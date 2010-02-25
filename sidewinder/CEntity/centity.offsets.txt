@@ -1,0 +1,126 @@
+"Games"
+{
+	"#default"
+	{
+		"Offsets"
+		{
+			"FVisible"
+			{
+				"windows"	"138"
+				"linux"		"138"
+			}
+			"Teleport"
+			{
+				"windows"	"105"
+				"linux"		"106"
+			}
+			"Spawn"
+			{
+				"windows"	"21"
+				"linux"		"22"
+			}
+			"UpdateOnRemove"
+			{
+				"windows"	"102"
+				"linux"		"103"
+			}
+			"Think"
+			{
+				"windows"	"45"
+				"linux"		"46"
+			}
+			"OnTakeDamage"
+			{
+				"windows"	"60"
+				"linux"		"61"
+			}
+			"AcceptInput"
+			{
+				"windows"	"34"
+				"linux"		"35"
+			}
+			"PlayerRunCmd"
+			{
+				"windows"	"403"
+				"linux"		"404"
+			}
+			"GetDataDescMap"
+			{
+				"windows"	"11"
+				"linux"		"12"
+			}
+			"StartTouch"
+			{
+				"windows"	"95"
+				"linux"		"96"
+			}
+			"Touch"
+			{
+				"windows"	"96"
+				"linux"		"97"
+			}
+			"EndTouch"
+			{
+				"windows"	"97"
+				"linux"		"98"
+			}
+			"GetServerVehicle"
+			{
+				"windows"	"86"
+				"linux"		"87"
+			}
+			"StudioFrameAdvance"
+			{
+				"windows"	"184"
+				"linux"		"185"
+			}
+			"LeaveVehicle"
+			{
+				"windows"	"378"
+				"linux"		"379"
+			}
+			"VPhysicsTakeDamage"
+			{
+				"windows"	"153"
+				"linux"		"154"
+			}
+			"VPhysicsGetObjectList"
+			{
+				"windows"	"159"
+				"linux"		"160"
+			}
+		}
+	}
+	
+	/* EntityFactoryDictionary function */
+	"#default"
+	{
+		"Signatures"
+		{
+			"EntityFactory"
+			{
+				"library"	"server"
+				"windows"	"\xB8\x01\x00\x00\x00\x84\x2A\x2A\x2A\x2A\x2A\x75\x1D\x09\x2A\x2A\x2A\x2A\x2A\xB9\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x83\xC4\x04\xB8\x2A\x2A\x2A\x2A\xC3"
+				"linux"		"@_Z23EntityFactoryDictionaryv"
+			}
+			"FireOutput"
+			{
+				"library"	"server"
+				"windows"	"\x81\xEC\x1C\x01\x00\x00\x53\x55\x56\x8B\x71\x14\x85\xF6"
+				"linux"		"@_ZN17CBaseEntityOutput10FireOutputE9variant_tP11CBaseEntityS2_f"
+			}
+			"TakeDamage"
+			{
+				"library"	"server"
+				"windows"	"\x83\xEC\x58\x57\x8B\xF9\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x0F\x84\x94\x01\x00\x00"
+				"linux"		"@_ZN11CBaseEntity10TakeDamageERK15CTakeDamageInfo"
+			}
+			"PhysIsInCallback"
+			{
+				"library"	"server"
+				"windows"	"\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x74\x0E\x8B\x01\x8B\x90\x8C\x00\x00\x00\xFF\xD2\x84\xC0\x75\x09\x83\x3D\x2A\x2A\x2A\x2A\x00\x7E\x03\xB0\x01\xC3"
+				"linux"		"@_Z16PhysIsInCallbackv"
+			}
+		}
+	}
+}
