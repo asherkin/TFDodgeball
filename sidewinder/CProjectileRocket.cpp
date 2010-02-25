@@ -10,9 +10,4 @@ void CProjectileRocket::Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool add
 void CProjectileRocket::Spawn(void)
 {
 	BaseClass::Spawn();
-
-	if (SentryCrit.GetBool())
-	{
-		SetCritical(true);
-	}
 }
