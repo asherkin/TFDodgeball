@@ -112,3 +112,12 @@ public Action:TF2Items_OnGiveNamedItem(client, String:strClassName[], iItemDefin
 	hItemOverride = hWeapon;
 	return Plugin_Changed;
 }
+
+public Action:TF2_CalcIsAttackCritical(client, weapon, String:weaponname[], &bool:result)
+{
+    if (StrEqual(weaponname, "tf_weapon_rocketlauncher")) {
+        result = true;
+        return Plugin_Handled;
+    }
+    return Plugin_Continue;
+}
