@@ -5,7 +5,8 @@
 
 SH_DECL_MANUALEXTERN3(FVisible, bool, CBaseEntity *, int, CBaseEntity **);
 
-ConVar RocketSpeedMul("sm_sentryrocket_speedmul", "1.0", 0);
+ConVar RocketSpeedMul("sm_sentryrocket_speedmul", "0.1", FCVAR_NONE);
+ConVar SeekTFBots("sm_sidewinder_seekbots", "1", FCVAR_NONE);
 
 void CTrackingProjectile::Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool addHooks)
 {
@@ -103,29 +104,41 @@ void CTrackingProjectile::TrackThink(void)
 bool CTrackingProjectile::IsValidTarget(CEntity *pEntity)
 {
 	if(!pEntity)
+	{
 		return false;
+	}
 
-	if(!pEntity->IsPlayer())
+	if(!pEntity->IsPlayer() && !SeekTFBots.GetBool())
+	{
 		return false;
+	}
 
 	CPlayer *pPlayer = static_cast<CPlayer *>(pEntity);
 
-	if(!pPlayer->IsAlive())
+	if(!pPlayer->IsAlive() && !SeekTFBots.GetBool())
+	{
 		return false;
+	}
 
 	if (pPlayer->GetPlayerClass() == PLAYERCLASS_SPY) 
 	{
 		//Cloaky
 		if (pPlayer->GetPlayerCond() & PLAYERCOND_SPYCLOAK)
+		{
 			return false;
+		}
 
 		//Disguised
 		if (pPlayer->IsDisguised() && pPlayer->GetDisguisedTeam() == GetTeam())
+		{
 			return false;
+		}
 	}
 
 	if (pEntity->GetTeam() != GetTeam() && FVisible(pEntity->BaseEntity(), MASK_OPAQUE, NULL))
-		return true;
+	{
+			return true;
+	}
 
 	return false;
 }

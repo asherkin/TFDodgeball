@@ -1,6 +1,6 @@
 #include "CSentryRocket.h"
 
-ConVar SentryCrit("sm_sentryrocket_crit", "1", 0);
+ConVar SentryCrit("sm_sentryrocket_crit", "1", FCVAR_NONE);
 
 LINK_ENTITY_TO_CLASS(tf_projectile_sentryrocket, CSentryRocket);
 
