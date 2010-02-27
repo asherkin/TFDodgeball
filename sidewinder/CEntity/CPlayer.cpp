@@ -23,6 +23,7 @@
 SH_DECL_MANUALHOOK3(FVisible, 0, 0, 0, bool, CBaseEntity *, int, CBaseEntity **);
 
 LINK_ENTITY_TO_CLASS(player, CPlayer);
+LINK_ENTITY_TO_CLASS(tf_bot, CPlayer);
 
 void CPlayer::Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool addHooks)
 {

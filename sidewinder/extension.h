@@ -132,7 +132,6 @@ extern IServerGameEnts *gameents;
 extern int gMaxClients;
 
 extern ConVar RocketSpeedMul;
-extern ConVar SeekTFBots;
 extern ConVar SentryCrit;
 extern ConVar SideWinderVersion;
 

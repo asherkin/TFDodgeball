@@ -6,7 +6,6 @@
 SH_DECL_MANUALEXTERN3(FVisible, bool, CBaseEntity *, int, CBaseEntity **);
 
 ConVar RocketSpeedMul("sm_sentryrocket_speedmul", "0.1", FCVAR_NONE);
-ConVar SeekTFBots("sm_sidewinder_seekbots", "1", FCVAR_NONE);
 
 void CTrackingProjectile::Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool addHooks)
 {
@@ -108,14 +107,14 @@ bool CTrackingProjectile::IsValidTarget(CEntity *pEntity)
 		return false;
 	}
 
-	if(!pEntity->IsPlayer() && !SeekTFBots.GetBool())
+	if(!pEntity->IsPlayer())
 	{
 		return false;
 	}
 
 	CPlayer *pPlayer = static_cast<CPlayer *>(pEntity);
 
-	if(!pPlayer->IsAlive() && !SeekTFBots.GetBool())
+	if(!pPlayer->IsAlive())
 	{
 		return false;
 	}
