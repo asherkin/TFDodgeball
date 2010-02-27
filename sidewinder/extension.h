@@ -121,8 +121,8 @@ public: //IConCommandBaseAccessor
 
 	// Standard MM:S Plugin Hooks
 	void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax);
-	void ClientPutInServer(edict_t *pEntity, char const *playername);
-	void ClientDisconnect(edict_t *pEntity);
+	//void ClientPutInServer(edict_t *pEntity, char const *playername);
+	//void ClientDisconnect(edict_t *pEntity);
 };
 
 //edict_t *UTIL_PlayerByIndex(int client);
