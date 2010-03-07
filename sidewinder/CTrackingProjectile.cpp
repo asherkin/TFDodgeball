@@ -5,7 +5,7 @@
 
 SH_DECL_MANUALEXTERN3(FVisible, bool, CBaseEntity *, int, CBaseEntity **);
 
-ConVar RocketSpeedMul("sm_sentryrocket_speedmul", "0.1", FCVAR_NONE);
+ConVar RocketSpeedMul("sm_sentryrocket_speedmul", "0.5", FCVAR_NONE);
 
 void CTrackingProjectile::Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool addHooks)
 {
