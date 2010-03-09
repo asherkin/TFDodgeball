@@ -117,7 +117,8 @@ public Action:TF2_CalcIsAttackCritical(client, weapon, String:weaponname[], &boo
 {
     if (StrEqual(weaponname, "tf_weapon_rocketlauncher")) {
         result = true;
-        return Plugin_Handled;
-    }
-    return Plugin_Continue;
+    } else {
+        result = false;
+	}
+	return Plugin_Handled;
 }

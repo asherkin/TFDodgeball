@@ -11,3 +11,4 @@ void CProjectileRocket::Spawn(void)
 {
 	BaseClass::Spawn();
 }
+
