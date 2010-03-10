@@ -10,5 +10,11 @@ void CProjectileRocket::Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool add
 void CProjectileRocket::Spawn(void)
 {
 	BaseClass::Spawn();
+	/*
+	size_t i;
+	META_CONPRINTF("Data in [%p..%p): ",this,this+sizeof(CProjectileRocket));
+	for (i=0;i<sizeof(CProjectileRocket);i++)
+		META_CONPRINTF("%02X ", ((unsigned char*)this)[i] );
+	META_CONPRINTF("\n");
+	*/
 }
-
