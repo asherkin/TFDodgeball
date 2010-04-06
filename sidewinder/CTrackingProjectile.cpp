@@ -68,15 +68,13 @@ void CTrackingProjectile::StartTouch(CBaseEntity *entity)
 	g_pSM->LogMessage(myself, ">>> Current Target: %d", pBestVictim->entindex());
 	g_pSM->LogMessage(myself, ">>> Target Distance: %f", flBestVictim);
 
-	float damage = 0.0;
+	int damage = 0.0;
 
 	if (flBestVictim < 145) {
 		damage = ( -0.8 * ( flBestVictim-24 ) ) + 100;
 	}
 
 	g_pSM->LogMessage(myself, ">>> Damage to deal: %f", damage);
-
-	pBestVictim->SetHealth(pBestVictim->GetHealth() - Float2Int(damage));
 
 	BaseClass::StartTouch(entity);
 }
