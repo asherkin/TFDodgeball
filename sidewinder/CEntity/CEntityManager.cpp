@@ -36,6 +36,9 @@ SH_DECL_MANUALEXTERN3_void(Teleport, const Vector *, const QAngle *, const Vecto
 SH_DECL_MANUALEXTERN0_void(Spawn);
 SH_DECL_MANUALEXTERN1(OnTakeDamage, int, const CTakeDamageInfo &);
 SH_DECL_MANUALEXTERN0_void(Think);
+SH_DECL_MANUALEXTERN1_void(StartTouch, CBaseEntity *);
+SH_DECL_MANUALEXTERN1_void(Touch, CBaseEntity *);
+SH_DECL_MANUALEXTERN1_void(EndTouch, CBaseEntity *);
 
 SH_DECL_MANUALEXTERN3(FVisible, bool, CBaseEntity *, int, CBaseEntity **);
 
@@ -69,6 +72,9 @@ bool CEntityManager::Init(IGameConfig *pConfig)
 	RECONFIGURE_HOOK(Spawn);
 	RECONFIGURE_HOOK(OnTakeDamage);
 	RECONFIGURE_HOOK(Think);
+	RECONFIGURE_HOOK(StartTouch);
+	RECONFIGURE_HOOK(Touch);
+	RECONFIGURE_HOOK(EndTouch);
 	RECONFIGURE_HOOK(FVisible);
 
 	SH_DECL_MANUALEXTERN3(FVisible, bool, CBaseEntity *, int, CBaseEntity **);

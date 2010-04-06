@@ -38,6 +38,10 @@ public:
 	bool IsDisguised();
 	int GetDisguisedTeam();
 
+	int GetHealth();
+	void SetHealth(int iHealth);
+
+
 public: // CBasePlayer virtuals
 	virtual	bool FVisible(CBaseEntity *pEntity, int traceMask = MASK_BLOCKLOS, CBaseEntity **ppBlocker = NULL);
 

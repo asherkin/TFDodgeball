@@ -28,6 +28,59 @@ void CTrackingProjectile::Spawn(void)
 	SetNextThink(gpGlobals->curtime); 
 }
 
+void CTrackingProjectile::StartTouch(CBaseEntity *entity)
+{
+	CPlayer *pBestVictim = NULL;
+	Vector rocketLoc = GetLocalOrigin();
+	Vector targetLoc;
+	float flBestVictim = MAX_TRACE_LENGTH;
+	float flVictimDist;
+
+	for (int index = 1; index <= gpGlobals->maxClients; index++)
+	{
+		CEntity *pEntity = CEntity::Instance(index);
+
+		if (!IsValidTarget(pEntity))
+		{
+			continue;
+		}
+
+		targetLoc = pEntity->GetLocalOrigin();
+		targetLoc.z += 50;
+
+		flVictimDist = (rocketLoc - targetLoc).Length();
+
+		//Find closest
+		if (flVictimDist < flBestVictim)
+		{
+			pBestVictim = static_cast<CPlayer *>(pEntity);
+			flBestVictim = flVictimDist;
+		}
+	}
+
+	if (pBestVictim == NULL) 
+	{
+		BaseClass::StartTouch(entity);
+		return;
+	}
+
+	g_pSM->LogMessage(myself, ">>> Entity Index: %d", entindex());
+	g_pSM->LogMessage(myself, ">>> Current Target: %d", pBestVictim->entindex());
+	g_pSM->LogMessage(myself, ">>> Target Distance: %f", flBestVictim);
+
+	float damage = 0.0;
+
+	if (flBestVictim < 145) {
+		damage = ( -0.8 * ( flBestVictim-24 ) ) + 100;
+	}
+
+	g_pSM->LogMessage(myself, ">>> Damage to deal: %f", damage);
+
+	pBestVictim->SetHealth(pBestVictim->GetHealth() - Float2Int(damage));
+
+	BaseClass::StartTouch(entity);
+}
+
 void CTrackingProjectile::FindThink(void)
 {
 	CEntity *pBestVictim = NULL;

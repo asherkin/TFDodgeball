@@ -84,3 +84,13 @@ int CPlayer::GetDisguisedTeam()
 {
 	return *m_nDisguiseTeam;
 }
+
+int CPlayer::GetHealth()
+{
+	return *m_iHealth;
+}
+
+void CPlayer::SetHealth(int iHealth)
+{
+	*m_iHealth = iHealth;
+}

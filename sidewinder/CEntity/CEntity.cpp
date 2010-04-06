@@ -27,6 +27,9 @@ SH_DECL_MANUALHOOK0_void(UpdateOnRemove, 0, 0, 0);
 SH_DECL_MANUALHOOK0_void(Spawn, 0, 0, 0);
 SH_DECL_MANUALHOOK1(OnTakeDamage, 0, 0, 0, int, const CTakeDamageInfo &);
 SH_DECL_MANUALHOOK0_void(Think, 0, 0, 0);
+SH_DECL_MANUALHOOK1_void(StartTouch, 0, 0, 0, CBaseEntity *);
+SH_DECL_MANUALHOOK1_void(Touch, 0, 0, 0, CBaseEntity *);
+SH_DECL_MANUALHOOK1_void(EndTouch, 0, 0, 0, CBaseEntity *);
 
 CEntity *pEntityData[MAX_EDICTS+1] = {NULL};
 
@@ -67,6 +70,9 @@ void CEntity::Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool addHooks)
 	ADD_DEFAULTHANDLER_HOOK(CEntity, Spawn);
 	ADD_DEFAULTHANDLER_HOOK(CEntity, OnTakeDamage);
 	ADD_DEFAULTHANDLER_HOOK(CEntity, Think);
+	ADD_DEFAULTHANDLER_HOOK(CEntity, StartTouch);
+	ADD_DEFAULTHANDLER_HOOK(CEntity, Touch);
+	ADD_DEFAULTHANDLER_HOOK(CEntity, EndTouch);
 }
 
 void CEntity::Destroy()
@@ -118,6 +124,9 @@ void CEntity::InternalUpdateOnRemove()
 DECLARE_DEFAULTHANDLER_void(CEntity, Teleport, (const Vector *origin, const QAngle* angles, const Vector *velocity), (origin, angles, velocity));
 DECLARE_DEFAULTHANDLER_void(CEntity, Spawn, (), ());
 DECLARE_DEFAULTHANDLER(CEntity, OnTakeDamage, int, (const CTakeDamageInfo &info), (info));
+DECLARE_DEFAULTHANDLER_void(CEntity, StartTouch, (CBaseEntity *entity), (entity));
+DECLARE_DEFAULTHANDLER_void(CEntity, Touch, (CBaseEntity *entity), (entity));
+DECLARE_DEFAULTHANDLER_void(CEntity, EndTouch, (CBaseEntity *entity), (entity));
 
 void CEntity::Think()
 {

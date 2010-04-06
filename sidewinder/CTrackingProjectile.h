@@ -11,6 +11,7 @@ public:
 
 	virtual void Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool addHooks);
 	virtual void Spawn(void);
+	virtual void StartTouch(CBaseEntity *entity);
 
 public:
 	virtual void TrackThink(void);

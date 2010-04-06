@@ -98,6 +98,9 @@ public: // CBaseEntity virtuals
 	virtual void Spawn();
 	virtual int OnTakeDamage(const CTakeDamageInfo &info);
 	virtual void Think();
+	virtual void StartTouch(CBaseEntity *entity);
+	virtual void Touch(CBaseEntity *entity);
+	virtual void EndTouch(CBaseEntity *entity);
 
 public: // CBaseEntity non virtual helpers
 	BASEPTR	ThinkSet(BASEPTR func, float thinkTime, const char *szContext);
@@ -138,6 +141,9 @@ private: // All the internal hook implementations for the above virtuals
 	DECLARE_DEFAULTHEADER(Spawn, void, ());
 	DECLARE_DEFAULTHEADER(OnTakeDamage, int, (const CTakeDamageInfo &info));
 	DECLARE_DEFAULTHEADER(Think, void, ());
+	DECLARE_DEFAULTHEADER(StartTouch, void, (CBaseEntity*));
+	DECLARE_DEFAULTHEADER(Touch, void, (CBaseEntity*));
+	DECLARE_DEFAULTHEADER(EndTouch, void, (CBaseEntity*));
 
 protected: // CEntity
 	CBaseEntity *m_pEntity;
