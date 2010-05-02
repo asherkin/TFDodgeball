@@ -18,65 +18,18 @@ void CTrackingProjectile::Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool a
 
 	sm_sendprop_info_t info;
 	GET_SENDPROP_POINTER(bool, m_pEdict, BaseEntity(), &info, m_bCritical);
+	GET_SENDPROP_POINTER(int, m_pEdict, BaseEntity(), &info, m_iDeflected);
+	m_flDamage = (float *)((char *)BaseEntity() + (info.actual_offset+sizeof(int)));
 }
 
 void CTrackingProjectile::Spawn(void)
 {
  	BaseClass::Spawn();
 
+	SetDamage(9000);
+
 	SetThink(&CTrackingProjectile::FindThink);
 	SetNextThink(gpGlobals->curtime); 
-}
-
-void CTrackingProjectile::StartTouch(CBaseEntity *entity)
-{
-	CPlayer *pBestVictim = NULL;
-	Vector rocketLoc = GetLocalOrigin();
-	Vector targetLoc;
-	float flBestVictim = MAX_TRACE_LENGTH;
-	float flVictimDist;
-
-	for (int index = 1; index <= gpGlobals->maxClients; index++)
-	{
-		CEntity *pEntity = CEntity::Instance(index);
-
-		if (!IsValidTarget(pEntity))
-		{
-			continue;
-		}
-
-		targetLoc = pEntity->GetLocalOrigin();
-		targetLoc.z += 50;
-
-		flVictimDist = (rocketLoc - targetLoc).Length();
-
-		//Find closest
-		if (flVictimDist < flBestVictim)
-		{
-			pBestVictim = static_cast<CPlayer *>(pEntity);
-			flBestVictim = flVictimDist;
-		}
-	}
-
-	if (pBestVictim == NULL) 
-	{
-		BaseClass::StartTouch(entity);
-		return;
-	}
-
-	g_pSM->LogMessage(myself, ">>> Entity Index: %d", entindex());
-	g_pSM->LogMessage(myself, ">>> Current Target: %d", pBestVictim->entindex());
-	g_pSM->LogMessage(myself, ">>> Target Distance: %f", flBestVictim);
-
-	int damage = 0.0;
-
-	if (flBestVictim < 145) {
-		damage = ( -0.8 * ( flBestVictim-24 ) ) + 100;
-	}
-
-	g_pSM->LogMessage(myself, ">>> Damage to deal: %f", damage);
-
-	BaseClass::StartTouch(entity);
 }
 
 void CTrackingProjectile::FindThink(void)
@@ -223,6 +176,17 @@ void CTrackingProjectile::SetCritical(bool bCritical)
 {
 	if (m_bCritical)
 		*m_bCritical = bCritical;
+}
+
+float CTrackingProjectile::GetDamage(void)
+{
+	return *m_flDamage;
+}
+
+void CTrackingProjectile::SetDamage(float flDamage)
+{
+	if (m_flDamage)
+		*m_flDamage = flDamage;
 }
 
 DECLARE_DEFAULTHANDLER(CTrackingProjectile, FVisible, bool, (CBaseEntity *pEntity, int traceMask, CBaseEntity **ppBlocker), (pEntity, traceMask, ppBlocker));

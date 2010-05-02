@@ -11,7 +11,6 @@ public:
 
 	virtual void Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool addHooks);
 	virtual void Spawn(void);
-	virtual void StartTouch(CBaseEntity *entity);
 
 public:
 	virtual void TrackThink(void);
@@ -21,6 +20,9 @@ public:
 
 	bool IsCritical(void);
 	void SetCritical(bool bCritical);
+
+	float GetDamage(void);
+	void SetDamage(float flDamage);
 
 public: // CBasePlayer virtuals
 	virtual	bool FVisible(CBaseEntity *pEntity, int traceMask = MASK_BLOCKLOS, CBaseEntity **ppBlocker = NULL);
@@ -32,8 +34,10 @@ private:
 	int m_currentTarget;
 	float m_lastSearch;
 
-protected:	
+protected:
+	int   *m_iDeflected;
 	bool  *m_bCritical;
+	float *m_flDamage;
 	bool   m_bHasThought;
 };
 

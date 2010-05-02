@@ -17,4 +17,6 @@ void CSentryRocket::Spawn(void)
 	{
 		SetCritical(true);
 	}
+
+	
 }
