@@ -13,10 +13,8 @@ void CSentryRocket::Spawn(void)
 {
 	BaseClass::Spawn();
 
-	if (SentryCrit.GetBool())
-	{
-		SetCritical(true);
-	}
-
-	
+	//if (SentryCrit.GetBool())
+	//{
+	//	SetCritical(true);
+	//}
 }

@@ -9,7 +9,7 @@ ConVar RocketSpeedMul("sm_sentryrocket_speedmul", "0.5", FCVAR_NONE);
 
 void CTrackingProjectile::Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool addHooks)
 {
-	m_bCritical = false;
+	//m_bCritical = false;
 	m_bHasThought = false;
 
 	BaseClass::Init(pEdict, pBaseEntity, addHooks);
@@ -26,7 +26,7 @@ void CTrackingProjectile::Spawn(void)
 {
  	BaseClass::Spawn();
 
-	SetDamage(9000);
+	//SetDamage(9000);
 
 	SetThink(&CTrackingProjectile::FindThink);
 	SetNextThink(gpGlobals->curtime); 

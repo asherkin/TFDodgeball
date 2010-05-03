@@ -1,8 +1,6 @@
 #include <sourcemod>
 #include <sdktools>
 
-#define VERSION "0.4"
-
 #define TEAM_SPEC 1
 #define TEAM_RED 2
 #define TEAM_BLUE 3
@@ -10,44 +8,33 @@
 #define PROJECTILE_ROCKET 1
 #define PROJECTILE_ROCKET_SENTRY 2
 
-public Plugin:myinfo = 
-{
-	name = "[TF2] Rockets",
-	author = "Asherkin",
-	description = "Spawns rockets.",
-	version = VERSION,
-	url = "http://www.limetech.org"
-}
+#define PLUGIN_NAME		"[TF2] Dogdeball (Rocket Management)"
+#define PLUGIN_AUTHOR		"Asherkin"
+#define PLUGIN_VERSION		"1.0.0"
+#define PLUGIN_CONTACT		"http://limetech.org/"
+
+public Plugin:myinfo = {
+	name			= PLUGIN_NAME,
+	author			= PLUGIN_AUTHOR,
+	description	= PLUGIN_NAME,
+	version		= PLUGIN_VERSION,
+	url				= PLUGIN_CONTACT
+};
 
 new g_iRocketLastTeam = TEAM_RED;
 
 new Handle:g_hSpeedMul = INVALID_HANDLE;
-//new Handle:g_SentryRocketCreate = INVALID_HANDLE;
 new Handle:g_RocketRespawnTimer = INVALID_HANDLE;
 
 public OnPluginStart()
 {
-	CreateConVar("sm_rocket_version", VERSION, "Rocket Version", FCVAR_PLUGIN|FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
-	
 	/*
-	RegAdminCmd("sm_sdkrocket", Command_SDKRocket, ADMFLAG_SLAY);
-	
 	RegAdminCmd("sm_rocket", Command_ForceRocket, ADMFLAG_SLAY);
 	RegAdminCmd("sm_rocket_red", Command_ForceRocketRed, ADMFLAG_SLAY);
 	RegAdminCmd("sm_rocket_blue", Command_ForceRocketBlue, ADMFLAG_SLAY);
 	*/
 	
 	g_hSpeedMul = FindConVar("sm_sentryrocket_speedmul");
-	
-	/*
-	StartPrepSDKCall(SDKCall_Static);
-	PrepSDKCall_SetSignature(SDKLibrary_Server, "\x8B\x44\x24\x0C\x8B\x4C\x24\x08\x8B\x54\x24\x04\x56\x50\x51\x52", 16);
-	PrepSDKCall_AddParameter(SDKType_Vector, SDKPass_ByRef);
-	PrepSDKCall_AddParameter(SDKType_QAngle, SDKPass_ByRef);
-	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-	PrepSDKCall_AddParameter(SDKType_CBaseEntity, SDKPass_Pointer);
-	g_SentryRocketCreate = EndPrepSDKCall();
-	*/
 	
 	HookEvent("teamplay_setup_finished", Event_teamplay_setup_finished);
 }
@@ -67,7 +54,7 @@ public Action:SpawnRockets(Handle:timer)
 	if (g_iRocketLastTeam == TEAM_BLUE) {
 		fireTeamProjectile(TEAM_RED, PROJECTILE_ROCKET);
 		g_iRocketLastTeam = TEAM_RED;
-	}
+	} // else???
 	if (g_iRocketLastTeam == TEAM_RED) {
 		fireTeamProjectile(TEAM_BLUE, PROJECTILE_ROCKET);
 		g_iRocketLastTeam = TEAM_BLUE;
@@ -76,29 +63,6 @@ public Action:SpawnRockets(Handle:timer)
 }
 
 /*
-public Action:Command_SDKRocket(client, args)
-{
-	if(GetEntityCount() >= GetMaxEntities()-32)
-	{
-		PrintToChat(client, "[SM] Entity limit is reached. Can't spawn anymore rockets. Change maps.");
-		return Plugin_Handled;
-	}
-	
-	new iTeam = GetClientTeam(client);
-	decl Float:vPosition[3];
-	decl Float:vAngles[3];
-	
-	new launcherIndex = findNextTeamLaunchPosition(iTeam);
-	
-	GetEntPropVector(launcherIndex, Prop_Data, "m_vecOrigin", vPosition);
-	GetEntPropVector(launcherIndex, Prop_Data, "m_angRotation", vAngles);
-	
-	SDKCall(g_SentryRocketCreate, vPosition, vAngles, 0, 0);
-	
-	return Plugin_Handled;
-}
-
-
 public Action:Command_ForceRocket(client, args)
 {
 	if(GetEntityCount() >= GetMaxEntities()-32)
@@ -149,7 +113,7 @@ fireTeamProjectile(iTeam, iType = PROJECTILE_ROCKET) {
 	GetEntPropVector(launcherIndex, Prop_Data, "m_vecOrigin", vPosition);
 	GetEntPropVector(launcherIndex, Prop_Data, "m_angRotation", vAngles);
 	
-	return fireProjectile(vPosition, vAngles, (1100.0*GetConVarFloat(g_hSpeedMul)), iTeam, iType, true)
+	return fireProjectile(vPosition, vAngles, (1100.0*GetConVarFloat(g_hSpeedMul)), 20.0, iTeam, iType, true)
 }
 
 findNextTeamLaunchPosition(iTeam)
@@ -190,7 +154,7 @@ findNextTeamLaunchPosition(iTeam)
 	return launcherIndex
 }
 
-fireProjectile(Float:vPosition[3], Float:vAngles[3] = NULL_VECTOR, Float:fSpeed = 1100.0, iTeam = TEAM_SPEC, iType = PROJECTILE_ROCKET, bool:bCritical = false)
+fireProjectile(Float:vPosition[3], Float:vAngles[3] = NULL_VECTOR, Float:flSpeed = 1100.0, Float:flDamage = 90.0, iTeam = TEAM_SPEC, iType = PROJECTILE_ROCKET, bool:bCritical = false)
 {
 	new String:strClassname[32] = "";
 	new String:strEntname[32] = "";
@@ -222,22 +186,21 @@ fireProjectile(Float:vPosition[3], Float:vAngles[3] = NULL_VECTOR, Float:fSpeed 
 	
 	GetAngleVectors(vAngles, vBuffer, NULL_VECTOR, NULL_VECTOR);
 	
-	vVelocity[0] = vBuffer[0]*fSpeed;
-	vVelocity[1] = vBuffer[1]*fSpeed;
-	vVelocity[2] = vBuffer[2]*fSpeed;
+	vVelocity[0] = vBuffer[0]*flSpeed;
+	vVelocity[1] = vBuffer[1]*flSpeed;
+	vVelocity[2] = vBuffer[2]*flSpeed;
 	
 	TeleportEntity(iRocket, vPosition, vAngles, vVelocity);
 	
 	SetEntData(iRocket, FindSendPropOffs(strClassname, "m_nSkin"), (iTeam-2), 1, true);
 	SetEntData(iRocket, FindSendPropOffs(strClassname, "m_bCritical"), bCritical, true);
+	SetEntDataFloat(iRocket, FindSendPropOffs(strClassname, "m_iDeflected") + 4, flDamage, true);
 	
 	SetVariantInt(iTeam);
 	AcceptEntityInput(iRocket, "TeamNum", -1, -1, 0);
 
 	SetVariantInt(iTeam);
 	AcceptEntityInput(iRocket, "SetTeam", -1, -1, 0); 
-	
-	//SetRocketDamage(iRocket, someFloatProbaly); // BLAAAARGH Need to write this :'(
 	
 	DispatchSpawn(iRocket);
 	

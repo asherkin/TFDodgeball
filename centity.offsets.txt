@@ -1,0 +1,79 @@
+"Games"
+{
+	"#default"
+	{
+		"Offsets"
+		{
+			"FVisible"
+			{
+				"windows"	"139"
+				"linux"		"139"
+			}
+			"Teleport"
+			{
+				"windows"	"105"
+				"linux"		"106"
+			}
+			"Spawn"
+			{
+				"windows"	"21"
+				"linux"		"22"
+			}
+			"UpdateOnRemove"
+			{
+				"windows"	"102"
+				"linux"		"103"
+			}
+			"Think"
+			{
+				"windows"	"45"
+				"linux"		"46"
+			}
+			"OnTakeDamage"
+			{
+				"windows"	"60"
+				"linux"		"61"
+			}
+			"AcceptInput"
+			{
+				"windows"	"34"
+				"linux"		"35"
+			}
+			"PlayerRunCmd"
+			{
+				"windows"	"403"
+				"linux"		"404"
+			}
+			"StartTouch"
+			{
+				"windows"	"95"
+				"linux"		"96"
+			}
+			"Touch"
+			{
+				"windows"	"96"
+				"linux"		"97"
+			}
+			"EndTouch"
+			{
+				"windows"	"97"
+				"linux"		"98"
+			}
+		}
+	}
+	
+	/* EntityFactoryDictionary function */
+	"#default"
+	{
+		"Signatures"
+		{
+			"EntityFactory"
+			{
+				"library"	"server"
+				"windows"	"\xB8\x01\x00\x00\x00\x84\x2A\x2A\x2A\x2A\x2A\x75\x1D\x09\x2A\x2A\x2A\x2A\x2A\xB9\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x83\xC4\x04\xB8\x2A\x2A\x2A\x2A\xC3"
+				"linux"		"@_Z23EntityFactoryDictionaryv"
+			}
+		}
+	}
+}
+
