@@ -61,22 +61,17 @@ public OnPluginStart()
 	g_hSpeedMul = FindConVar("sm_sentryrocket_speedmul");
 	
 	AutoExecConfig();
-}
-
-public OnConfigsExecuted()
-{
-	g_config_bSpawnEnabled = GetConVarBool(g_hConVars[0]);
-	g_config_iMaxRockets = GetConVarFloat(g_hConVars[2]);
-	g_config_flBaseDamage = GetConVarFloat(g_hConVars[3]);
-	g_config_bSpawnCriticals = GetConVarBool(g_hConVars[4]);
-
-	g_hRocketSpawnTimer = CreateTimer(GetConVarFloat(g_hConVars[1]), SpawnRockets, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 	
 	HookConVarChange(g_hConVars[0], config_bSpawnEnabled_changed);
 	HookConVarChange(g_hConVars[1], config_flSpawnInterval_changed);
 	HookConVarChange(g_hConVars[2], config_iMaxRockets_changed);
 	HookConVarChange(g_hConVars[3], config_flBaseDamage_changed);
 	HookConVarChange(g_hConVars[4], config_bSpawnCriticals_changed);
+}
+
+public OnConfigsExecuted()
+{
+	g_hRocketSpawnTimer = CreateTimer(GetConVarFloat(g_hConVars[1]), SpawnRockets, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 }
 
 public config_bSpawnEnabled_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bSpawnEnabled = bool:StringToInt(newValue); }
@@ -86,8 +81,11 @@ public config_bSpawnCriticals_changed(Handle:convar, const String:oldValue[], co
 
 public config_flSpawnInterval_changed(Handle:convar, const String:oldValue[], const String:newValue[])
 {
-	CloseHandle(g_hRocketSpawnTimer);
-	g_hRocketSpawnTimer = CreateTimer(StringToFloat(newValue), SpawnRockets, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+	if (g_hRocketSpawnTimer != INVALID_HANDLE)
+	{
+		CloseHandle(g_hRocketSpawnTimer);
+		g_hRocketSpawnTimer = CreateTimer(StringToFloat(newValue), SpawnRockets, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+	}
 }
 
 public Action:SpawnRockets(Handle:timer)
