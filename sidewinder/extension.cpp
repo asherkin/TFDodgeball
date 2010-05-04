@@ -39,6 +39,8 @@
 #include "filesystem.h"
 #include "CEntityManager.h"
 
+#include "CEntity.h"
+
 /**
  * @file extension.cpp
  * @brief Implement extension code here.
@@ -60,9 +62,11 @@ ConVar SideWinderVersion("sidewinder_version", "3.0.0", FCVAR_SPONLY|FCVAR_REPLI
 
 void *g_EntList = NULL;
 int gMaxClients = 0;
+int gCmdIndex;
 
 /** hooks **/
 SH_DECL_HOOK3_void(IServerGameDLL, ServerActivate, SH_NOATTRIB, 0, edict_t *, int, int)
+SH_DECL_HOOK1_void(IServerGameClients, SetCommandClient, SH_NOATTRIB, 0, int);
 
 bool Sidewinder::SDK_OnLoad(char *error, size_t maxlength, bool late)
 {
@@ -77,6 +81,8 @@ bool Sidewinder::SDK_OnLoad(char *error, size_t maxlength, bool late)
 	}
 
 	GetEntityManager()->Init(g_pGameConf);
+
+	g_EntList = gamehelpers->GetGlobalEntityList();
 
 	return true;
 }
@@ -94,6 +100,7 @@ bool Sidewinder::SDK_OnMetamodLoad(ISmmAPI *ismm, char *error, size_t maxlen, bo
 
 	// add standard plugin hooks
 	SH_ADD_HOOK_MEMFUNC(IServerGameDLL, ServerActivate, gamedll, &g_Sidewinder, &Sidewinder::ServerActivate, true);
+	SH_ADD_HOOK_MEMFUNC(IServerGameClients, SetCommandClient, serverclients, &g_Sidewinder, &Sidewinder::SetCommandClient, true);
 
 	return true;
 }
@@ -109,6 +116,7 @@ bool Sidewinder::SDK_OnMetamodUnload(char *error, size_t maxlength)
 {
 	// remove standard plugin hooks
 	SH_REMOVE_HOOK_MEMFUNC(IServerGameDLL, ServerActivate, gamedll, &g_Sidewinder, &Sidewinder::ServerActivate, true);
+	SH_REMOVE_HOOK_MEMFUNC(IServerGameClients, SetCommandClient, serverclients, &g_Sidewinder, &Sidewinder::SetCommandClient, true);
 	return true;
 }
 
@@ -118,4 +126,9 @@ void Sidewinder::ServerActivate(edict_t *pEdictList, int edictCount, int clientM
 {
 	gMaxClients = clientMax;
 	RETURN_META(MRES_IGNORED);
+}
+
+void Sidewinder::SetCommandClient( int cmd )
+{
+	gCmdIndex = cmd + 1; //HL2 is offset by -1 for some reason...
 }

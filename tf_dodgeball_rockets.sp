@@ -1,5 +1,8 @@
+#pragma semicolon 1
+
 #include <sourcemod>
 #include <sdktools>
+#include <sdkhooks>
 
 #define TEAM_SPEC 1
 #define TEAM_RED 2
@@ -7,6 +10,8 @@
 
 #define PROJECTILE_ROCKET 1
 #define PROJECTILE_ROCKET_SENTRY 2
+
+#define CONVAR_COUNT 5
 
 #define PLUGIN_NAME		"[TF2] Dogdeball (Rocket Management)"
 #define PLUGIN_AUTHOR		"Asherkin"
@@ -21,88 +26,118 @@ public Plugin:myinfo = {
 	url				= PLUGIN_CONTACT
 };
 
-new g_iRocketLastTeam = TEAM_RED;
-
 new Handle:g_hSpeedMul = INVALID_HANDLE;
-new Handle:g_RocketRespawnTimer = INVALID_HANDLE;
+new Handle:g_hRocketSpawnTimer = INVALID_HANDLE;
+new Handle:g_hConVars[CONVAR_COUNT] = {INVALID_HANDLE, ...};
+
+#define ROCKET_SPAWN_ENTITY "info_target"
+#define RED_ROCKET_SPAWN "rocket_spawn_red"
+#define BLUE_ROCKET_SPAWN "rocket_spawn_blue"
+
+#define CONFIGDEF_ENABLED "1"
+#define CONFIGDEF_SPAWN_INTERVAL "1.0"
+#define CONFIGDEF_MAX_ROCKETS "100"
+#define CONFIGDEF_BASE_DAMAGE "15.0"
+#define CONFIGDEF_CRITICALS "1"
+
+new bool:g_config_bSpawnEnabled;
+new g_config_iMaxRockets;
+new Float:g_config_flBaseDamage;
+new bool:g_config_bSpawnCriticals;
+
+new g_iRocketCount;
 
 public OnPluginStart()
 {
-	/*
-	RegAdminCmd("sm_rocket", Command_ForceRocket, ADMFLAG_SLAY);
-	RegAdminCmd("sm_rocket_red", Command_ForceRocketRed, ADMFLAG_SLAY);
-	RegAdminCmd("sm_rocket_blue", Command_ForceRocketBlue, ADMFLAG_SLAY);
-	*/
+	RegAdminCmd("sm_dodgeball_rocket", Command_ForceRocket, ADMFLAG_SLAY);
+	RegAdminCmd("sm_dodgeball_headrocket", Command_HeadRocket, ADMFLAG_SLAY);
+	
+	g_hConVars[0] = CreateConVar("sm_dodgeball_enabled", CONFIGDEF_ENABLED, "", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hConVars[1] = CreateConVar("sm_dodgeball_spawninterval", CONFIGDEF_SPAWN_INTERVAL, "", FCVAR_NONE, true, 0.0, false);
+	g_hConVars[2] = CreateConVar("sm_dodgeball_maxrockets", CONFIGDEF_MAX_ROCKETS, "", FCVAR_NONE, true, 0.0, false);
+	g_hConVars[3] = CreateConVar("sm_dodgeball_basedamage", CONFIGDEF_BASE_DAMAGE, "", FCVAR_NONE, true, 0.0, false);
+	g_hConVars[4] = CreateConVar("sm_dodgeball_criticals", CONFIGDEF_CRITICALS, "", FCVAR_NONE, true, 0.0, true, 1.0);
 	
 	g_hSpeedMul = FindConVar("sm_sentryrocket_speedmul");
 	
-	HookEvent("teamplay_setup_finished", Event_teamplay_setup_finished);
+	AutoExecConfig();
 }
 
-public Action:Event_teamplay_setup_finished(Handle:event, const String:name[], bool:dontBroadcast) {
-	if (g_RocketRespawnTimer != INVALID_HANDLE) {
-		CloseHandle(g_RocketRespawnTimer);
-		g_RocketRespawnTimer = INVALID_HANDLE;
-	}
-	g_RocketRespawnTimer = CreateTimer(1.0, SpawnRockets, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+public OnConfigsExecuted()
+{
+	g_config_bSpawnEnabled = GetConVarBool(g_hConVars[0]);
+	g_config_iMaxRockets = GetConVarFloat(g_hConVars[2]);
+	g_config_flBaseDamage = GetConVarFloat(g_hConVars[3]);
+	g_config_bSpawnCriticals = GetConVarBool(g_hConVars[4]);
+
+	g_hRocketSpawnTimer = CreateTimer(GetConVarFloat(g_hConVars[1]), SpawnRockets, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 	
-	return Plugin_Continue;
+	HookConVarChange(g_hConVars[0], config_bSpawnEnabled_changed);
+	HookConVarChange(g_hConVars[1], config_flSpawnInterval_changed);
+	HookConVarChange(g_hConVars[2], config_iMaxRockets_changed);
+	HookConVarChange(g_hConVars[3], config_flBaseDamage_changed);
+	HookConVarChange(g_hConVars[4], config_bSpawnCriticals_changed);
+}
+
+public config_bSpawnEnabled_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bSpawnEnabled = bool:StringToInt(newValue); }
+public config_iMaxRockets_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_iMaxRockets = StringToInt(newValue); }
+public config_flBaseDamage_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flBaseDamage = StringToFloat(newValue); }
+public config_bSpawnCriticals_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bSpawnCriticals = bool:StringToInt(newValue); }
+
+public config_flSpawnInterval_changed(Handle:convar, const String:oldValue[], const String:newValue[])
+{
+	CloseHandle(g_hRocketSpawnTimer);
+	g_hRocketSpawnTimer = CreateTimer(StringToFloat(newValue), SpawnRockets, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 }
 
 public Action:SpawnRockets(Handle:timer)
 {
-	if (g_iRocketLastTeam == TEAM_BLUE) {
-		fireTeamProjectile(TEAM_RED, PROJECTILE_ROCKET);
-		g_iRocketLastTeam = TEAM_RED;
-	} // else???
-	if (g_iRocketLastTeam == TEAM_RED) {
-		fireTeamProjectile(TEAM_BLUE, PROJECTILE_ROCKET);
-		g_iRocketLastTeam = TEAM_BLUE;
+	if (!g_config_bSpawnEnabled || (g_iRocketCount >= g_config_iMaxRockets))
+		return Plugin_Continue;
+	
+	static iRocketLastTeam = TEAM_RED;
+	
+	new rocketEnt;
+	if (iRocketLastTeam == TEAM_BLUE) {
+		rocketEnt = fireTeamProjectile(TEAM_RED, PROJECTILE_ROCKET);
+		iRocketLastTeam = TEAM_RED;
+	} else if (iRocketLastTeam == TEAM_RED) {
+		rocketEnt = fireTeamProjectile(TEAM_BLUE, PROJECTILE_ROCKET);
+		iRocketLastTeam = TEAM_BLUE;
 	}
+	SDKHook(rocketEnt, SDKHook_StartTouch, OnRocketDestroyed);
+	g_iRocketCount++;
 	return Plugin_Continue;
 }
 
-/*
+public OnRocketDestroyed(entity, other)
+{
+	g_iRocketCount--;
+	
+	if (g_iRocketCount < 0)
+		g_iRocketCount = 0;
+}
+
 public Action:Command_ForceRocket(client, args)
 {
-	if(GetEntityCount() >= GetMaxEntities()-32)
-	{
-		PrintToChat(client, "[SM] Entity limit is reached. Can't spawn anymore rockets. Change maps.");
-		return Plugin_Handled;
-	}
-	
-	new iTeam = GetClientTeam(client);
-	fireTeamProjectile(iTeam, PROJECTILE_ROCKET);
-	
+	new String:arg1[32];
+	GetCmdArg(1, arg1, 32);
+	fireTeamProjectile(StringToInt(arg1), PROJECTILE_ROCKET);
 	return Plugin_Handled;
 }
 
-public Action:Command_ForceRocketRed(client, args)
+public Action:Command_HeadRocket(client, args)
 {
-	if(GetEntityCount() >= GetMaxEntities()-32)
-	{
-		PrintToChat(client, "[SM] Entity limit is reached. Can't spawn anymore rockets. Change maps.");
-		return Plugin_Handled;
-	}
-	
-	fireTeamProjectile(TEAM_RED, PROJECTILE_ROCKET);
-	
-	return Plugin_Handled;
-}
+	new Float:vAngles[3];
+	new Float:vPosition[3];
 
-public Action:Command_ForceRocketBlue(client, args)
-{
-	if(GetEntityCount() >= GetMaxEntities()-32)
-	{
-		PrintToChat(client, "[SM] Entity limit is reached. Can't spawn anymore rockets. Change maps.");
-		return Plugin_Handled;
-	}
+	GetClientEyeAngles(client, vAngles);
+	GetClientEyePosition(client, vPosition);
 	
-	fireTeamProjectile(TEAM_BLUE, PROJECTILE_ROCKET);
+	fireProjectile(vPosition, vAngles, (1100.0*GetConVarFloat(g_hSpeedMul)), g_config_flBaseDamage, GetClientTeam(client), PROJECTILE_ROCKET, g_config_bSpawnCriticals);
 	
 	return Plugin_Handled;
 }
-*/
 
 fireTeamProjectile(iTeam, iType = PROJECTILE_ROCKET) {
 	decl Float:vPosition[3];
@@ -113,7 +148,7 @@ fireTeamProjectile(iTeam, iType = PROJECTILE_ROCKET) {
 	GetEntPropVector(launcherIndex, Prop_Data, "m_vecOrigin", vPosition);
 	GetEntPropVector(launcherIndex, Prop_Data, "m_angRotation", vAngles);
 	
-	return fireProjectile(vPosition, vAngles, (1100.0*GetConVarFloat(g_hSpeedMul)), 20.0, iTeam, iType, true)
+	return fireProjectile(vPosition, vAngles, (1100.0*GetConVarFloat(g_hSpeedMul)), g_config_flBaseDamage, iTeam, iType, g_config_bSpawnCriticals);
 }
 
 findNextTeamLaunchPosition(iTeam)
@@ -130,13 +165,13 @@ findNextTeamLaunchPosition(iTeam)
 	else if (iTeam == TEAM_BLUE)
 		launcherIndex = currentlauncherIndex_Blue;
 	
-	while ((launcherIndex = FindEntityByClassname(launcherIndex, "info_target")) != -1) {
+	while ((launcherIndex = FindEntityByClassname(launcherIndex, ROCKET_SPAWN_ENTITY)) != -1) {
 		GetEntPropString(launcherIndex, Prop_Data, "m_iName", targetName, 32);
-		if (iTeam == TEAM_RED && StrEqual(targetName, "rocket_spawn_red", false)) {
+		if (iTeam == TEAM_RED && StrEqual(targetName, RED_ROCKET_SPAWN, false)) {
 			spawnFound = true;
 			currentlauncherIndex_Red = launcherIndex;
 			break;
-		} else if (iTeam == TEAM_BLUE && StrEqual(targetName, "rocket_spawn_blue", false)) {
+		} else if (iTeam == TEAM_BLUE && StrEqual(targetName, BLUE_ROCKET_SPAWN, false)) {
 			spawnFound = true;
 			currentlauncherIndex_Blue = launcherIndex;
 			break;
@@ -151,7 +186,7 @@ findNextTeamLaunchPosition(iTeam)
 		launcherIndex = findNextTeamLaunchPosition(iTeam);
 	}
 	
-	return launcherIndex
+	return launcherIndex;
 }
 
 fireProjectile(Float:vPosition[3], Float:vAngles[3] = NULL_VECTOR, Float:flSpeed = 1100.0, Float:flDamage = 90.0, iTeam = TEAM_SPEC, iType = PROJECTILE_ROCKET, bool:bCritical = false)
