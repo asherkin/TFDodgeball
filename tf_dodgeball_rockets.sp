@@ -30,16 +30,6 @@ new Handle:g_hSpeedMul = INVALID_HANDLE;
 new Handle:g_hRocketSpawnTimer = INVALID_HANDLE;
 new Handle:g_hConVars[CONVAR_COUNT] = {INVALID_HANDLE, ...};
 
-#define ROCKET_SPAWN_ENTITY "info_target"
-#define RED_ROCKET_SPAWN "rocket_spawn_red"
-#define BLUE_ROCKET_SPAWN "rocket_spawn_blue"
-
-#define CONFIGDEF_ENABLED "1"
-#define CONFIGDEF_SPAWN_INTERVAL "1.0"
-#define CONFIGDEF_MAX_ROCKETS "100"
-#define CONFIGDEF_BASE_DAMAGE "15.0"
-#define CONFIGDEF_CRITICALS "1"
-
 new bool:g_config_bSpawnEnabled;
 new g_config_iMaxRockets;
 new Float:g_config_flBaseDamage;
@@ -52,21 +42,21 @@ public OnPluginStart()
 	RegAdminCmd("sm_dodgeball_rocket", Command_ForceRocket, ADMFLAG_SLAY);
 	RegAdminCmd("sm_dodgeball_headrocket", Command_HeadRocket, ADMFLAG_SLAY);
 	
-	g_hConVars[0] = CreateConVar("sm_dodgeball_enabled", CONFIGDEF_ENABLED, "", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_hConVars[1] = CreateConVar("sm_dodgeball_spawninterval", CONFIGDEF_SPAWN_INTERVAL, "", FCVAR_NONE, true, 0.0, false);
-	g_hConVars[2] = CreateConVar("sm_dodgeball_maxrockets", CONFIGDEF_MAX_ROCKETS, "", FCVAR_NONE, true, 0.0, false);
-	g_hConVars[3] = CreateConVar("sm_dodgeball_basedamage", CONFIGDEF_BASE_DAMAGE, "", FCVAR_NONE, true, 0.0, false);
-	g_hConVars[4] = CreateConVar("sm_dodgeball_criticals", CONFIGDEF_CRITICALS, "", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hConVars[0] = CreateConVar("sm_dodgeball_enabled", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hConVars[1] = CreateConVar("sm_dodgeball_spawninterval", "1.0", "", FCVAR_NONE, true, 0.0, false);
+	g_hConVars[2] = CreateConVar("sm_dodgeball_maxrockets", "100", "", FCVAR_NONE, true, 0.0, false);
+	g_hConVars[3] = CreateConVar("sm_dodgeball_basedamage", "15.0", "", FCVAR_NONE, true, 0.0, false);
+	g_hConVars[4] = CreateConVar("sm_dodgeball_criticals", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
 	
 	g_hSpeedMul = FindConVar("sm_sentryrocket_speedmul");
-	
-	AutoExecConfig();
 	
 	HookConVarChange(g_hConVars[0], config_bSpawnEnabled_changed);
 	HookConVarChange(g_hConVars[1], config_flSpawnInterval_changed);
 	HookConVarChange(g_hConVars[2], config_iMaxRockets_changed);
 	HookConVarChange(g_hConVars[3], config_flBaseDamage_changed);
 	HookConVarChange(g_hConVars[4], config_bSpawnCriticals_changed);
+	
+	AutoExecConfig();
 }
 
 public OnConfigsExecuted()
@@ -74,13 +64,14 @@ public OnConfigsExecuted()
 	g_hRocketSpawnTimer = CreateTimer(GetConVarFloat(g_hConVars[1]), SpawnRockets, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public config_bSpawnEnabled_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bSpawnEnabled = bool:StringToInt(newValue); }
-public config_iMaxRockets_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_iMaxRockets = StringToInt(newValue); }
-public config_flBaseDamage_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flBaseDamage = StringToFloat(newValue); }
-public config_bSpawnCriticals_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bSpawnCriticals = bool:StringToInt(newValue); }
+public config_bSpawnEnabled_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bSpawnEnabled = bool:StringToInt(newValue); new String:conname[32]; GetConVarName(convar, conname, 32); PrintToChatAll("ConVar %s changed from %s to %s.", conname, oldValue, newValue); }
+public config_iMaxRockets_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_iMaxRockets = StringToInt(newValue); new String:conname[32]; GetConVarName(convar, conname, 32); PrintToChatAll("ConVar %s changed from %s to %s.", conname, oldValue, newValue); }
+public config_flBaseDamage_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flBaseDamage = StringToFloat(newValue); new String:conname[32]; GetConVarName(convar, conname, 32); PrintToChatAll("ConVar %s changed from %s to %s.", conname, oldValue, newValue); }
+public config_bSpawnCriticals_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bSpawnCriticals = bool:StringToInt(newValue); new String:conname[32]; GetConVarName(convar, conname, 32); PrintToChatAll("ConVar %s changed from %s to %s.", conname, oldValue, newValue); }
 
 public config_flSpawnInterval_changed(Handle:convar, const String:oldValue[], const String:newValue[])
 {
+	new String:conname[32]; GetConVarName(convar, conname, 32); PrintToChatAll("ConVar %s changed from %s to %s.", conname, oldValue, newValue);
 	if (g_hRocketSpawnTimer != INVALID_HANDLE)
 	{
 		CloseHandle(g_hRocketSpawnTimer);
@@ -163,13 +154,13 @@ findNextTeamLaunchPosition(iTeam)
 	else if (iTeam == TEAM_BLUE)
 		launcherIndex = currentlauncherIndex_Blue;
 	
-	while ((launcherIndex = FindEntityByClassname(launcherIndex, ROCKET_SPAWN_ENTITY)) != -1) {
+	while ((launcherIndex = FindEntityByClassname(launcherIndex, "info_target")) != -1) {
 		GetEntPropString(launcherIndex, Prop_Data, "m_iName", targetName, 32);
-		if (iTeam == TEAM_RED && StrEqual(targetName, RED_ROCKET_SPAWN, false)) {
+		if (iTeam == TEAM_RED && StrEqual(targetName, "rocket_spawn_red", false)) {
 			spawnFound = true;
 			currentlauncherIndex_Red = launcherIndex;
 			break;
-		} else if (iTeam == TEAM_BLUE && StrEqual(targetName, BLUE_ROCKET_SPAWN, false)) {
+		} else if (iTeam == TEAM_BLUE && StrEqual(targetName, "rocket_spawn_blue", false)) {
 			spawnFound = true;
 			currentlauncherIndex_Blue = launcherIndex;
 			break;
