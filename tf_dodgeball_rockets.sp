@@ -12,6 +12,7 @@
 #define PROJECTILE_ROCKET_SENTRY 2
 
 #define CONVAR_COUNT 5
+#define MAX_FAILED_LAUNCHER_SEARCHES 2
 
 #define PLUGIN_NAME		"[TF2] Dogdeball (Rocket Management)"
 #define PLUGIN_AUTHOR		"Asherkin"
@@ -44,9 +45,14 @@ public OnPluginStart()
 	
 	g_hConVars[0] = CreateConVar("sm_dodgeball_enabled", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_hConVars[1] = CreateConVar("sm_dodgeball_spawninterval", "1.0", "", FCVAR_NONE, true, 0.0, false);
-	g_hConVars[2] = CreateConVar("sm_dodgeball_maxrockets", "100", "", FCVAR_NONE, true, 0.0, false);
+	g_hConVars[2] = CreateConVar("sm_dodgeball_maxrockets", "10", "", FCVAR_NONE, true, 0.0, false);
 	g_hConVars[3] = CreateConVar("sm_dodgeball_basedamage", "15.0", "", FCVAR_NONE, true, 0.0, false);
 	g_hConVars[4] = CreateConVar("sm_dodgeball_criticals", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
+	
+	g_config_bSpawnEnabled = true;
+	g_config_iMaxRockets = 10;
+	g_config_flBaseDamage = 15.0;
+	g_config_bSpawnCriticals = true;
 	
 	g_hSpeedMul = FindConVar("sm_sentryrocket_speedmul");
 	
@@ -64,14 +70,13 @@ public OnConfigsExecuted()
 	g_hRocketSpawnTimer = CreateTimer(GetConVarFloat(g_hConVars[1]), SpawnRockets, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 }
 
-public config_bSpawnEnabled_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bSpawnEnabled = bool:StringToInt(newValue); new String:conname[32]; GetConVarName(convar, conname, 32); PrintToChatAll("ConVar %s changed from %s to %s.", conname, oldValue, newValue); }
-public config_iMaxRockets_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_iMaxRockets = StringToInt(newValue); new String:conname[32]; GetConVarName(convar, conname, 32); PrintToChatAll("ConVar %s changed from %s to %s.", conname, oldValue, newValue); }
-public config_flBaseDamage_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flBaseDamage = StringToFloat(newValue); new String:conname[32]; GetConVarName(convar, conname, 32); PrintToChatAll("ConVar %s changed from %s to %s.", conname, oldValue, newValue); }
-public config_bSpawnCriticals_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bSpawnCriticals = bool:StringToInt(newValue); new String:conname[32]; GetConVarName(convar, conname, 32); PrintToChatAll("ConVar %s changed from %s to %s.", conname, oldValue, newValue); }
+public config_bSpawnEnabled_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bSpawnEnabled = bool:StringToInt(newValue); }
+public config_iMaxRockets_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_iMaxRockets = StringToInt(newValue); }
+public config_flBaseDamage_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flBaseDamage = StringToFloat(newValue); }
+public config_bSpawnCriticals_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bSpawnCriticals = bool:StringToInt(newValue); }
 
 public config_flSpawnInterval_changed(Handle:convar, const String:oldValue[], const String:newValue[])
 {
-	new String:conname[32]; GetConVarName(convar, conname, 32); PrintToChatAll("ConVar %s changed from %s to %s.", conname, oldValue, newValue);
 	if (g_hRocketSpawnTimer != INVALID_HANDLE)
 	{
 		CloseHandle(g_hRocketSpawnTimer);
@@ -81,7 +86,7 @@ public config_flSpawnInterval_changed(Handle:convar, const String:oldValue[], co
 
 public Action:SpawnRockets(Handle:timer)
 {
-	if (!g_config_bSpawnEnabled || (g_iRocketCount >= g_config_iMaxRockets))
+	if (!g_config_bSpawnEnabled || (g_config_iMaxRockets && (g_iRocketCount >= g_config_iMaxRockets)))
 		return Plugin_Continue;
 	
 	static iRocketLastTeam = TEAM_RED;
@@ -145,6 +150,8 @@ findNextTeamLaunchPosition(iTeam)
 	static currentlauncherIndex_Red = -1;
 	static currentlauncherIndex_Blue = -1;
 	
+	static iFailedAttemptsToFindLauncher = 0;
+	
 	new launcherIndex = -1;
 	new String:targetName[32] = "";
 	new bool:spawnFound = false;	
@@ -167,14 +174,21 @@ findNextTeamLaunchPosition(iTeam)
 		}
 	}
 	
+	if (iFailedAttemptsToFindLauncher >= MAX_FAILED_LAUNCHER_SEARCHES)
+	{
+		SetFailState("No launchers found in map for team %d.", iTeam);
+	}
+	
 	if (!spawnFound) {
 		if (iTeam == TEAM_RED)
 			currentlauncherIndex_Red = -1;
 		else if (iTeam == TEAM_BLUE)
 			currentlauncherIndex_Blue = -1;
+		iFailedAttemptsToFindLauncher += 1;
 		launcherIndex = findNextTeamLaunchPosition(iTeam);
 	}
 	
+	iFailedAttemptsToFindLauncher = 0;
 	return launcherIndex;
 }
 
