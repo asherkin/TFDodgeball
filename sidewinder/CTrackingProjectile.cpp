@@ -5,11 +5,14 @@
 
 SH_DECL_MANUALEXTERN3(FVisible, bool, CBaseEntity *, int, CBaseEntity **);
 
-ConVar RocketSpeedMul("sm_sentryrocket_speedmul", "0.5", FCVAR_NONE);
+LINK_ENTITY_TO_CLASS(tf_projectile_rocket, CTrackingProjectile);
+LINK_ENTITY_TO_CLASS(tf_projectile_sentryrocket, CTrackingProjectile);
+
+ConVar RocketSpeedMul("sm_dodgeball_speedmul", "0.5", FCVAR_NONE);
+ConVar ReflectSpeedInk("sm_dodgeball_reflectinc", "0.02", FCVAR_NONE);
 
 void CTrackingProjectile::Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool addHooks)
 {
-	//m_bCritical = false;
 	m_bHasThought = false;
 
 	BaseClass::Init(pEdict, pBaseEntity, addHooks);
@@ -25,8 +28,6 @@ void CTrackingProjectile::Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool a
 void CTrackingProjectile::Spawn(void)
 {
  	BaseClass::Spawn();
-
-	//SetDamage(9000);
 
 	SetThink(&CTrackingProjectile::FindThink);
 	SetNextThink(gpGlobals->curtime); 
@@ -153,6 +154,7 @@ void CTrackingProjectile::TurnToTarget(CEntity *pEntity)
 
 	Vector rocketVec = GetAbsVelocity();
 	vec_t speed = 1100.0 * RocketSpeedMul.GetFloat();
+	speed *= (ReflectSpeedInk.GetFloat() * m_iDeflected) + 1.0;
 
 	Vector locationToTarget = targetLocation;
 	locationToTarget.z += 50;
