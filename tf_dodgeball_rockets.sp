@@ -11,7 +11,7 @@
 #define PROJECTILE_ROCKET 1
 #define PROJECTILE_ROCKET_SENTRY 2
 
-#define CONVAR_COUNT 5
+#define CONVAR_COUNT 6
 #define MAX_FAILED_LAUNCHER_SEARCHES 2
 
 #define PLUGIN_NAME		"[TF2] Dogdeball (Rocket Management)"
@@ -27,7 +27,6 @@ public Plugin:myinfo = {
 	url				= PLUGIN_CONTACT
 };
 
-new Handle:g_hSpeedMul = INVALID_HANDLE;
 new Handle:g_hRocketSpawnTimer = INVALID_HANDLE;
 new Handle:g_hConVars[CONVAR_COUNT] = {INVALID_HANDLE, ...};
 
@@ -35,6 +34,7 @@ new bool:g_config_bSpawnEnabled;
 new g_config_iMaxRockets;
 new Float:g_config_flBaseDamage;
 new bool:g_config_bSpawnCriticals;
+new Float:g_config_flSpeedMul;
 
 new g_iRocketCount;
 
@@ -48,19 +48,20 @@ public OnPluginStart()
 	g_hConVars[2] = CreateConVar("sm_dodgeball_maxrockets", "10", "", FCVAR_NONE, true, 0.0, false);
 	g_hConVars[3] = CreateConVar("sm_dodgeball_basedamage", "15.0", "", FCVAR_NONE, true, 0.0, false);
 	g_hConVars[4] = CreateConVar("sm_dodgeball_criticals", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hConVars[5] = FindConVar("sm_dodgeball_speedmul");
 	
 	g_config_bSpawnEnabled = true;
 	g_config_iMaxRockets = 10;
 	g_config_flBaseDamage = 15.0;
 	g_config_bSpawnCriticals = true;
-	
-	g_hSpeedMul = FindConVar("sm_sentryrocket_speedmul");
+	g_config_flSpeedMul = 0.5;
 	
 	HookConVarChange(g_hConVars[0], config_bSpawnEnabled_changed);
 	HookConVarChange(g_hConVars[1], config_flSpawnInterval_changed);
 	HookConVarChange(g_hConVars[2], config_iMaxRockets_changed);
 	HookConVarChange(g_hConVars[3], config_flBaseDamage_changed);
 	HookConVarChange(g_hConVars[4], config_bSpawnCriticals_changed);
+	HookConVarChange(g_hConVars[5], config_flSpeedMul_changed);
 	
 	AutoExecConfig();
 }
@@ -74,6 +75,7 @@ public config_bSpawnEnabled_changed(Handle:convar, const String:oldValue[], cons
 public config_iMaxRockets_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_iMaxRockets = StringToInt(newValue); }
 public config_flBaseDamage_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flBaseDamage = StringToFloat(newValue); }
 public config_bSpawnCriticals_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bSpawnCriticals = bool:StringToInt(newValue); }
+public config_flSpeedMul_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flSpeedMul = StringToFloat(newValue); }
 
 public config_flSpawnInterval_changed(Handle:convar, const String:oldValue[], const String:newValue[])
 {
@@ -128,7 +130,7 @@ public Action:Command_HeadRocket(client, args)
 	GetClientEyeAngles(client, vAngles);
 	GetClientEyePosition(client, vPosition);
 	
-	fireProjectile(vPosition, vAngles, (1100.0*GetConVarFloat(g_hSpeedMul)), g_config_flBaseDamage, GetClientTeam(client), PROJECTILE_ROCKET, g_config_bSpawnCriticals);
+	fireProjectile(vPosition, vAngles, (1100.0*g_config_flSpeedMul), g_config_flBaseDamage, GetClientTeam(client), PROJECTILE_ROCKET, g_config_bSpawnCriticals);
 	
 	return Plugin_Handled;
 }
@@ -142,7 +144,7 @@ fireTeamProjectile(iTeam, iType = PROJECTILE_ROCKET) {
 	GetEntPropVector(launcherIndex, Prop_Data, "m_vecOrigin", vPosition);
 	GetEntPropVector(launcherIndex, Prop_Data, "m_angRotation", vAngles);
 	
-	return fireProjectile(vPosition, vAngles, (1100.0*GetConVarFloat(g_hSpeedMul)), g_config_flBaseDamage, iTeam, iType, g_config_bSpawnCriticals);
+	return fireProjectile(vPosition, vAngles, (1100.0*g_config_flSpeedMul), g_config_flBaseDamage, iTeam, iType, g_config_bSpawnCriticals);
 }
 
 findNextTeamLaunchPosition(iTeam)

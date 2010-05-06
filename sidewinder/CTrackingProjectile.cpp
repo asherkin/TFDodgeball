@@ -1,5 +1,5 @@
 #include "extension.h"
-#include "CSentryRocket.h"
+#include "CTrackingProjectile.h"
 #include "CPlayer.h"
 #include "worldsize.h"
 
@@ -154,7 +154,7 @@ void CTrackingProjectile::TurnToTarget(CEntity *pEntity)
 
 	Vector rocketVec = GetAbsVelocity();
 	vec_t speed = 1100.0 * RocketSpeedMul.GetFloat();
-	speed *= (ReflectSpeedInk.GetFloat() * m_iDeflected) + 1.0;
+	speed *= (ReflectSpeedInk.GetFloat() * *m_iDeflected) + 1.0;
 
 	Vector locationToTarget = targetLocation;
 	locationToTarget.z += 50;
