@@ -20,23 +20,28 @@ public Plugin:myinfo = {
 	url				= PLUGIN_CONTACT
 };
 
-public OnPluginStart() {
-	CreateConVar("dodgeball_version", PLUGIN_VERSION, PLUGIN_NAME, FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
+#define CONVAR_COUNT 2
+new Handle:g_hConVars[CONVAR_COUNT] = {INVALID_HANDLE, ...};
 
+new g_config_iWeaponParticle;
+
+public OnPluginStart() {
+	g_hConVars[0] = CreateConVar("dodgeball_version", PLUGIN_VERSION, PLUGIN_NAME, FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
+	g_hConVars[1] = CreateConVar("sm_dodgeball_weaponparticle", "0", "", FCVAR_NONE, true, 0.0, true, 5.0);
+	
+	g_config_iWeaponParticle = 0;
+	
+	HookConVarChange(g_hConVars[1], config_iWeaponParticle_changed);
+	
 	LoadTranslations("common.phrases");
 	HookEvent("post_inventory_application", Event_PostInventoryApplication);
 	HookEvent("player_spawn", Event_PlayerSpawn);
-	HookEvent("player_changeclass", Event_PlayerChangeClass, EventHookMode_Pre);
 }
+
+public config_iWeaponParticle_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_iWeaponParticle = StringToInt(newValue); }
 
 public OnClientPutInServer(client) {
 	FakeClientCommandEx(client, "jointeam 0");
-}
-
-public Action:Event_PlayerChangeClass(Handle:event, const String:name[], bool:dontBroadcast)
-{
-	SetEventInt(event, "class", 3);
-	return Plugin_Changed;
 }
 
 public Event_PostInventoryApplication(Handle:event, const String:name[], bool:dontBroadcast) {
@@ -68,7 +73,7 @@ public Action:TF2Items_OnGiveNamedItem(client, String:strClassName[], iItemDefin
 	
 	new Handle:hWeapon = TF2Items_CreateItem(OVERRIDE_ATTRIBUTES);
 
-	TF2Items_SetNumAttributes(hWeapon, 7);
+	TF2Items_SetNumAttributes(hWeapon, (g_config_iWeaponParticle > 0)?8:7);
 	
 	TF2Items_SetAttribute(hWeapon, 0, 112, 0.25);
 	TF2Items_SetAttribute(hWeapon, 1, 76, 4.0);
@@ -77,7 +82,9 @@ public Action:TF2Items_OnGiveNamedItem(client, String:strClassName[], iItemDefin
 	TF2Items_SetAttribute(hWeapon, 4, 66, 0.0);
 	TF2Items_SetAttribute(hWeapon, 5, 72, 0.0);
 	TF2Items_SetAttribute(hWeapon, 6, 74, 0.0);
-	//TF2Items_SetAttribute(hWeapon, 7, 134, 3.0);
+	
+	if (g_config_iWeaponParticle > 0)
+		TF2Items_SetAttribute(hWeapon, 7, 134, float(g_config_iWeaponParticle));
 	
 	hItemOverride = hWeapon;
 	return Plugin_Changed;

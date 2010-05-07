@@ -1,6 +1,7 @@
 #pragma semicolon 1
 
 #include <sourcemod>
+#define REQUIRE_EXTENSIONS
 #include <sdktools>
 #include <sdkhooks>
 
@@ -64,10 +65,24 @@ public OnPluginStart()
 	HookConVarChange(g_hConVars[5], config_flSpeedMul_changed);
 	
 	AutoExecConfig();
+	
+	HookEvent("teamplay_round_start", Event_TeamplayRoundStart);
+	HookEvent("teamplay_setup_finished", Event_TeamplaySetupFinished);
 }
 
-public OnConfigsExecuted()
-{
+public Event_TeamplayRoundStart(Handle:event, const String:name[], bool:dontBroadcast) {
+	new bool:full = GetEventBool(event, "full_reset");
+	if (!full)
+		return;
+	
+	if (g_hRocketSpawnTimer != INVALID_HANDLE)
+	{
+		CloseHandle(g_hRocketSpawnTimer);
+		g_hRocketSpawnTimer = INVALID_HANDLE;
+	}
+}
+
+public Event_TeamplaySetupFinished(Handle:event, const String:name[], bool:dontBroadcast) {
 	g_hRocketSpawnTimer = CreateTimer(GetConVarFloat(g_hConVars[1]), SpawnRockets, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
 }
 
@@ -234,7 +249,7 @@ fireProjectile(Float:vPosition[3], Float:vAngles[3] = NULL_VECTOR, Float:flSpeed
 	
 	SetEntData(iRocket, FindSendPropOffs(strClassname, "m_nSkin"), (iTeam-2), 1, true);
 	SetEntData(iRocket, FindSendPropOffs(strClassname, "m_bCritical"), bCritical, true);
-	SetEntDataFloat(iRocket, FindSendPropOffs(strClassname, "m_iDeflected") + 4, flDamage, true);
+	SetEntDataFloat(iRocket, FindSendPropOffs(strClassname, "m_iDeflected") + 4, flDamage, true); // Credit to voogru
 	
 	SetVariantInt(iTeam);
 	AcceptEntityInput(iRocket, "TeamNum", -1, -1, 0);
