@@ -1,0 +1,162 @@
+// Custom admin menu commands.
+// For more information:
+//
+// http://wiki.alliedmods.net/Custom_Admin_Menu_%28SourceMod%29
+//
+// Note: This file must be in Valve KeyValues format (no multiline comments)
+//
+
+"Commands"
+{
+	"TF Dodgeball"
+	{
+		"Spawn On/Off"
+		{
+			"cmd"			"sm_dodgeball_enabled @1"
+			"admin"			"tf_dodgeball_admin"
+			"execute"		"server"
+			"1"
+			{
+				"type" 		"onoff"
+				"title"		"Spawn Rockets?"
+			}
+		}
+		"Criticals On/Off"
+		{
+			"cmd"			"sm_dodgeball_criticals @1"
+			"admin"			"tf_dodgeball_admin"
+			"execute"		"server"
+			"1"
+			{
+				"type" 		"onoff"
+				"title"		"Critical Rockets?"
+			}
+		}
+		"Spawn Interval"
+		{
+			"cmd"			"sm_dodgeball_spawninterval @1"
+			"admin"			"tf_dodgeball_admin"
+			"execute"		"server"
+			"1"
+			{
+				"type" 		"list"
+				"title"		"Spawn Interval"
+				"1"		"0.25"
+				"1."		"0.25 seconds"
+				"2"		"0.75"
+				"2."		"0.75 seconds"
+				"3"		"1.00"
+				"3."		"1.00 seconds"
+				"4"		"1.50"
+				"4."		"1.50 seconds"
+				"5"		"2.00"
+				"5."		"2.00 seconds"
+			}
+		}
+		"Speed Multiplier"
+		{
+			"cmd"			"sm_dodgeball_speedmul @1"
+			"admin"			"tf_dodgeball_admin"
+			"execute"		"server"
+			"1"
+			{
+				"type" 		"list"
+				"title"		"Speed Multiplier"
+				"1"		"0.20"
+				"1."		"20%"
+				"2"		"0.30"
+				"2."		"30%"
+				"3"		"0.40"
+				"3."		"40%"
+				"4"		"0.50"
+				"4."		"50%"
+				"5"		"1.00"
+				"5."		"100%"
+			}
+		}
+		"Speed Increase"
+		{
+			"cmd"			"sm_dodgeball_reflectinc @1"
+			"admin"			"tf_dodgeball_admin"
+			"execute"		"server"
+			"1"
+			{
+				"type" 		"list"
+				"title"		"Speed Increase"
+				"1"		"0.10"
+				"1."		"10%"
+				"2"		"0.20"
+				"2."		"20%"
+				"3"		"0.30"
+				"3."		"30%"
+				"4"		"0.40"
+				"4."		"40%"
+				"5"		"0.50"
+				"5."		"50%"
+			}
+		}
+		"Base Damage"
+		{
+			"cmd"			"sm_dodgeball_basedamage @1"
+			"admin"			"tf_dodgeball_admin"
+			"execute"		"server"
+			"1"
+			{
+				"type" 		"list"
+				"title"		"Base Damage"
+				"1"		"5.0"
+				"1."		"5"
+				"2"		"10.0"
+				"2."		"10"
+				"3"		"15.0"
+				"3."		"15"
+				"4"		"20.0"
+				"4."		"20"
+				"5"		"25.0"
+				"5."		"25"
+			}
+		}
+		"Max Rockets"
+		{
+			"cmd"			"sm_dodgeball_maxrockets @1"
+			"admin"			"tf_dodgeball_admin"
+			"execute"		"server"
+			"1"
+			{
+				"type" 		"list"
+				"title"		"Max Rockets"
+				"1"		"1"
+				"1."		"1"
+				"2"		"2"
+				"2."		"2"
+				"3"		"5"
+				"3."		"5"
+				"4"		"10"
+				"4."		"10"
+				"5"		"20"
+				"5."		"20"
+			}
+		}
+		"Weapon Particle"
+		{
+			"cmd"			"sm_dodgeball_weaponparticle @1"
+			"admin"			"tf_dodgeball_admin"
+			"execute"		"server"
+			"1"
+			{
+				"type" 		"list"
+				"title"		"Weapon Particle"
+				"1"		"0"
+				"1."		"0 - Off"
+				"2"		"1"
+				"2."		"1"
+				"3"		"2"
+				"3."		"2 - Fire"
+				"4"		"3"
+				"4."		"3 - Explosion"
+				"5"		"4"
+				"5."		"4 - Sparkles"
+			}
+		}
+	}
+}
