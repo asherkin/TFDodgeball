@@ -153,8 +153,6 @@ void CTrackingProjectile::TurnToTarget(CEntity *pEntity)
 	Vector rocketLocation = GetLocalOrigin();
 
 	Vector rocketVec = GetAbsVelocity();
-	vec_t speed = 1100.0 * RocketSpeedMul.GetFloat();
-	speed *= (ReflectSpeedInk.GetFloat() * *m_iDeflected) + 1.0;
 
 	Vector locationToTarget = targetLocation;
 	locationToTarget.z += 50;
@@ -164,6 +162,8 @@ void CTrackingProjectile::TurnToTarget(CEntity *pEntity)
 	QAngle angles;
 	VectorAngles(newVec, angles);
 
+	vec_t speed = 1100.0 * RocketSpeedMul.GetFloat();
+	speed *= (ReflectSpeedInk.GetFloat() * *m_iDeflected) + 1.0;
 	newVec *= speed;
 
 	Teleport(NULL, &angles, &newVec);
