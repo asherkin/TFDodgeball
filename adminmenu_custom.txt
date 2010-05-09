@@ -10,6 +10,27 @@
 {
 	"TF Dodgeball"
 	{
+		"Fire Rocket"
+		{
+			"cmd"			"sm_dodgeball_rocket @1"
+			"admin"			"tf_dodgeball_admin"
+			"execute"		"server"
+			"1"
+			{
+				"type" 		"list"
+				"title"		"Team?"
+				"1"		"2"
+				"1."		"RED"
+				"2"		"3"
+				"2."		"BLU"
+			}
+		}
+		"Fire Rocket From Head"
+		{
+			"cmd"			"sm_dodgeball_headrocket"
+			"admin"			"tf_dodgeball_admin"
+			"execute"		"server"
+		}
 		"Spawn On/Off"
 		{
 			"cmd"			"sm_dodgeball_enabled @1"
@@ -147,15 +168,15 @@
 				"type" 		"list"
 				"title"		"Weapon Particle"
 				"1"		"0"
-				"1."		"0 - Off"
+				"1."		"Off"
 				"2"		"1"
 				"2."		"1"
 				"3"		"2"
-				"3."		"2 - Fire"
+				"3."		"Fire"
 				"4"		"3"
-				"4."		"3 - Explosion"
+				"4."		"Explosion"
 				"5"		"4"
-				"5."		"4 - Sparkles"
+				"5."		"Sparkles"
 			}
 		}
 	}
