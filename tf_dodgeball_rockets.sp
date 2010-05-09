@@ -116,17 +116,30 @@ public Action:SpawnRockets(Handle:timer)
 		rocketEnt = fireTeamProjectile(TEAM_BLUE, PROJECTILE_ROCKET);
 		iRocketLastTeam = TEAM_BLUE;
 	}
-	SDKHook(rocketEnt, SDKHook_StartTouch, OnRocketDestroyed);
+	//SDKHook(rocketEnt, SDKHook_StartTouch, OnRocketDestroyed);
 	g_iRocketCount++;
 	return Plugin_Continue;
 }
 
-public OnRocketDestroyed(entity, other)
+/*public OnRocketDestroyed(entity, other)
 {
 	g_iRocketCount--;
 	
 	if (g_iRocketCount < 0)
 		g_iRocketCount = 0;
+}*/
+
+public OnEntityDestroyed(entity)
+{
+	new String:netClassName[32];
+	GetEntityNetClass(entity, netClassName, 32);
+	if (StrEqual(netClassName, "CTFProjectile_Rocket", false) || StrEqual(netClassName, "CTFProjectile_SentryRocket", false))
+	{
+		g_iRocketCount--;
+	
+		if (g_iRocketCount < 0)
+			g_iRocketCount = 0;
+	}
 }
 
 public Action:Command_ForceRocket(client, args)
