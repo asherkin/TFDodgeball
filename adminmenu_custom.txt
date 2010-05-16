@@ -14,7 +14,7 @@
 		{
 			"cmd"			"sm_dodgeball_rocket @1"
 			"admin"			"tf_dodgeball_admin"
-			"execute"		"server"
+			"execute"		"player"
 			"1"
 			{
 				"type" 		"list"
@@ -29,7 +29,7 @@
 		{
 			"cmd"			"sm_dodgeball_headrocket"
 			"admin"			"tf_dodgeball_admin"
-			"execute"		"server"
+			"execute"		"player"
 		}
 		"Spawn On/Off"
 		{
