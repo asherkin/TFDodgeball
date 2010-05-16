@@ -1,4 +1,4 @@
-#pragma semicolon 1 // Force strict semicolon mode.
+#pragma semicolon 1
 
 #include <sourcemod>
 #define REQUIRE_EXTENSIONS
@@ -7,7 +7,7 @@
 #include <tf2>
 #include <tf2_stocks>
 
-#define PLUGIN_NAME		"[TF2] Dogdeball (Weapon / Player Management)"
+#define PLUGIN_NAME		"TFDodgeball (Weapon / Player Management)"
 #define PLUGIN_AUTHOR		"Asherkin"
 #define PLUGIN_VERSION		"1.0.0"
 #define PLUGIN_CONTACT		"http://limetech.org/"
