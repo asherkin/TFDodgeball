@@ -15,7 +15,7 @@
 #define CONVAR_COUNT 6
 #define MAX_FAILED_LAUNCHER_SEARCHES 2
 
-#define PLUGIN_NAME		"TFDogdeball (Rocket Management)"
+#define PLUGIN_NAME		"[TF2] Dogdeball (Rocket Management)"
 #define PLUGIN_AUTHOR		"Asherkin"
 #define PLUGIN_VERSION		"1.0.0"
 #define PLUGIN_CONTACT		"http://limetech.org/"
