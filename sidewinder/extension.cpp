@@ -55,6 +55,10 @@ ICvar *icvar = NULL;
 IGameConfig *g_pGameConf = NULL;
 
 IServerGameEnts *gameents;
+INetworkStringTableContainer *netstringtables;
+IEngineSound *engsound;
+IEngineTrace *enginetrace;
+IServerGameClients *gameclients;
 
 CGlobalVars *gpGlobals;
 
@@ -80,7 +84,8 @@ bool Sidewinder::SDK_OnLoad(char *error, size_t maxlength, bool late)
 		return false;
 	}
 
-	GetEntityManager()->Init(g_pGameConf);
+	if (!GetEntityManager()->Init(g_pGameConf))
+		g_pSM->LogError(myself, "CEntity failed to init.");
 
 	g_EntList = gamehelpers->GetGlobalEntityList();
 
@@ -90,10 +95,13 @@ bool Sidewinder::SDK_OnLoad(char *error, size_t maxlength, bool late)
 bool Sidewinder::SDK_OnMetamodLoad(ISmmAPI *ismm, char *error, size_t maxlen, bool late)
 {
 	GET_V_IFACE_CURRENT(GetServerFactory, gameents, IServerGameEnts, INTERFACEVERSION_SERVERGAMEENTS);
-	gpGlobals = ismm->GetCGlobals();
-
 	GET_V_IFACE_CURRENT(GetEngineFactory, icvar, ICvar, CVAR_INTERFACE_VERSION);
+	GET_V_IFACE_CURRENT(GetEngineFactory, netstringtables, INetworkStringTableContainer, INTERFACENAME_NETWORKSTRINGTABLESERVER);
+	GET_V_IFACE_CURRENT(GetEngineFactory, engsound, IEngineSound, IENGINESOUND_SERVER_INTERFACE_VERSION);
+	GET_V_IFACE_CURRENT(GetEngineFactory, enginetrace, IEngineTrace, INTERFACEVERSION_ENGINETRACE_SERVER);
+	GET_V_IFACE_CURRENT(GetServerFactory, gameclients, IServerGameClients, INTERFACEVERSION_SERVERGAMECLIENTS);
 
+	gpGlobals = ismm->GetCGlobals();
 	g_pCVar = icvar;
 	
 	ConVar_Register(0, this);

@@ -39,6 +39,10 @@
 
 #include "smsdk_ext.h"
 
+#include "networkstringtabledefs.h"
+#include "IEngineSound.h"
+#include "IEngineTrace.h"
+
 /**
  * @brief Sample implementation of the SDK Extension.
  * Note: Uncomment one of the pre-defined virtual functions in order to use it.
@@ -126,10 +130,14 @@ public: //IConCommandBaseAccessor
 	//void ClientDisconnect(edict_t *pEntity);
 };
 
-//edict_t *UTIL_PlayerByIndex(int client);
-//extern edict_t *(*UTIL_PlayerByIndex_Actual)(int);
 extern CGlobalVars *gpGlobals;
+
 extern IServerGameEnts *gameents;
+extern INetworkStringTableContainer *netstringtables;
+extern IEngineSound *engsound;
+extern IEngineTrace *enginetrace;
+extern IServerGameClients *gameclients;
+
 extern int gMaxClients;
 
 extern ConVar RocketSpeedMul;
