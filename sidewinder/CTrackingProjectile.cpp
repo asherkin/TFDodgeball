@@ -5,24 +5,26 @@
 
 SH_DECL_MANUALEXTERN3(FVisible, bool, CBaseEntity *, int, CBaseEntity **);
 
-LINK_ENTITY_TO_CLASS(tf_projectile_rocket, CTrackingProjectile);
-LINK_ENTITY_TO_CLASS(tf_projectile_sentryrocket, CTrackingProjectile);
+LINK_ENTITY_TO_CLASS(CTFProjectile_Rocket, CTrackingProjectile);
+LINK_ENTITY_TO_CLASS(CTFProjectile_SentryRocket, CTrackingProjectile);
 
 ConVar RocketSpeedMul("sm_dodgeball_speedmul", "0.5", FCVAR_NONE);
 ConVar ReflectSpeedInk("sm_dodgeball_reflectinc", "0.02", FCVAR_NONE);
 
-void CTrackingProjectile::Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool addHooks)
+DEFINE_PROP(m_bCritical, CTrackingProjectile);
+DEFINE_PROP(m_iDeflected, CTrackingProjectile);
+
+DECLARE_HOOK(FVisible, CTrackingProjectile);
+
+DECLARE_DEFAULTHANDLER(CTrackingProjectile, FVisible, bool, (CBaseEntity *pEntity, int traceMask, CBaseEntity **ppBlocker), (pEntity, traceMask, ppBlocker));
+
+void CTrackingProjectile::Init(edict_t *pEdict, CBaseEntity *pBaseEntity)
 {
 	m_bHasThought = false;
 
-	BaseClass::Init(pEdict, pBaseEntity, addHooks);
+	BaseClass::Init(pEdict, pBaseEntity);
 
-	ADD_DEFAULTHANDLER_HOOK(CTrackingProjectile, FVisible);
-
-	sm_sendprop_info_t info;
-	GET_SENDPROP_POINTER(bool, m_pEdict, BaseEntity(), &info, m_bCritical);
-	GET_SENDPROP_POINTER(int, m_pEdict, BaseEntity(), &info, m_iDeflected);
-	m_flDamage = (float *)((char *)BaseEntity() + (info.actual_offset+sizeof(int)));
+	//m_flDamage = (float *)((char *)BaseEntity() + (info.actual_offset+sizeof(int)));
 }
 
 void CTrackingProjectile::Spawn(void)
@@ -30,7 +32,7 @@ void CTrackingProjectile::Spawn(void)
  	BaseClass::Spawn();
 
 	SetThink(&CTrackingProjectile::FindThink);
-	SetNextThink(gpGlobals->curtime); 
+	SetNextThink(gpGlobals->curtime);
 }
 
 void CTrackingProjectile::FindThink(void)
@@ -179,16 +181,3 @@ void CTrackingProjectile::SetCritical(bool bCritical)
 	if (m_bCritical)
 		*m_bCritical = bCritical;
 }
-
-float CTrackingProjectile::GetDamage(void)
-{
-	return *m_flDamage;
-}
-
-void CTrackingProjectile::SetDamage(float flDamage)
-{
-	if (m_flDamage)
-		*m_flDamage = flDamage;
-}
-
-DECLARE_DEFAULTHANDLER(CTrackingProjectile, FVisible, bool, (CBaseEntity *pEntity, int traceMask, CBaseEntity **ppBlocker), (pEntity, traceMask, ppBlocker));

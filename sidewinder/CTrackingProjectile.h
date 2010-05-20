@@ -9,7 +9,7 @@ class CTrackingProjectile : public CEntity
 public:
 	DECLARE_CLASS(CTrackingProjectile, CEntity);
 
-	virtual void Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool addHooks);
+	virtual void Init(edict_t *pEdict, CBaseEntity *pBaseEntity);
 	virtual void Spawn(void);
 
 public:
@@ -20,9 +20,6 @@ public:
 
 	bool IsCritical(void);
 	void SetCritical(bool bCritical);
-
-	float GetDamage(void);
-	void SetDamage(float flDamage);
 
 public: // CBasePlayer virtuals
 	virtual	bool FVisible(CBaseEntity *pEntity, int traceMask = MASK_BLOCKLOS, CBaseEntity **ppBlocker = NULL);
@@ -35,10 +32,11 @@ private:
 	float m_lastSearch;
 
 protected:
-	int   *m_iDeflected;
-	bool  *m_bCritical;
-	float *m_flDamage;
 	bool   m_bHasThought;
+
+protected: //Sendprops
+	DECLARE_SENDPROP(int, m_iDeflected);
+	DECLARE_SENDPROP(bool, m_bCritical);
 };
 
 #endif // _INCLUDE_CTRACKINGPROJECTILE_H_
