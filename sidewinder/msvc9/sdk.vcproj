@@ -124,12 +124,12 @@
 			<Tool
 				Name="VCCLCompilerTool"
 				FavorSizeOrSpeed="1"
-				AdditionalIncludeDirectories="..;..\sdk;..\CEntity;&quot;$(SOURCEMOD13)\public&quot;;&quot;$(SOURCEMOD13)\public\sourcepawn&quot;;&quot;$(HL2SDKOBVALVE)\public\mathlib&quot;;&quot;$(HL2SDKOBVALVE)\public&quot;;&quot;$(HL2SDKOBVALVE)\public\engine&quot;;&quot;$(HL2SDKOBVALVE)\public\game\server&quot;;&quot;$(HL2SDKOBVALVE)\public\tier0&quot;;&quot;$(HL2SDKOBVALVE)\public\tier1&quot;;&quot;$(MMSOURCE18)\core&quot;;&quot;$(MMSOURCE18)\core\sourcemm&quot;;&quot;$(MMSOURCE18)\core\sourcehook&quot;"
+				AdditionalIncludeDirectories="..;..\sdk;..\CEntity;&quot;$(SOURCEMOD13)\public&quot;;&quot;$(SOURCEMOD13)\public\sourcepawn&quot;;&quot;$(HL2SDKOBVALVE)\public\mathlib&quot;;&quot;$(HL2SDKOBVALVE)\public\SoundEmitterSystem&quot;;&quot;$(HL2SDKOBVALVE)\public&quot;;&quot;$(HL2SDKOBVALVE)\public\engine&quot;;&quot;$(HL2SDKOBVALVE)\public\game\server&quot;;&quot;$(HL2SDKOBVALVE)\public\tier0&quot;;&quot;$(HL2SDKOBVALVE)\public\tier1&quot;;&quot;$(HL2SDKOBVALVE)\game\shared&quot;;&quot;$(HL2SDKOBVALVE)\game\server&quot;;&quot;$(MMSOURCE18)\core&quot;;&quot;$(MMSOURCE18)\core\sourcemm&quot;;&quot;$(MMSOURCE18)\core\sourcehook&quot;"
 				PreprocessorDefinitions="WIN32;NDEBUG;_WINDOWS;_USRDLL;SDK_EXPORTS;_CRT_SECURE_NO_DEPRECATE;SOURCEMOD_BUILD;ORANGEBOX_BUILD"
 				GeneratePreprocessedFile="0"
 				RuntimeLibrary="0"
 				EnableEnhancedInstructionSet="1"
-				RuntimeTypeInfo="false"
+				RuntimeTypeInfo="true"
 				UsePrecompiledHeader="0"
 				WarningLevel="3"
 				Detect64BitPortabilityProblems="false"
@@ -237,7 +237,15 @@
 				Name="Header Files"
 				>
 				<File
+					RelativePath="..\CEntity\CAnimating.h"
+					>
+				</File>
+				<File
 					RelativePath="..\CEntity\CEntity.h"
+					>
+				</File>
+				<File
+					RelativePath="..\CEntity\CEntityBase.h"
 					>
 				</File>
 				<File
@@ -245,11 +253,47 @@
 					>
 				</File>
 				<File
+					RelativePath="..\CEntity\CHelpers.h"
+					>
+				</File>
+				<File
 					RelativePath="..\CEntity\CPlayer.h"
 					>
 				</File>
 				<File
+					RelativePath="..\CEntity\CRecipientFilter.h"
+					>
+				</File>
+				<File
+					RelativePath="..\CEntity\CScriptCreatedItem.h"
+					>
+				</File>
+				<File
+					RelativePath="..\CEntity\CTakeDamageInfo.h"
+					>
+				</File>
+				<File
+					RelativePath="..\CEntity\EntityOutput.h"
+					>
+				</File>
+				<File
 					RelativePath="..\CEntity\IEntityFactory.h"
+					>
+				</File>
+				<File
+					RelativePath="..\CEntity\macros.h"
+					>
+				</File>
+				<File
+					RelativePath="..\CEntity\rtti.h"
+					>
+				</File>
+				<File
+					RelativePath="..\CEntity\util.h"
+					>
+				</File>
+				<File
+					RelativePath="..\CEntity\vehicles.h"
 					>
 				</File>
 			</Filter>
@@ -257,7 +301,15 @@
 				Name="Source Files"
 				>
 				<File
+					RelativePath="..\CEntity\CAnimating.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\CEntity\CEntity.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\CEntity\CEntityBase.cpp"
 					>
 				</File>
 				<File
@@ -265,7 +317,31 @@
 					>
 				</File>
 				<File
+					RelativePath="..\CEntity\CHelpers.cpp"
+					>
+				</File>
+				<File
 					RelativePath="..\CEntity\CPlayer.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\CEntity\CRecipientFilter.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\CEntity\CTakeDamageInfo.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\CEntity\EntityOutput.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\CEntity\rtti.cpp"
+					>
+				</File>
+				<File
+					RelativePath="..\CEntity\util.cpp"
 					>
 				</File>
 			</Filter>
