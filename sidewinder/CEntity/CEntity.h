@@ -80,11 +80,11 @@ typedef CHandle<CBaseEntity> EHANDLE;
 #include "vphysics_interface.h"
 #include <typeinfo>
 #include <variant_t.h>
-#include "CEntity/EntityOutput.h"
+#include "EntityOutput.h"
 #include "macros.h"
 #include "shareddefs.h"
-#include "CEntity/util.h"
-#include "CEntity/vehicles.h"
+#include "util.h"
+#include "vehicles.h"
 
 extern variant_t g_Variant;
 

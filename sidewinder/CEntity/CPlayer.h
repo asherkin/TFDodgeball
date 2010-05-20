@@ -26,9 +26,9 @@
 #include "sh_list.h"
 #include "shareddefs.h"
 #include "usercmd.h"
-#include "CEntity/vehicles.h"
+#include "vehicles.h"
 #include "mathlib.h"
-#include "CEntity/CScriptCreatedItem.h"
+#include "CScriptCreatedItem.h"
 
 
 class CPlayer : public CEntity
