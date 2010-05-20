@@ -89,6 +89,76 @@
 				"windows"	"160"
 				"linux"		"161"
 			}
+			"GiveNamedItem"
+			{
+				"windows"	"385"
+				"linux"		"386"
+			}
+			"RemovePlayerItem"
+			{
+				"windows"	"259"
+				"linux"		"259"
+			}
+			"Weapon_GetSlot"
+			{
+				"windows"	"257"
+				"linux"		"258"
+			}
+			"GetClientEyeAngles"
+			{
+				"windows"	"128"
+				"linux"		"129"
+			}
+			"Weapon_Equip"
+			{
+				"windows"	"250"
+				"linux"		"251"
+			}
+			"PreThink"
+			{
+				"windows"	"320"
+				"linux"		"321"
+			}
+			"PostThink"
+			{
+				"windows"	"321"
+				"linux"		"322"
+			}
+			"WeaponSwitch"
+			{
+				"windows"	"253"
+				"linux"		"254"
+			}
+			"CanSpeakVoiceCommand"
+			{
+				"windows"	"439" // CHECK
+				"linux"		"440"
+			}
+			"IsReadyToSpawn"
+			{
+				"windows"	"418" // CHECK
+				"linux"		"419"
+			}
+			"OnTakeDamage_Alive"
+			{
+				"windows"	"261" // CHECK
+				"linux"		"262"
+			}
+			"Jump"
+			{
+				"windows"	"318" // CHECK
+				"linux"		"319"
+			}
+			"ProcessUserCmds"
+			{
+				"windows"	"402" // CHECK
+				"linux"		"403"
+			}
+			"GetSoundEmissionOrigin"
+			{
+				"windows"	"147" // CHECK
+				"linux"		"148"
+			}
 		}
 	}
 	
@@ -112,7 +182,7 @@
 			"TakeDamage"
 			{
 				"library"	"server"
-				"windows"	"\x83\xEC\x58\x57\x8B\xF9\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x0F\x84\x94\x01\x00\x00"
+				"windows"	"\x83\xEC\x5C\x57\x8B\xF9\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x0F\x84\x94\x01\x00\x00"
 				"linux"		"@_ZN11CBaseEntity10TakeDamageERK15CTakeDamageInfo"
 			}
 			"PhysIsInCallback"
