@@ -77,13 +77,13 @@ public Event_TeamplayRoundStart(Handle:event, const String:name[], bool:dontBroa
 	
 	if (g_hRocketSpawnTimer != INVALID_HANDLE)
 	{
-		CloseHandle(g_hRocketSpawnTimer);
+		CloseHandle(g_hRocketSpawnTimer); // Check Handle
 		g_hRocketSpawnTimer = INVALID_HANDLE;
 	}
 }
 
 public Event_TeamplaySetupFinished(Handle:event, const String:name[], bool:dontBroadcast) {
-	g_hRocketSpawnTimer = CreateTimer(GetConVarFloat(g_hConVars[1]), SpawnRockets, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+	g_hRocketSpawnTimer = CreateTimer(GetConVarFloat(g_hConVars[1]), SpawnRockets, _, TIMER_REPEAT);
 }
 
 public config_bSpawnEnabled_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bSpawnEnabled = bool:StringToInt(newValue); }
@@ -96,8 +96,8 @@ public config_flSpawnInterval_changed(Handle:convar, const String:oldValue[], co
 {
 	if (g_hRocketSpawnTimer != INVALID_HANDLE)
 	{
-		CloseHandle(g_hRocketSpawnTimer);
-		g_hRocketSpawnTimer = CreateTimer(StringToFloat(newValue), SpawnRockets, _, TIMER_REPEAT | TIMER_FLAG_NO_MAPCHANGE);
+		CloseHandle(g_hRocketSpawnTimer); // Check Handle
+		g_hRocketSpawnTimer = CreateTimer(StringToFloat(newValue), SpawnRockets, _, TIMER_REPEAT);
 	}
 }
 
