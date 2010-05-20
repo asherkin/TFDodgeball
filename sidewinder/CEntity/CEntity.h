@@ -34,7 +34,7 @@
 *			- Calls from valve code to a virtual (with a derived version) will call that code, and the valve code can be optionally run using BaseClass::Function().
 *
 *			- Calls from your code to a virtual in CEntity (with no derived versions) will make a call to the valve code.
-*			- Calls from your code to a virtual (with a derived version) will call that code, and the valve code can be optionally run using BaseClass::Function().
+*			- Calls from your code to a virtual (with a derived version) will call that code, and that derived handler can run the valve code optionally using BaseClass::Function().
 *			
 *
 * - Notes:
@@ -44,16 +44,17 @@
 *		- Add handling of custom keyvalues commands
 *			- Add datamapping to class values so keyvalues can parse to them
 *		- Add handling of Inputs
+*		- Outputs
 *		- Include more CEntity virtuals and props/datamaps
 *		- Create more derived classes
 *		- Include more Think/Touch etc handlers
-*			- Can we access the actual valve internal m_pfnThink somehow
+*			- Can we access the actual valve internal m_pfnThink somehow - no we can't. Virtual function pointer. Unless we swap out the vtable. Just no. nononono.
 *			- Valve code now has lists of thinks, can we access this?
-*		- Forcibly deleting entities?
+*		- Forcibly deleting entities? - Implemented AcceptInput("Kill"...), UTIL_Remove sig scan would be cleaner.
 *		- Handling of custom entity names in Create
 *			- Requires a pre-hook to switch out the custom string with one it can actually handle
 *				- Probably need a new LINK_ENTITY_TO_CUSTOM_CLASS to define which real entity name to use instead
-*			- Need to hook FindFactory and return the matched real entity factory so CanCreate (sp?) will succeed.
+*			- Need to hook FindFactory and return the matched real entity factory so CanCreate (sp?) will succeed. - This appears to be never used. Ignore for now
 *		- Support mods other than TF2 (CPlayer should only contain CBasePlayer sdk stuff and create optional CTFPlayer/CCSPlayer derives)
 *
 *	- Change log
@@ -64,43 +65,133 @@
 #ifndef _INCLUDE_CENTITY_H_
 #define _INCLUDE_CENTITY_H_
 
+#define NO_STRING_T
+
 #include "extension.h"
+#include "CEntityBase.h"
 #include "IEntityFactory.h"
 #include "vector.h"
 #include "server_class.h"
 
-#include "../game/shared/ehandle.h"
+#include "ehandle.h"
 class CBaseEntity;
 typedef CHandle<CBaseEntity> EHANDLE;
-#include "../game/shared/takedamageinfo.h"
+#include "takedamageinfo.h"
+#include "vphysics_interface.h"
+#include <typeinfo>
+#include <variant_t.h>
+#include "CEntity/EntityOutput.h"
+#include "macros.h"
+#include "shareddefs.h"
+#include "CEntity/util.h"
+#include "CEntity/vehicles.h"
+
+extern variant_t g_Variant;
 
 class CEntity;
+class CEntityTakeDamageInfo;
+
+#undef DEFINE_INPUTFUNC
+#define DEFINE_INPUTFUNC( fieldtype, inputname, inputfunc ) { fieldtype, #inputfunc, { 0, 0 }, 1, FTYPEDESC_INPUT, inputname, NULL, (inputfunc_t)(&classNameTypedef::inputfunc) }
+
+extern CEntity *pEntityData[MAX_EDICTS+1];
+
+typedef void (CEntity::*BASEPTR)(void);
+typedef void (CEntity::*ENTITYFUNCPTR)(CEntity *pOther);
+typedef void (CEntity::*USEPTR)(CEntity *pActivator, CEntity *pCaller, USE_TYPE useType, float value);
+
+
+/**
+ * Don't think this is even used yet, not sure why I pasted it in.
+ */
+struct inputdata_t
+{
+	CBaseEntity *pActivator;		// The entity that initially caused this chain of output events.
+	CBaseEntity *pCaller;			// The entity that fired this particular output.
+	variant_t value;				// The data parameter for this output.
+	int nOutputID;					// The unique ID of the output that was fired.
+};
+
+//template< class T >
+class CFakeHandle;
 
 #define DECLARE_DEFAULTHEADER(name, ret, params) \
 	ret Internal##name params; \
 	bool m_bIn##name;
 
+#define DECLARE_DEFAULTHEADER_DETOUR(name, ret, params) \
+	ret Internal##name params; \
+	static ret (ThisClass::* name##_Actual) params; \
+	CDetour *m_##name##Detour;
+
 #define SetThink(a) ThinkSet(static_cast <void (CEntity::*)(void)> (a), 0, NULL)
-typedef void (CEntity::*BASEPTR)(void);
 
 class CEntity // : public CBaseEntity  - almost.
 {
 public: // CEntity
 	DECLARE_CLASS_NOBASE(CEntity);
+	DECLARE_DATADESC();
+	DECLARE_DEFAULTHEADER(GetDataDescMap, datamap_t *, ());
 
-	virtual void Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool addHooks);
+	virtual void Init(edict_t *pEdict, CBaseEntity *pBaseEntity);
+	void InitHooks();
+	void InitProps();
+	void ClearFlags();
 	virtual void Destroy();
 	CBaseEntity *BaseEntity();
+
+	operator CBaseEntity* ()
+	{
+		if (this == NULL)
+		{
+			return NULL;
+		}
+
+		return BaseEntity();
+	}
+	CEntity *operator=(CBaseEntity *rhs)
+	{
+		return CEntityLookup::Instance(rhs);
+	}
+	CEntity *operator=(CBaseHandle &rhs)
+	{
+		return CEntityLookup::Instance(rhs);
+	}
+	CEntity *operator=(CBaseHandle rhs)
+	{
+		return CEntityLookup::Instance(rhs);
+	}
+	CEntity *operator=(Redirect<CBaseHandle> &rhs)
+	{
+		return CEntityLookup::Instance(rhs);
+	}
+	CBaseEntity *operator=(CEntity *const pEnt)
+	{
+		return pEnt->BaseEntity();
+	}
+
+	/* Bcompat and it's just easier to refer to these as CEntity:: */
+	static CEntity *Instance(const CBaseHandle &hEnt) { return CEntityLookup::Instance(hEnt); }
+	static CEntity *Instance(const edict_t *pEnt)  { return CEntityLookup::Instance(pEnt); }
+	static CEntity *Instance(edict_t *pEnt)  { return CEntityLookup::Instance(pEnt); }
+	static CEntity* Instance(int iEnt)  { return CEntityLookup::Instance(iEnt); }
+	static CEntity* Instance(CBaseEntity *pEnt)  { return CEntityLookup::Instance(pEnt); }
 
 public: // CBaseEntity virtuals
 	virtual void Teleport(const Vector *origin, const QAngle* angles, const Vector *velocity);
 	virtual void UpdateOnRemove();
 	virtual void Spawn();
-	virtual int OnTakeDamage(const CTakeDamageInfo &info);
+	virtual int OnTakeDamage(CEntityTakeDamageInfo &info);
 	virtual void Think();
-	virtual void StartTouch(CBaseEntity *entity);
-	virtual void Touch(CBaseEntity *entity);
-	virtual void EndTouch(CBaseEntity *entity);
+	virtual bool AcceptInput(const char *szInputName, CEntity *pActivator, CEntity *pCaller, variant_t Value, int outputID);
+	virtual void StartTouch(CEntity *pOther);
+	virtual void Touch(CEntity *pOther); 
+	virtual void EndTouch(CEntity *pOther);
+	virtual Vector GetSoundEmissionOrigin();
+	virtual IServerVehicle *GetServerVehicle();
+	void TakeDamage(const CEntityTakeDamageInfo &inputInfo);
+	virtual int VPhysicsTakeDamage(const CEntityTakeDamageInfo &inputInfo);
+	virtual int	VPhysicsGetObjectList(IPhysicsObject **pList, int listMax);
 
 public: // CBaseEntity non virtual helpers
 	BASEPTR	ThinkSet(BASEPTR func, float thinkTime, const char *szContext);
@@ -113,6 +204,8 @@ public: // CBaseEntity non virtual helpers
 	bool IsEFlagSet(int nEFlagMask) const;
 
 	const char* GetClassname();
+	void SetClassname(const char *pClassName);
+	CEntity *GetOwner();
 
 	int GetTeamNumber()  const;
 	virtual void ChangeTeam(int iTeamNum);
@@ -120,141 +213,79 @@ public: // CBaseEntity non virtual helpers
 
 	const Vector &GetLocalOrigin() const;
 	const Vector &GetAbsVelocity() const;
+	const Vector &GetVelocity() const;
 
 	CEntity *GetMoveParent();
 
 	edict_t *edict();
 	int entindex();
 
-	static CEntity *Instance(const CBaseHandle &hEnt);
-	static CEntity *Instance(const edict_t *pEnt);
-	static CEntity *Instance(edict_t *pEnt);
-	static CEntity* Instance(int iEnt);
-	static CEntity* Instance(CBaseEntity *pEnt);
+	inline IPhysicsObject *VPhysicsGetObject(void) const;
+	void SetCollisionGroup(int collisionGroup);
+	void CollisionRulesChanged();
 
 	virtual	bool IsPlayer();
 	int GetTeam();
 
-private: // All the internal hook implementations for the above virtuals
+public: // All the internal hook implementations for the above virtuals
 	DECLARE_DEFAULTHEADER(Teleport, void, (const Vector *origin, const QAngle* angles, const Vector *velocity));
 	DECLARE_DEFAULTHEADER(UpdateOnRemove, void, ());
 	DECLARE_DEFAULTHEADER(Spawn, void, ());
-	DECLARE_DEFAULTHEADER(OnTakeDamage, int, (const CTakeDamageInfo &info));
+	DECLARE_DEFAULTHEADER(OnTakeDamage, int, (CEntityTakeDamageInfo &info));
 	DECLARE_DEFAULTHEADER(Think, void, ());
-	DECLARE_DEFAULTHEADER(StartTouch, void, (CBaseEntity*));
-	DECLARE_DEFAULTHEADER(Touch, void, (CBaseEntity*));
-	DECLARE_DEFAULTHEADER(EndTouch, void, (CBaseEntity*));
+	DECLARE_DEFAULTHEADER(AcceptInput, bool, (const char *szInputName, CBaseEntity *pActivator, CBaseEntity *pCaller,variant_t Value, int outputID));
+	DECLARE_DEFAULTHEADER(StartTouch, void, (CBaseEntity *pOther));
+	DECLARE_DEFAULTHEADER(Touch, void, (CBaseEntity *pOther));
+	DECLARE_DEFAULTHEADER(EndTouch, void, (CBaseEntity *pOther));
+	DECLARE_DEFAULTHEADER(GetSoundEmissionOrigin, Vector, ());
+	DECLARE_DEFAULTHEADER(GetServerVehicle, IServerVehicle *, ());
+	DECLARE_DEFAULTHEADER(VPhysicsTakeDamage, int, (const CEntityTakeDamageInfo &inputInfo));
+	DECLARE_DEFAULTHEADER(VPhysicsGetObjectList, int, (IPhysicsObject **pList, int listMax));
 
 protected: // CEntity
 	CBaseEntity *m_pEntity;
 	edict_t *m_pEdict;
 
 protected: //Sendprops
-	uint8_t *m_iTeamNum;
-	Vector *m_vecOrigin;
-	uint8_t *m_CollisionGroup;
-	CBaseHandle *m_hOwnerEntity;
-	uint16_t *m_fFlags;
+	DECLARE_SENDPROP(uint8_t, m_iTeamNum);
+	DECLARE_SENDPROP(Vector, m_vecOrigin);
+	DECLARE_SENDPROP(uint8_t, m_CollisionGroup);
+	DECLARE_SENDPROP(CFakeHandle, m_hOwnerEntity);
+	DECLARE_SENDPROP(uint16_t, m_fFlags);
 
 protected: //Datamaps
-	Vector *m_vecAbsVelocity;
-	string_t *m_iClassname;
-	matrix3x4_t	*m_rgflCoordinateFrame;
-	Vector *m_vecVelocity;
-	CBaseHandle *m_hMoveParent;
-	int *m_iEFlags;
-
+	DECLARE_DATAMAP(Vector, m_vecAbsVelocity);
+	DECLARE_DATAMAP(string_t, m_iClassname);
+	DECLARE_DATAMAP(matrix3x4_t, m_rgflCoordinateFrame);
+	DECLARE_DATAMAP(Vector, m_vecVelocity);
+	DECLARE_DATAMAP(Vector, m_vecAngVelocity);
+	DECLARE_DATAMAP(Vector, m_vecBaseVelocity);
+	DECLARE_DATAMAP(CFakeHandle, m_hMoveParent);
+	DECLARE_DATAMAP(int, m_iEFlags);
+	DECLARE_DATAMAP(IPhysicsObject *, m_pPhysicsObject);
+	DECLARE_DATAMAP(int, m_nNextThinkTick);
+	DECLARE_DATAMAP(CFakeHandle, m_pParent);
+	
 	/* Thinking Stuff */
 	void (CEntity::*m_pfnThink)(void);
-	int *m_nNextThinkTick;
+	void (CEntity::*m_pfnTouch)(CEntity *pOther);
 };
 
-/* All the macros to make everything above smaller */
-
-#define DECLARE_DEFAULTHANDLER(type, name, ret, params, paramscall) \
-	ret type::name params \
-	{ \
-		if (!m_bIn##name) \
-		{ \
-			return SH_MCALL(BaseEntity(), name) paramscall; \
-		} \
-		SET_META_RESULT(MRES_IGNORED); \
-		SH_GLOB_SHPTR->DoRecall(); \
-		SourceHook::EmptyClass *thisptr = reinterpret_cast<SourceHook::EmptyClass*>(SH_GLOB_SHPTR->GetIfacePtr()); \
-		RETURN_META_VALUE(MRES_SUPERCEDE, (thisptr->*(__SoureceHook_FHM_GetRecallMFP##name(thisptr))) paramscall); \
-	} \
-	ret type::Internal##name params \
-	{ \
-		SET_META_RESULT(MRES_SUPERCEDE); \
-		type *pEnt = (type *)CEntity::Instance(META_IFACEPTR(CBaseEntity)); \
-		if (!pEnt) \
-		{ \
-			RETURN_META_VALUE(MRES_IGNORED, (ret)0); \
-		} \
-		int index = pEnt->entindex(); \
-		pEnt->m_bIn##name = true; \
-		ret retvalue = pEnt->name paramscall; \
-		pEnt = (type *)CEntity::Instance(index); \
-		if (pEnt) \
-			pEnt->m_bIn##name = false; \
-		return retvalue; \
+/**
+ * Fake definition of CBaseEntity, as long as we don't declare any data member we should be fine with this.
+ * Also gives us access to IServerEntity and below without explicit casting.
+ */
+class CBaseEntity : public IServerEntity
+{
+public:
+	CBaseEntity* operator= (CEntity* const input)
+	{
+		return input->BaseEntity();
 	}
-
-#define DECLARE_DEFAULTHANDLER_void(type, name, params, paramscall) \
-	void type::name params \
-	{ \
-		if (!m_bIn##name) \
-		{ \
-			SH_MCALL(BaseEntity(), name) paramscall; \
-			return; \
-		} \
-		SET_META_RESULT(MRES_IGNORED); \
-		SH_GLOB_SHPTR->DoRecall(); \
-		SourceHook::EmptyClass *thisptr = reinterpret_cast<SourceHook::EmptyClass*>(SH_GLOB_SHPTR->GetIfacePtr()); \
-		(thisptr->*(__SoureceHook_FHM_GetRecallMFP##name(thisptr))) paramscall; \
-		SET_META_RESULT(MRES_SUPERCEDE); \
-	} \
-	void type::Internal##name params \
-	{ \
-		SET_META_RESULT(MRES_SUPERCEDE); \
-		type *pEnt = (type *)CEntity::Instance(META_IFACEPTR(CBaseEntity)); \
-		if (!pEnt) \
-		{ \
-			RETURN_META(MRES_IGNORED); \
-		} \
-		int index = pEnt->entindex(); \
-		pEnt->m_bIn##name = true; \
-		pEnt->name paramscall; \
-		pEnt = (type *)CEntity::Instance(index); \
-		if (pEnt) \
-			pEnt->m_bIn##name = false; \
+	operator CEntity* ()
+	{
+		return CEntityLookup::Instance(this);
 	}
-
-#define ADD_DEFAULTHANDLER_HOOK(type,name) \
-	if (addHooks) \
-		SH_ADD_MANUALVPHOOK(name, BaseEntity(), SH_MEMBER(this, &type::Internal##name), false); \
-	m_bIn##name = false;
-#define REMOVE_DEFAULTHANDLER_HOOK(type,name) \
-	SH_REMOVE_MANUALHOOK(name, BaseEntity(), SH_MEMBER(this, &type::Internal##name), false);
-
-#define GET_SENDPROP_POINTER(type, edict, entity, info, prop) \
-	if (!gamehelpers->FindSendPropInfo(edict->GetNetworkable()->GetServerClass()->GetName(), #prop, info)) \
-		prop = NULL; \
-	else \
-		prop = (type *)((uint8_t *)entity + (info)->actual_offset);
-
-#define GET_DATAMAP_POINTER(type, entity, map, prop) \
-	map = gamehelpers->GetDataMap(entity); \
-	if (!map) \
-	prop = NULL; \
-	else \
-	{ \
-		typedescription_t *typedesc = gamehelpers->FindInDataMap(map, #prop); \
-		if (!typedesc) \
-			prop = NULL; \
-		else \
-			prop = (type *)((uint8_t *)entity + typedesc->fieldOffset[TD_OFFSET_NORMAL]); \
-		map = NULL; \
-	}
+};
 
 #endif // _INCLUDE_CENTITY_H_

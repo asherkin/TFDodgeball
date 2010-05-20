@@ -21,26 +21,25 @@
 #include "CEntityManager.h"
 #include "sourcehook.h"
 #include "IEntityFactory.h"
-#include "../game/shared/ehandle.h"
+#include "ehandle.h"
 class CBaseEntity;
 typedef CHandle<CBaseEntity> EHANDLE;
-#include "../game/shared/takedamageinfo.h"
+#include "takedamageinfo.h"
 #include "server_class.h"
 #include "CEntity.h"
+#include "shareddefs.h"
+#include "usercmd.h"
+#ifdef WIN32
+#include "rtti.h"
+#endif
+
 
 SH_DECL_HOOK1(IEntityFactoryDictionary, Create, SH_NOATTRIB, 0, IServerNetworkable *, const char *);
 SH_DECL_HOOK1_void(IVEngineServer, RemoveEdict, SH_NOATTRIB, 0, edict_t *);
 
-SH_DECL_MANUALEXTERN0_void(UpdateOnRemove);
-SH_DECL_MANUALEXTERN3_void(Teleport, const Vector *, const QAngle *, const Vector *);
-SH_DECL_MANUALEXTERN0_void(Spawn);
-SH_DECL_MANUALEXTERN1(OnTakeDamage, int, const CTakeDamageInfo &);
-SH_DECL_MANUALEXTERN0_void(Think);
-SH_DECL_MANUALEXTERN1_void(StartTouch, CBaseEntity *);
-SH_DECL_MANUALEXTERN1_void(Touch, CBaseEntity *);
-SH_DECL_MANUALEXTERN1_void(EndTouch, CBaseEntity *);
+IEntityFactoryReal *IEntityFactoryReal::m_Head;
 
-SH_DECL_MANUALEXTERN3(FVisible, bool, CBaseEntity *, int, CBaseEntity **);
+EntityFactoryDictionaryCall EntityFactoryDictionary = NULL;
 
 CEntityManager *GetEntityManager()
 {
@@ -59,26 +58,59 @@ bool CEntityManager::Init(IGameConfig *pConfig)
 	void *addr;
 	if (!pConfig->GetMemSig("EntityFactory", &addr) || addr == NULL)
 	{
+		g_pSM->LogError(myself, "[CENTITY] Couldn't find sig: %s.", "EntityFactory");
 		return false;
 	}
 
-	typedef IEntityFactoryDictionary *(*EntityFactoryDictionaryCall)();
-	EntityFactoryDictionaryCall EntityFactoryDictionary = (EntityFactoryDictionaryCall)addr;
+	EntityFactoryDictionary = (EntityFactoryDictionaryCall)addr;
 	pDict = EntityFactoryDictionary();
 
-	/* Reconfigure all the hooks */
-	RECONFIGURE_HOOK(Teleport);
-	RECONFIGURE_HOOK(UpdateOnRemove);
-	RECONFIGURE_HOOK(Spawn);
-	RECONFIGURE_HOOK(OnTakeDamage);
-	RECONFIGURE_HOOK(Think);
-	RECONFIGURE_HOOK(StartTouch);
-	RECONFIGURE_HOOK(Touch);
-	RECONFIGURE_HOOK(EndTouch);
-	RECONFIGURE_HOOK(FVisible);
+	IEntityFactoryReal *pList = IEntityFactoryReal::m_Head;
+	while (pList)
+	{
+		pList->AddToList();
+		pList = pList->m_Next;
+	}
 
-	SH_DECL_MANUALEXTERN3(FVisible, bool, CBaseEntity *, int, CBaseEntity **);
-	
+	if (!pConfig->GetMemSig("FireOutput", &addr) || addr == NULL)
+	{
+		g_pSM->LogError(myself, "[CENTITY] Couldn't find sig: %s.", "FireOutput");
+		return false;
+	}
+
+	FireOutputFunc= (FireOutputFuncType)addr;
+
+	if (!pConfig->GetMemSig("TakeDamage", &addr) || addr == NULL)
+	{
+		g_pSM->LogError(myself, "[CENTITY] Couldn't find sig: %s.", "TakeDamage");
+		return false;
+	}
+
+	TakeDamageFunc= (TakeDamageFuncType)addr;
+
+	if (!pConfig->GetMemSig("PhysIsInCallback", &addr) || addr == NULL)
+	{
+		g_pSM->LogError(myself, "[CENTITY] Couldn't find sig: %s.", "PhysIsInCallback");
+		return false;
+	}
+
+	PhysIsInCallback = (PhysIsInCallbackFuncType)addr;
+
+	/* Reconfigure all the hooks */
+	IHookTracker *pTracker = IHookTracker::m_Head;
+	while (pTracker)
+	{
+		pTracker->ReconfigureHook(pConfig);
+		pTracker = pTracker->m_Next;
+	}
+
+	IDetourTracker *pDetourTracker = IDetourTracker::m_Head;
+	while (pDetourTracker)
+	{
+		pDetourTracker->AddHook(pConfig);
+		pDetourTracker = pDetourTracker->m_Next;
+	}
+
 	/* Start the creation hooks! */
 	SH_ADD_HOOK(IEntityFactoryDictionary, Create, pDict, SH_MEMBER(this, &CEntityManager::Create), true);
 	SH_ADD_HOOK(IVEngineServer, RemoveEdict, engine, SH_MEMBER(this, &CEntityManager::RemoveEdict), true);
@@ -97,18 +129,57 @@ void CEntityManager::Shutdown()
 
 void CEntityManager::LinkEntityToClass(IEntityFactory *pFactory, const char *className)
 {
-	if (!pFactory)
-	{
-		return;
-	}
-
+	assert(pFactory);
 	pFactoryTrie.insert(className, pFactory);
+}
+
+void CEntityManager::LinkEntityToClass(IEntityFactory *pFactory, const char *className, const char *replaceName)
+{
+	LinkEntityToClass(pFactory, className);
+	pSwapTrie.insert(className, replaceName);
 }
 
 IServerNetworkable *CEntityManager::Create(const char *pClassName)
 {
-	IEntityFactory **value = pFactoryTrie.retrieve(pClassName);
-	
+	IServerNetworkable *pNetworkable = META_RESULT_ORIG_RET(IServerNetworkable *);
+
+	if (!pNetworkable)
+	{
+		return NULL;
+	}
+
+	CBaseEntity *pEnt = pNetworkable->GetBaseEntity();
+	edict_t *pEdict = pNetworkable->GetEdict();
+
+	if (!pEdict || !pEnt)
+	{
+		return NULL;
+	}
+
+	IEntityFactory **value = NULL;
+	value = pFactoryTrie.retrieve(pClassName);
+
+	if (!value)
+	{
+		/* Attempt to do an RTTI lookup for C++ class links */
+		IType *pType = GetType(pEnt);
+		IBaseType *pBase = pType->GetBaseType();
+
+		do 
+		{
+			const char *classname = GetTypeName(pBase->GetTypeInfo());
+			value = pFactoryTrie.retrieve(classname);
+
+			if (value)
+			{
+				break;
+			}
+
+		} while (pBase->GetNumBaseClasses() && (pBase = pBase->GetBaseClass(0)));
+
+		pType->Destroy();
+	}
+
 	if (!value)
 	{
 		/* No specific handler for this entity */
@@ -119,32 +190,23 @@ IServerNetworkable *CEntityManager::Create(const char *pClassName)
 	IEntityFactory *pFactory = *value;
 	assert(pFactory);
 
-	IServerNetworkable *pNetworkable = META_RESULT_ORIG_RET(IServerNetworkable *);
+	char vtable[20];
+	_snprintf(vtable, sizeof(vtable), "%x", (unsigned int) *(void **)pEnt);
 
-	if (pNetworkable != NULL)
+	CEntity *pEntity = pFactory->Create(pEdict, pEnt);
+
+	pEntity->ClearFlags();
+	pEntity->InitProps();
+
+	if (!pHookedTrie.retrieve(vtable))
 	{
-		//const char *serverName = pNetworkable->GetServerClass()->GetName();
-		edict_t *pEdict = pNetworkable->GetEdict();
-		CBaseEntity *pEnt = pNetworkable->GetBaseEntity();
-
-		if (!pEdict || !pEnt)
-		{
-			return NULL;
-		}
-	
-		char vtable[20];
-		_snprintf(vtable, sizeof(vtable), "%x", (unsigned int) *(void **)pEnt);
-
-		if (pHookedTrie.retrieve(vtable))
-		{
-			pFactory->Create(pEdict, pEnt, false);
-		}
-		else
-		{
-			pFactory->Create(pEdict, pEnt, true);
-			pHookedTrie.insert(vtable, true);
-		}
+		pEntity->InitHooks();
+		pEntity->InitDataMap();
+		pHookedTrie.insert(vtable, true);
 	}
+
+	pEntity->SetClassname(pClassName);
+
 
 	return NULL;
 }
@@ -154,6 +216,7 @@ void CEntityManager::RemoveEdict(edict_t *e)
 	CEntity *pEnt = CEntity::Instance(e);
 	if (pEnt)
 	{
+		g_pSM->LogMessage(myself, "Edict Removed, removing CEntity");
 		pEnt->Destroy();
 	}
 }

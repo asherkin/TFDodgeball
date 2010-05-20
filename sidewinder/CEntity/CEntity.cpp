@@ -19,23 +19,109 @@
 */
 
 #include "CEntity.h"
-#include "../game/shared/shareddefs.h"
+#include "shareddefs.h"
 #include "CEntityManager.h"
+#include "CPlayer.h"
+#include "CTakeDamageInfo.h"
+
+
+IHookTracker *IHookTracker::m_Head = NULL;
+IPropTracker *IPropTracker::m_Head = NULL;
+IDetourTracker *IDetourTracker::m_Head = NULL;
+
+ISaveRestoreOps *eventFuncs = NULL;
 
 SH_DECL_MANUALHOOK3_void(Teleport, 0, 0, 0, const Vector *, const QAngle *, const Vector *);
 SH_DECL_MANUALHOOK0_void(UpdateOnRemove, 0, 0, 0);
 SH_DECL_MANUALHOOK0_void(Spawn, 0, 0, 0);
-SH_DECL_MANUALHOOK1(OnTakeDamage, 0, 0, 0, int, const CTakeDamageInfo &);
+SH_DECL_MANUALHOOK1(OnTakeDamage, 0, 0, 0, int, CEntityTakeDamageInfo &);
 SH_DECL_MANUALHOOK0_void(Think, 0, 0, 0);
+SH_DECL_MANUALHOOK5(AcceptInput, 0, 0, 0, bool, const char *, CBaseEntity *, CBaseEntity *, variant_t, int);
+SH_DECL_MANUALHOOK0(GetDataDescMap, 0, 0, 0, datamap_t *);
 SH_DECL_MANUALHOOK1_void(StartTouch, 0, 0, 0, CBaseEntity *);
 SH_DECL_MANUALHOOK1_void(Touch, 0, 0, 0, CBaseEntity *);
 SH_DECL_MANUALHOOK1_void(EndTouch, 0, 0, 0, CBaseEntity *);
+SH_DECL_MANUALHOOK0(GetSoundEmissionOrigin, 0, 0, 0, Vector);
+SH_DECL_MANUALHOOK0(GetServerVehicle, 0, 0, 0, IServerVehicle *);
+SH_DECL_MANUALHOOK1(VPhysicsTakeDamage, 0, 0, 0, int, const CEntityTakeDamageInfo &);
+SH_DECL_MANUALHOOK2(VPhysicsGetObjectList, 0, 0, 0, int, IPhysicsObject **, int);
 
-CEntity *pEntityData[MAX_EDICTS+1] = {NULL};
+DECLARE_HOOK(Teleport, CEntity);
+DECLARE_HOOK(UpdateOnRemove, CEntity);
+DECLARE_HOOK(Spawn, CEntity);
+DECLARE_HOOK(OnTakeDamage, CEntity);
+DECLARE_HOOK(Think, CEntity);
+DECLARE_HOOK(AcceptInput, CEntity);
+DECLARE_HOOK(GetDataDescMap, CEntity);
+DECLARE_HOOK(StartTouch, CEntity);
+DECLARE_HOOK(Touch, CEntity);
+DECLARE_HOOK(EndTouch, CEntity);
+DECLARE_HOOK(GetSoundEmissionOrigin, CEntity);
+DECLARE_HOOK(GetServerVehicle, CEntity);
+DECLARE_HOOK(VPhysicsTakeDamage, CEntity);
+DECLARE_HOOK(VPhysicsGetObjectList, CEntity);
+
+
+//Sendprops
+DEFINE_PROP(m_iTeamNum, CEntity);
+DEFINE_PROP(m_vecOrigin, CEntity);
+DEFINE_PROP(m_CollisionGroup, CEntity);
+DEFINE_PROP(m_hOwnerEntity, CEntity);
+DEFINE_PROP(m_fFlags, CEntity);
+DEFINE_PROP(m_vecVelocity, CEntity);
+
+//Datamaps
+DEFINE_PROP(m_vecAbsVelocity, CEntity);
+DEFINE_PROP(m_nNextThinkTick, CEntity);
+DEFINE_PROP(m_iClassname, CEntity);
+DEFINE_PROP(m_rgflCoordinateFrame, CEntity);
+DEFINE_PROP(m_vecAngVelocity, CEntity);
+DEFINE_PROP(m_vecBaseVelocity, CEntity);
+DEFINE_PROP(m_hMoveParent, CEntity);
+DEFINE_PROP(m_iEFlags, CEntity);
+DEFINE_PROP(m_pPhysicsObject, CEntity);
+DEFINE_PROP(m_pParent, CEntity);
+
+/* Hacked Datamap declaration to fallback to the corresponding real entities one */
+datamap_t CEntity::m_DataMap = { 0, 0, "CEntity", NULL };
+//DECLARE_DEFAULTHANDLER(CEntity, GetDataDescMap, datamap_t *, (), ());
+datamap_t *CEntity::GetBaseMap() { return NULL; }
+BEGIN_DATADESC_GUTS(CEntity)
+END_DATADESC()
+
+TakeDamageFuncType TakeDamageFunc;
+PhysIsInCallbackFuncType PhysIsInCallback;
+
+datamap_t* CEntity::GetDataDescMap()
+{
+	if (!m_bInGetDataDescMap)
+		return SH_MCALL(BaseEntity(), GetDataDescMap)();
+
+	SET_META_RESULT(MRES_IGNORED);
+	SH_GLOB_SHPTR->DoRecall();
+	SourceHook::EmptyClass *thisptr = reinterpret_cast<SourceHook::EmptyClass*>(SH_GLOB_SHPTR->GetIfacePtr());
+	RETURN_META_VALUE(MRES_SUPERCEDE, (thisptr->*(__SoureceHook_FHM_GetRecallMFPGetDataDescMap(thisptr)))());
+}
+
+datamap_t* CEntity::InternalGetDataDescMap()
+{
+	SET_META_RESULT(MRES_SUPERCEDE);
+	CEntity *pEnt = (CEntity *)CEntity::Instance(META_IFACEPTR(CBaseEntity));
+	if (!pEnt)
+		RETURN_META_VALUE(MRES_IGNORED, (datamap_t *)0);
+	int index = pEnt->entindex();
+	pEnt->m_bInGetDataDescMap = true;
+	datamap_t* retvalue = pEnt->GetDataDescMap();
+	if (pEnt == CEntity::Instance(index))
+		pEnt->m_bInGetDataDescMap = false;
+	return retvalue;
+}
 
 LINK_ENTITY_TO_CLASS(baseentity, CEntity);
 
-void CEntity::Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool addHooks)
+variant_t g_Variant;
+
+void CEntity::Init(edict_t *pEdict, CBaseEntity *pBaseEntity)
 {
 	m_pEntity = pBaseEntity;
 	m_pEdict = pEdict;
@@ -47,32 +133,8 @@ void CEntity::Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool addHooks)
 	if(!m_pEntity || !m_pEdict)
 		return;
 
-	sm_sendprop_info_t info;
-	GET_SENDPROP_POINTER(uint8_t, m_pEdict, BaseEntity(), &info, m_iTeamNum);
-	GET_SENDPROP_POINTER(Vector, m_pEdict, BaseEntity(), &info, m_vecOrigin);
-	GET_SENDPROP_POINTER(uint8_t, m_pEdict, BaseEntity(), &info, m_CollisionGroup);
-	GET_SENDPROP_POINTER(CBaseHandle, m_pEdict, BaseEntity(), &info, m_hOwnerEntity);
-	GET_SENDPROP_POINTER(uint16_t, m_pEdict, BaseEntity(), &info, m_fFlags);
-
-	datamap_t *pMap = NULL;
-	GET_DATAMAP_POINTER(Vector, BaseEntity(), pMap, m_vecAbsVelocity);
-	//GET_DATAMAP_POINTER(BASEPTR, BaseEntity(), pMap, m_pfnThink);
 	m_pfnThink = NULL;
-	GET_DATAMAP_POINTER(int, BaseEntity(), pMap, m_nNextThinkTick);
-	GET_DATAMAP_POINTER(string_t, BaseEntity(), pMap, m_iClassname);
-	GET_DATAMAP_POINTER(matrix3x4_t, BaseEntity(), pMap, m_rgflCoordinateFrame);
-	GET_DATAMAP_POINTER(Vector, BaseEntity(), pMap, m_vecVelocity);
-	GET_DATAMAP_POINTER(CBaseHandle, BaseEntity(), pMap, m_hMoveParent);
-	GET_DATAMAP_POINTER(int, BaseEntity(), pMap, m_iEFlags);
-
-	ADD_DEFAULTHANDLER_HOOK(CEntity, Teleport);
-	ADD_DEFAULTHANDLER_HOOK(CEntity, UpdateOnRemove);
-	ADD_DEFAULTHANDLER_HOOK(CEntity, Spawn);
-	ADD_DEFAULTHANDLER_HOOK(CEntity, OnTakeDamage);
-	ADD_DEFAULTHANDLER_HOOK(CEntity, Think);
-	ADD_DEFAULTHANDLER_HOOK(CEntity, StartTouch);
-	ADD_DEFAULTHANDLER_HOOK(CEntity, Touch);
-	ADD_DEFAULTHANDLER_HOOK(CEntity, EndTouch);
+	m_pfnTouch = NULL;
 }
 
 void CEntity::Destroy()
@@ -114,19 +176,173 @@ void CEntity::InternalUpdateOnRemove()
 		RETURN_META(MRES_IGNORED);
 	}
 
+	int index = pEnt->entindex();
 	pEnt->m_bInUpdateOnRemove = true;
 	pEnt->UpdateOnRemove();
-	pEnt->m_bInUpdateOnRemove = false;
+	if (pEnt == CEntity::Instance(index))
+		pEnt->m_bInUpdateOnRemove = false;
 
 	pEnt->Destroy();
 }
 
 DECLARE_DEFAULTHANDLER_void(CEntity, Teleport, (const Vector *origin, const QAngle* angles, const Vector *velocity), (origin, angles, velocity));
 DECLARE_DEFAULTHANDLER_void(CEntity, Spawn, (), ());
-DECLARE_DEFAULTHANDLER(CEntity, OnTakeDamage, int, (const CTakeDamageInfo &info), (info));
-DECLARE_DEFAULTHANDLER_void(CEntity, StartTouch, (CBaseEntity *entity), (entity));
-DECLARE_DEFAULTHANDLER_void(CEntity, Touch, (CBaseEntity *entity), (entity));
-DECLARE_DEFAULTHANDLER_void(CEntity, EndTouch, (CBaseEntity *entity), (entity));
+DECLARE_DEFAULTHANDLER(CEntity, OnTakeDamage, int, (CEntityTakeDamageInfo &info), (info));
+//DECLARE_DEFAULTHANDLER(CEntity, GetServerVehicle, IServerVehicle *, (), ());
+DECLARE_DEFAULTHANDLER(CEntity, VPhysicsTakeDamage, int, (const CEntityTakeDamageInfo &inputInfo), (inputInfo));
+DECLARE_DEFAULTHANDLER(CEntity, VPhysicsGetObjectList, int, (IPhysicsObject **pList, int listMax), (pList, listMax));
+
+IServerVehicle *CEntity::GetServerVehicle()
+{
+	return SH_MCALL(BaseEntity(), GetServerVehicle)();
+}
+
+IServerVehicle *CEntity::InternalGetServerVehicle()
+{
+	/* Do absolutely nothing since the iface ptr is 0xcccccccc sometimes and we can't handle that yet */
+	RETURN_META_VALUE(MRES_IGNORED, NULL);
+}
+
+void CEntity::StartTouch(CEntity *pOther)
+{
+	if (!m_bInStartTouch)
+	{
+		SH_MCALL(BaseEntity(), StartTouch)(*pOther);
+		return;
+	}
+
+	SET_META_RESULT(MRES_IGNORED);
+	SH_GLOB_SHPTR->DoRecall();
+	SourceHook::EmptyClass *thisptr = reinterpret_cast<SourceHook::EmptyClass*>(SH_GLOB_SHPTR->GetIfacePtr());
+	(thisptr->*(__SoureceHook_FHM_GetRecallMFPStartTouch(thisptr)))(*pOther);
+	SET_META_RESULT(MRES_SUPERCEDE);
+}
+
+void CEntity::InternalStartTouch(CBaseEntity *pOther)
+{
+	SET_META_RESULT(MRES_SUPERCEDE);
+
+	CEntity *pEnt = *META_IFACEPTR(CBaseEntity);
+	CEntity *pEntOther = *pOther;
+	if (!pEnt || !pEntOther)
+	{
+		RETURN_META(MRES_IGNORED);
+	}
+
+	int index = pEnt->entindex();
+	pEnt->m_bInStartTouch = true;
+	pEnt->StartTouch(pEntOther);
+	if (pEnt == CEntity::Instance(index))
+		pEnt->m_bInStartTouch = false;
+}
+
+void CEntity::EndTouch(CEntity *pOther)
+{
+	if (!m_bInEndTouch)
+	{
+		SH_MCALL(BaseEntity(), EndTouch)(*pOther);
+		return;
+	}
+
+	SET_META_RESULT(MRES_IGNORED);
+	SH_GLOB_SHPTR->DoRecall();
+	SourceHook::EmptyClass *thisptr = reinterpret_cast<SourceHook::EmptyClass*>(SH_GLOB_SHPTR->GetIfacePtr());
+	(thisptr->*(__SoureceHook_FHM_GetRecallMFPEndTouch(thisptr)))(*pOther);
+	SET_META_RESULT(MRES_SUPERCEDE);
+}
+
+void CEntity::InternalEndTouch(CBaseEntity *pOther)
+{
+	SET_META_RESULT(MRES_SUPERCEDE);
+
+	CEntity *pEnt = *META_IFACEPTR(CBaseEntity);
+	CEntity *pEntOther = *pOther;
+	if (!pEnt || !pEntOther)
+	{
+		RETURN_META(MRES_IGNORED);
+	}
+
+	int index = pEnt->entindex();
+	pEnt->m_bInEndTouch = true;
+	pEnt->EndTouch(pEntOther);
+	if (pEnt == CEntity::Instance(index))
+		pEnt->m_bInEndTouch = false;
+}
+
+void CEntity::Touch(CEntity *pOther)
+{
+	if ( m_pfnTouch ) 
+		(this->*m_pfnTouch)(pOther);
+
+	//if (m_pParent)
+	//	m_pParent->Touch(pOther);
+
+	if (!m_bInTouch)
+	{
+		SH_MCALL(BaseEntity(), Touch)(*pOther);
+		return;
+	}
+
+	SET_META_RESULT(MRES_IGNORED);
+	SH_GLOB_SHPTR->DoRecall();
+	SourceHook::EmptyClass *thisptr = reinterpret_cast<SourceHook::EmptyClass*>(SH_GLOB_SHPTR->GetIfacePtr());
+	(thisptr->*(__SoureceHook_FHM_GetRecallMFPTouch(thisptr)))(*pOther);
+	SET_META_RESULT(MRES_SUPERCEDE);
+}
+
+void CEntity::InternalTouch(CBaseEntity *pOther)
+{
+	SET_META_RESULT(MRES_SUPERCEDE);
+
+	CEntity *pEnt = *META_IFACEPTR(CBaseEntity);
+	CEntity *pEntOther = *pOther;
+	if (!pEnt || !pEntOther)
+	{
+		RETURN_META(MRES_IGNORED);
+	}
+
+	int index = pEnt->entindex();
+	pEnt->m_bInTouch = true;
+	pEnt->Touch(pEntOther);
+	if (pEnt == CEntity::Instance(index))
+		pEnt->m_bInTouch = false;
+}
+
+Vector CEntity::GetSoundEmissionOrigin()
+{
+	if (!m_bInGetSoundEmissionOrigin)
+	{
+		Vector ret = SH_MCALL(BaseEntity(), GetSoundEmissionOrigin)();
+		return ret;
+	}
+
+	SET_META_RESULT(MRES_IGNORED);
+	SH_GLOB_SHPTR->DoRecall();
+	SourceHook::EmptyClass *thisptr = reinterpret_cast<SourceHook::EmptyClass*>(SH_GLOB_SHPTR->GetIfacePtr());
+	Vector ret = (thisptr->*(__SoureceHook_FHM_GetRecallMFPGetSoundEmissionOrigin(thisptr)))();
+	SET_META_RESULT(MRES_SUPERCEDE);
+
+	return ret;
+}
+
+Vector CEntity::InternalGetSoundEmissionOrigin()
+{
+	SET_META_RESULT(MRES_SUPERCEDE);
+
+	CEntity *pEnt = *META_IFACEPTR(CBaseEntity);
+	if (!pEnt)
+	{
+		RETURN_META_VALUE(MRES_IGNORED, NULL);
+	}
+
+	int index = pEnt->entindex();
+	pEnt->m_bInGetSoundEmissionOrigin = true;
+	Vector ret = pEnt->GetSoundEmissionOrigin();
+	if (pEnt == CEntity::Instance(index))
+		pEnt->m_bInGetSoundEmissionOrigin = false;
+
+	return ret;
+}
 
 void CEntity::Think()
 {
@@ -158,15 +374,23 @@ void CEntity::InternalThink()
 		RETURN_META(MRES_IGNORED);
 	}
 
+	int index = pEnt->entindex();
 	pEnt->m_bInThink = true;
 	pEnt->Think();
-	pEnt->m_bInThink = false;
+	if (pEnt == CEntity::Instance(index))
+		pEnt->m_bInThink = false;
 }
 
 
 BASEPTR	CEntity::ThinkSet(BASEPTR func, float thinkTime, const char *szContext)
 {
-	return m_pfnThink = func;
+	if ( !szContext )
+	{
+		m_pfnThink = func;
+		return m_pfnThink;
+	}
+
+	return NULL;
 }
 
 void CEntity::SetNextThink(float thinkTime, const char *szContext)
@@ -177,7 +401,7 @@ void CEntity::SetNextThink(float thinkTime, const char *szContext)
 	if ( !szContext )
 	{
 		// Old system
-		*m_nNextThinkTick = thinkTick;
+		m_nNextThinkTick = thinkTick;
 		CheckHasThinkFunction( thinkTick == TICK_NEVER_THINK ? false : true );
 		return;
 	}
@@ -185,17 +409,17 @@ void CEntity::SetNextThink(float thinkTime, const char *szContext)
 
 void CEntity::AddEFlags(int nEFlagMask)
 {
-	*m_iEFlags |= nEFlagMask;
+	m_iEFlags |= nEFlagMask;
 }
 
 void CEntity::RemoveEFlags(int nEFlagMask)
 {
-	*m_iEFlags &= ~nEFlagMask;
+	m_iEFlags &= ~nEFlagMask;
 }
 
 bool CEntity::IsEFlagSet(int nEFlagMask) const
 {
-	return (*m_iEFlags & nEFlagMask) != 0;
+	return (m_iEFlags & nEFlagMask) != 0;
 }
 
 void CEntity::CheckHasThinkFunction(bool isThinking)
@@ -212,7 +436,7 @@ void CEntity::CheckHasThinkFunction(bool isThinking)
 
 bool CEntity::WillThink()
 {
-	if (*m_nNextThinkTick > 0)
+	if (m_nNextThinkTick > 0)
 		return true;
 
 	return false;
@@ -220,17 +444,22 @@ bool CEntity::WillThink()
 
 const char* CEntity::GetClassname()
 {
-	return STRING(*m_iClassname);
+	return STRING(m_iClassname);
+}
+
+void CEntity::SetClassname(const char *pClassName)
+{
+	m_iClassname = MAKE_STRING(pClassName);
 }
 
 void CEntity::ChangeTeam(int iTeamNum)
 {
-	*m_iTeamNum = iTeamNum;
+	m_iTeamNum = iTeamNum;
 }
 
 int CEntity::GetTeamNumber(void) const
 {
-	return *m_iTeamNum;
+	return m_iTeamNum;
 }
 
 bool CEntity::InSameTeam(CEntity *pEntity) const
@@ -243,7 +472,7 @@ bool CEntity::InSameTeam(CEntity *pEntity) const
 
 const Vector& CEntity::GetLocalOrigin(void) const
 {
-	return *m_vecOrigin;
+	return m_vecOrigin;
 }
 
 const Vector &CEntity::GetAbsVelocity() const
@@ -252,12 +481,17 @@ const Vector &CEntity::GetAbsVelocity() const
 	{
 		//const_cast<CEntity*>(this)->CalcAbsoluteVelocity();
 	}
-	return *m_vecAbsVelocity;
+	return m_vecAbsVelocity;
+}
+
+const Vector & CEntity::GetVelocity() const
+{
+	return m_vecVelocity;
 }
 
 CEntity *CEntity::GetMoveParent(void)
 {
-	return Instance(*m_hMoveParent); 
+	return Instance(m_hMoveParent); 
 }
 
 edict_t *CEntity::edict()
@@ -267,80 +501,7 @@ edict_t *CEntity::edict()
 
 int CEntity::entindex()
 {
-	return engine->IndexOfEdict(edict());
-}
-
-CEntity *CEntity::Instance(CBaseEntity *pEnt)
-{
-	edict_t *pEdict = gameents->BaseEntityToEdict(META_IFACEPTR(CBaseEntity));
-	
-	if (!pEdict)
-	{
-		return NULL;
-	}
-
-	return Instance(pEdict);
-}
-
-CEntity *CEntity::Instance(int iEnt)
-{
-	return pEntityData[iEnt];
-}
-
-CEntity *CEntity::Instance(const edict_t *pEnt)
-{
-	return Instance(engine->IndexOfEdict(pEnt));
-}
-
-CEntity *CEntity::Instance(const CBaseHandle &hEnt)
-{
-	if (!hEnt.IsValid())
-	{
-		return NULL;
-	}
-
-	int index = hEnt.GetEntryIndex();
-
-	edict_t *pStoredEdict;
-	CBaseEntity *pStoredEntity;
-
-	pStoredEdict = engine->PEntityOfEntIndex(index);
-	if (!pStoredEdict || pStoredEdict->IsFree())
-	{
-		return NULL;
-	}
-
-	IServerUnknown *pUnk;
-	if ((pUnk = pStoredEdict->GetUnknown()) == NULL)
-	{
-		return NULL;
-	}
-
-	pStoredEntity = pUnk->GetBaseEntity();
-
-	if (pStoredEntity == NULL)
-	{
-		return NULL;
-	}
-
-	IServerEntity *pSE = pStoredEdict->GetIServerEntity();
-
-	if (pSE == NULL)
-	{
-		return NULL;
-	}
-
-	if (pSE->GetRefEHandle() != hEnt)
-	{
-		return NULL;
-	}
-
-	return Instance(index);
-}
-
-CEntity *CEntity::Instance(edict_t *pEnt)
-{
-	return Instance(engine->IndexOfEdict(pEnt));
+	return BaseEntity()->GetRefEHandle().GetEntryIndex();
 }
 
 bool CEntity::IsPlayer()
@@ -350,5 +511,145 @@ bool CEntity::IsPlayer()
 
 int CEntity::GetTeam()
 {
-	return *m_iTeamNum;
+	return m_iTeamNum;
+}
+
+bool CEntity::AcceptInput(const char *szInputName, CEntity *pActivator, CEntity *pCaller, variant_t Value, int outputID)
+{
+	if (!m_bInAcceptInput)
+	{
+		return SH_MCALL(BaseEntity(), AcceptInput)(szInputName, *pActivator, *pCaller, Value, outputID);
+	}
+
+	/**
+	 * This gets the award for the worst hack so far. Detects the end of waiting for players and probably lots of other things.
+	 * Forces players out of vehicles.
+	 */
+	if (strcmp(szInputName, "ShowInHUD") == 0 || strcmp(szInputName, "RoundSpawn") == 0 || strcmp(szInputName, "RoundWin") == 0)
+	{
+		CEntity *pEnt;
+		for (int i=1; i<=gpGlobals->maxClients; i++)
+		{
+			pEnt = CEntity::Instance(i);
+			if (!pEnt)
+			{
+				continue;
+			}
+
+			CPlayer *pPlayer = dynamic_cast<CPlayer *>(pEnt);
+			assert(pPlayer);
+
+			IServerVehicle *pVehicle = pPlayer->GetVehicle();
+			if (pVehicle && !pVehicle->IsPassengerExiting())
+			{
+				pPlayer->LeaveVehicle();
+			}
+		}
+	}
+
+	SET_META_RESULT(MRES_IGNORED);
+	SH_GLOB_SHPTR->DoRecall();
+	SourceHook::EmptyClass *thisptr = reinterpret_cast<SourceHook::EmptyClass*>(SH_GLOB_SHPTR->GetIfacePtr());
+	bool ret = (thisptr->*(__SoureceHook_FHM_GetRecallMFPAcceptInput(thisptr)))(szInputName, *pActivator, *pCaller, Value, outputID);
+	SET_META_RESULT(MRES_SUPERCEDE);
+	return ret;
+}
+
+bool CEntity::InternalAcceptInput(const char *szInputName, CBaseEntity *pActivator, CBaseEntity *pCaller, variant_t Value, int outputID)
+{
+	SET_META_RESULT(MRES_SUPERCEDE);
+
+	CEntity *pEnt = *META_IFACEPTR(CBaseEntity);
+	if (!pEnt)
+	{
+		RETURN_META_VALUE(MRES_IGNORED, false);
+	}
+
+	int index = pEnt->entindex();
+	pEnt->m_bInAcceptInput = true;
+	bool ret = pEnt->AcceptInput(szInputName, *pActivator, *pCaller, Value, outputID);
+	if (pEnt == CEntity::Instance(index))
+		pEnt->m_bInAcceptInput = false;
+
+	return ret;
+}
+
+void CEntity::InitHooks()
+{
+	IHookTracker *pTracker = IHookTracker::m_Head;
+	while (pTracker)
+	{
+		pTracker->AddHook(this);
+		pTracker = pTracker->m_Next;
+	}
+}
+
+void CEntity::InitProps()
+{
+	IPropTracker *pTracker = IPropTracker::m_Head;
+	while (pTracker)
+	{
+		pTracker->InitProp(this);
+		pTracker = pTracker->m_Next;
+	}
+}
+
+void CEntity::ClearFlags()
+{
+	IHookTracker *pTracker = IHookTracker::m_Head;
+	while (pTracker)
+	{
+		pTracker->ClearFlag(this);
+		pTracker = pTracker->m_Next;
+	}
+}
+
+CEntity *CEntity::GetOwner()
+{
+	return m_hOwnerEntity;
+}
+
+void CEntity::TakeDamage(const CEntityTakeDamageInfo &inputInfo)
+{
+#ifndef WIN32
+	TakeDamageFunc(*this, inputInfo);
+#else
+	TakeDamageFunc(*this, NULL, inputInfo);
+#endif
+}
+
+IPhysicsObject *CEntity::VPhysicsGetObject(void) const
+{
+	return m_pPhysicsObject;
+}
+
+void CEntity::SetCollisionGroup(int collisionGroup)
+{
+	if ((int)m_CollisionGroup != collisionGroup)
+	{
+		m_CollisionGroup = collisionGroup;
+		CollisionRulesChanged();
+	}
+}
+
+#define VPHYSICS_MAX_OBJECT_LIST_COUNT	1024
+void CEntity::CollisionRulesChanged()
+{
+	// ivp maintains state based on recent return values from the collision filter, so anything
+	// that can change the state that a collision filter will return (like m_Solid) needs to call RecheckCollisionFilter.
+	if (VPhysicsGetObject())
+	{
+		if (PhysIsInCallback())
+		{
+			Warning("Changing collision rules within a callback is likely to cause crashes!\n");
+			Assert(0);
+		}
+		IPhysicsObject *pList[VPHYSICS_MAX_OBJECT_LIST_COUNT];
+		int count = VPhysicsGetObjectList(pList, ARRAYSIZE(pList));
+		for (int i = 0; i < count; i++)
+		{
+			if (pList[i] != NULL) //this really shouldn't happen, but it does >_<
+				pList[i]->RecheckCollisionFilter();
+		}
+	}
 }

@@ -22,16 +22,32 @@
 #define _INCLUDE_IENTITYFACTORY_H_
 
 #include "CEntityManager.h"
+#include "CEntity.h"
 
 #define LINK_ENTITY_TO_CLASS(mapClassName,DLLClassName) \
-	static CEntityFactory<DLLClassName> mapClassName( #mapClassName );
+	static CEntityFactory<DLLClassName> mapClassName(#mapClassName);
+
+#define LINK_ENTITY_TO_CUSTOM_CLASS(mapClassName,replaceClassName,DLLClassName); \
+	static CCustomEntityFactory<DLLClassName> mapClassName##custom(#mapClassName, #replaceClassName); \
+	static CEntityFactory<DLLClassName> mapClassName(#mapClassName);
 
 class CEntity;
+
+class IEntityFactoryDictionary
+{
+public:
+	virtual void InstallFactory( IEntityFactory *pFactory, const char *pClassName ) = 0;
+	virtual IServerNetworkable *Create( const char *pClassName ) = 0;
+	virtual void Destroy( const char *pClassName, IServerNetworkable *pNetworkable ) = 0;
+	virtual IEntityFactory *FindFactory( const char *pClassName ) = 0;
+	virtual const char *GetCannonicalName( const char *pClassName ) = 0;
+};
+
 
 class IEntityFactory
 {
 public:
-	virtual CEntity *Create(edict_t *pEdict, CBaseEntity *pEnt, bool addHooks) = 0;
+	virtual CEntity *Create(edict_t *pEdict, CBaseEntity *pEnt) = 0;
 };
 
 template <class T>
@@ -43,7 +59,7 @@ public:
 		GetEntityManager()->LinkEntityToClass(this, pClassName);
 	}
 
-	CEntity *Create(edict_t *pEdict, CBaseEntity *pEnt, bool addHooks)
+	CEntity *Create(edict_t *pEdict, CBaseEntity *pEnt)
 	{
 		if (!pEdict || !pEnt)
 		{
@@ -51,19 +67,69 @@ public:
 		}
 
 		T* pOurEnt = new T();
-		pOurEnt->Init(pEdict, pEnt, addHooks);
+		pOurEnt->Init(pEdict, pEnt);
+
 		return pOurEnt;
 	}
 };
 
-class IEntityFactoryDictionary
+abstract_class IEntityFactoryReal
 {
 public:
-	virtual void InstallFactory( IEntityFactory *pFactory, const char *pClassName ) = 0;
+	IEntityFactoryReal()
+	{
+		m_Next = m_Head;
+		m_Head = this;
+	}
 	virtual IServerNetworkable *Create( const char *pClassName ) = 0;
-	virtual void Destroy( const char *pClassName, IServerNetworkable *pNetworkable ) = 0;
-	virtual IEntityFactory *FindFactory( const char *pClassName ) = 0;
-	virtual const char *GetCannonicalName( const char *pClassName ) = 0;
+	virtual void Destroy( IServerNetworkable *pNetworkable ) = 0;
+	virtual size_t GetEntitySize() = 0;
+	virtual void AddToList() =0;
+
+	static IEntityFactoryReal *m_Head;
+	IEntityFactoryReal *m_Next;
+};
+
+template <class T>
+class CCustomEntityFactory : public IEntityFactoryReal
+{
+public:
+	CCustomEntityFactory(const char *pClassName, const char *pReplaceName)
+	{
+		this->pReplaceName = pReplaceName;
+		this->pClassName = pClassName;
+	}
+
+	void AddToList()
+	{
+		assert(EntityFactoryDictionary);
+		EntityFactoryDictionary()->InstallFactory((IEntityFactory *)this, pClassName );
+	}
+
+	IServerNetworkable *Create( const char *pClassName )
+	{
+		IEntityFactoryReal *pFactory = (IEntityFactoryReal *)EntityFactoryDictionary()->FindFactory(pReplaceName);
+		assert(pFactory);
+
+		return pFactory->Create(pReplaceName);
+	}
+
+	void Destroy( IServerNetworkable *pNetworkable )
+	{
+		IEntityFactoryReal *pFactory = (IEntityFactoryReal *)EntityFactoryDictionary()->FindFactory(pReplaceName);
+		assert(pFactory);
+		return pFactory->Destroy(pNetworkable);
+	}
+
+	virtual size_t GetEntitySize()
+	{
+		IEntityFactoryReal *pFactory = (IEntityFactoryReal *)EntityFactoryDictionary()->FindFactory(pReplaceName);
+		assert(pFactory);
+		return pFactory->GetEntitySize();
+	}
+
+	const char *pReplaceName;
+	const char *pClassName;
 };
 
 #endif // _INCLUDE_IENTITYFACTORY_H_

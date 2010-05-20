@@ -27,10 +27,27 @@
 class IEntityFactoryDictionary;
 class IEntityFactory;
 
-#define RECONFIGURE_HOOK(name) \
-	int name##offset; \
-	pConfig->GetOffset(#name, &name##offset); \
-	SH_MANUALHOOK_RECONFIGURE(name, name##offset, 0, 0);
+typedef IEntityFactoryDictionary *(*EntityFactoryDictionaryCall)();
+extern EntityFactoryDictionaryCall EntityFactoryDictionary;
+
+class CBaseEntityOutput;
+#ifndef WIN32
+typedef void (* FireOutputFuncType)(CBaseEntityOutput *, variant_t Value, CBaseEntity *pActivator, CBaseEntity *pCaller, float fDelay);
+#else
+typedef void (__fastcall * FireOutputFuncType)(CBaseEntityOutput *, void *, variant_t Value, CBaseEntity *pActivator, CBaseEntity *pCaller, float fDelay);
+#endif
+extern FireOutputFuncType FireOutputFunc;
+
+class CEntityTakeDamageInfo;
+#ifndef WIN32
+typedef void (* TakeDamageFuncType)(CBaseEntity *pThis, const CEntityTakeDamageInfo &inputInfo);
+#else
+typedef void (__fastcall *TakeDamageFuncType)(CBaseEntity *pThis, void *dummy, const CEntityTakeDamageInfo &inputInfo);
+#endif
+extern TakeDamageFuncType TakeDamageFunc;
+
+typedef bool (* PhysIsInCallbackFuncType)();
+extern PhysIsInCallbackFuncType PhysIsInCallback;
 
 class CEntityManager
 {
@@ -39,15 +56,19 @@ public:
 	bool Init(IGameConfig *pConfig);
 	void Shutdown();
 	void LinkEntityToClass(IEntityFactory *pFactory, const char *className);
+	void LinkEntityToClass(IEntityFactory *pFactory, const char *className, const char *replaceName);
 
 	virtual IServerNetworkable *Create(const char *pClassName);
 	void RemoveEdict(edict_t *e);
 	//virtual IEntityFactory *FindFactory(const char *pClassName);
+
 private:
 	KTrie<IEntityFactory *> pFactoryTrie;
+	KTrie<const char *> pSwapTrie;
 	KTrie<bool> pHookedTrie;
 	IEntityFactoryDictionary *pDict;
 	bool m_bEnabled;
+	
 };
 
 CEntityManager *GetEntityManager();

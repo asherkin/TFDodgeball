@@ -22,14 +22,20 @@
 #define _INCLUDE_CPLAYER_H_
 
 #include "CEntity.h"
+#include "CTakeDamageInfo.h"
+#include "sh_list.h"
+#include "shareddefs.h"
+#include "usercmd.h"
+#include "CEntity/vehicles.h"
+#include "mathlib.h"
+#include "CEntity/CScriptCreatedItem.h"
+
 
 class CPlayer : public CEntity
 {
 public:
 	DECLARE_CLASS(CPlayer, CEntity);
-
-	virtual void Init(edict_t *pEdict, CBaseEntity *pBaseEntity, bool addHooks);
-	virtual void Destroy();
+	DECLARE_DATADESC();
 	virtual bool IsPlayer();
 
 	bool IsAlive();
@@ -37,33 +43,86 @@ public:
 	int GetPlayerCond();
 	bool IsDisguised();
 	int GetDisguisedTeam();
+	int GetButtons();
+	IServerVehicle *GetVehicle();
+	virtual void Spawn();
+	virtual int OnTakeDamage(CEntityTakeDamageInfo &info)
+	{
+		return BaseClass::OnTakeDamage(info);
+	}
 
+public:
 	int GetHealth();
-	void SetHealth(int iHealth);
+	void SetHealth(int health);
+	float GetMovementSpeed();
+	void SetMovementSpeed(float speed);
 
+	void GetClientEyePosition(Vector &pos);
+	virtual QAngle *GetClientEyeAngles();
+	int GetObserverMode();
+	CEntity* GetObserverTarget();
+	CEntity* GetAimTarget(bool playersOnly);
 
 public: // CBasePlayer virtuals
-	virtual	bool FVisible(CBaseEntity *pEntity, int traceMask = MASK_BLOCKLOS, CBaseEntity **ppBlocker = NULL);
+	virtual	bool FVisible(CEntity *pEntity, int traceMask = MASK_BLOCKLOS, CEntity **ppBlocker = NULL);
+	virtual void PlayerRunCmd(CUserCmd *, IMoveHelper *);
+	virtual void LeaveVehicle( const Vector &vecExitPoint = vec3_origin, const QAngle &vecExitAngles = vec3_angle );
+	virtual void ProcessUserCmds(CUserCmd *cmds, int numcmds, int totalcmds, int dropped_packets, bool paused);
+	virtual void PreThink(void);
+	virtual void PostThink(void);
+	virtual void Jump(void);
+	virtual int OnTakeDamage_Alive(CEntityTakeDamageInfo &info);
+	virtual bool WeaponSwitch(CBaseEntity /*CBaseCombatWeapon*/ *pWeapon, int viewmodelindex);
+	virtual bool IsReadyToSpawn(void);
+	virtual bool CanSpeakVoiceCommand(void);
+
+public: //Virtual calls
+	virtual CBaseEntity *GiveNamedItem(char const *szName, int iSubType, CScriptCreatedItem *item, bool bUnknown);
+	virtual bool RemovePlayerItem(CBaseEntity *pWeapon);
+	virtual void Weapon_Equip(CBaseEntity *pWeapon);
+	virtual CBaseEntity *Weapon_GetSlot(int slot);
 
 public: //Autohandlers
 	DECLARE_DEFAULTHEADER(FVisible, bool, (CBaseEntity *pEntity, int traceMask, CBaseEntity **ppBlocker));
+	DECLARE_DEFAULTHEADER(PlayerRunCmd, void, (CUserCmd *pCmd, IMoveHelper *pHelper));
+	DECLARE_DEFAULTHEADER(LeaveVehicle, void, (const Vector &vecExitPoint, const QAngle &vecExitAngles));
+	DECLARE_DEFAULTHEADER(ProcessUserCmds, void, (CUserCmd *cmds, int numcmds, int totalcmds, int dropped_packets, bool paused));
+	DECLARE_DEFAULTHEADER(PreThink, void, ());
+	DECLARE_DEFAULTHEADER(PostThink, void, ());
+	DECLARE_DEFAULTHEADER(Jump, void, ());
+	DECLARE_DEFAULTHEADER(OnTakeDamage_Alive, int, (CEntityTakeDamageInfo &info));
+	DECLARE_DEFAULTHEADER(WeaponSwitch, bool, (CBaseEntity /*CBaseCombatWeapon*/ *pWeapon, int viewmodelindex));
+	DECLARE_DEFAULTHEADER(IsReadyToSpawn, bool, ());
+	DECLARE_DEFAULTHEADER(CanSpeakVoiceCommand, bool, ());
+	DECLARE_DEFAULTHEADER(GiveNamedItem, CBaseEntity *, (char const *szName, int iSubType, CScriptCreatedItem *item, bool bUnknown));
+	DECLARE_DEFAULTHEADER(RemovePlayerItem, bool, (CBaseEntity *pItem));
+	DECLARE_DEFAULTHEADER(Weapon_Equip, void, (CBaseEntity *pWeapon));
+	DECLARE_DEFAULTHEADER(Weapon_GetSlot, CBaseEntity *, (int slot));
+	DECLARE_DEFAULTHEADER(GetClientEyeAngles, QAngle *, ());
 
 protected: // Sendprops
-	float *m_flNextAttack;
-	CBaseHandle *m_hActiveWeapon;
-	CBaseHandle *m_hMyWeapons;
-	uint16_t *m_iHealth;
-	uint8_t *m_lifeState;
+	DECLARE_SENDPROP(float, m_flNextAttack);
+	DECLARE_SENDPROP(CBaseHandle, m_hActiveWeapon);
+	DECLARE_SENDPROP(CBaseHandle, m_hMyWeapons);
+	DECLARE_SENDPROP(CBaseHandle, m_hVehicle);
+	DECLARE_SENDPROP(uint16_t, m_iHealth);
+	//DECLARE_SENDPROP(uint16_t, m_i);
+	DECLARE_SENDPROP(uint8_t, m_lifeState);
+	DECLARE_SENDPROP(uint8_t, m_iClass);
+	DECLARE_SENDPROP(uint16_t, m_nPlayerCond);
+	DECLARE_SENDPROP(bool, m_bJumping);
+	DECLARE_SENDPROP(uint8_t, m_nNumHealers);
+	DECLARE_SENDPROP(uint8_t, m_nPlayerState);
+	DECLARE_SENDPROP(uint8_t, m_nDisguiseTeam);
+	DECLARE_SENDPROP(uint8_t, m_nDisguiseClass);
+	DECLARE_SENDPROP(uint8_t, m_iDisguiseTargetIndex);
+	DECLARE_SENDPROP(uint16_t, m_iDisguiseHealth);
+	DECLARE_SENDPROP(float, m_flMaxspeed);
+	DECLARE_SENDPROP(uint16_t, m_iObserverMode);
+	DECLARE_SENDPROP(CBaseHandle, m_hObserverTarget);
 
-	uint8_t *m_iClass;
-	uint16_t *m_nPlayerCond;
-	bool *m_bJumping;
-	uint8_t *m_nNumHealers;
-	uint8_t *m_nPlayerState;
-	uint8_t *m_nDisguiseTeam;
-	uint8_t *m_nDisguiseClass;
-	uint8_t *m_iDisguiseTargetIndex;
-	uint16_t *m_iDisguiseHealth;
+protected:
+	DECLARE_DATAMAP(int, m_nButtons);
 };
 
 #define PLAYERCLASS_SCOUT 1

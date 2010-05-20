@@ -1,6 +1,41 @@
 #ifndef _INCLUDE_MACROS_H_
 #define _INCLUDE_MACROS_H_
 
+#include "CEntityBase.h"
+#include "CEntity.h"
+
+#undef DECLARE_CLASS
+#define DECLARE_CLASS( className, baseClassName ) \
+	typedef baseClassName BaseClass; \
+	typedef className ThisClass; \
+	virtual bool IsBase() { return false; } \
+	virtual void InitDataMap() \
+	{ \
+		if (BaseClass::IsBase()) \
+		{ \
+			ThisClass::m_DataMap.baseMap = BaseClass::GetDataDescMap(); \
+		} \
+		datamap_t *pMap = gamehelpers->GetDataMap(BaseEntity()); \
+		if (eventFuncs == NULL) \
+		{ \
+			if (pMap) \
+			{ \
+				typedescription_t *typedesc = gamehelpers->FindInDataMap(pMap, "m_OnUser1"); \
+				if (typedesc != NULL) \
+					eventFuncs = typedesc->pSaveRestoreOps; \
+			} \
+		} \
+		if (eventFuncs == NULL) \
+			g_pSM->LogError(myself, "[CENTITY] Could not lookup ISaveRestoreOps for Outputs"); \
+		UTIL_PatchOutputRestoreOps(pMap); \
+	}
+
+#undef DECLARE_CLASS_NOBASE
+#define DECLARE_CLASS_NOBASE( className ) \
+	typedef className ThisClass; \
+	virtual bool IsBase() { return true; } \
+	virtual void InitDataMap() {};
+
 class IHookTracker
 {
 public:
@@ -18,13 +53,16 @@ public:
 };
 
 #define DECLARE_HOOK(name, cl) \
-class name##HookTracker : public IHookTracker \
+class name##cl##HookTracker : public IHookTracker \
 { \
 public: \
 	void ReconfigureHook(IGameConfig *pConfig) \
 	{ \
 		int offset; \
-		pConfig->GetOffset(#name, &offset); \
+		if (!pConfig->GetOffset(#name, &offset)) \
+		{\
+			g_pSM->LogError(myself, "[CENTITY] Failed to retrieve offset %s from gamedata file", #name); \
+		} \
 		SH_MANUALHOOK_RECONFIGURE(name, offset, 0, 0); \
 	} \
 	void AddHook(CEntity *pEnt) \
@@ -44,7 +82,35 @@ public: \
 		} \
 	} \
 }; \
-name##HookTracker name##cl##HookTracker;
+name##cl##HookTracker name##cl##HookTrackerObj;
+
+class IDetourTracker
+{
+public:
+	IDetourTracker()
+	{
+		m_Next = m_Head;
+		m_Head = this;
+	}
+
+	virtual void AddHook(IGameConfig *pConfig) =0;
+
+	static IDetourTracker *m_Head;
+	IDetourTracker *m_Next;
+};
+
+#define DECLARE_DETOUR(name, cl) \
+class name##cl##DetourTracker : public IDetourTracker \
+{ \
+public: \
+	void AddHook(IGameConfig *pConfig) \
+	{ \
+		void *callback = (void *)GetCodeAddress(&cl::name##Internal); \
+		void **trampoline = (void **)(&cl::name##_Actual); \
+		m_##name##Detour = CDetourManager::CreateDetour(callback, trampoline, #name); \
+	} \
+} \
+name##cl##DetourTracker name##cl##DetourTrackerObj;
 
 #define PROP_SEND 0
 #define PROP_DATA 1
@@ -53,6 +119,101 @@ name##HookTracker name##cl##HookTracker;
 #define DECLARE_DATAMAP(typeof, name) DECLARE_PROP(typeof, name, PROP_DATA)
 
 #define DEFINE_PROP(name, cl)	cl::name##PropTracker cl::name##PropTrackerObj;
+
+template <typename T>
+class Redirect
+{
+public:
+	Redirect& operator =(const T& input)
+	{
+		*ptr = input;
+		return *this;
+	}
+	operator T& () const
+	{
+		return *ptr;
+	}
+	operator T* () const
+	{
+		return ptr;
+	}
+	T* operator->() 
+	{
+		return ptr;
+	}
+	T& operator [] (unsigned i)
+	{
+		return ptr[i];
+	}
+
+public:
+	T* ptr;
+};
+
+class CFakeHandle : public CBaseHandle
+{
+public:
+	CEntity* Get() const
+	{
+		return CEntityLookup::Instance(*this);
+	}
+	operator CEntity*()
+	{
+		return Get();
+	}
+	operator CEntity*() const
+	{
+		return Get();
+	}
+	CEntity* operator->() const
+	{
+		return Get();
+	}
+};
+
+template<>
+class Redirect <CFakeHandle>
+{
+public:
+	Redirect& operator =(const CFakeHandle& input)
+	{
+		*ptr = input;
+		return *this;
+	}
+	bool operator ==(const CEntity *lhs)
+	{
+		return (*ptr == lhs);
+	}
+	bool operator !=(const CEntity *lhs)
+	{
+		return (*ptr != lhs);
+	}
+	operator CFakeHandle& () const
+	{
+		return *ptr;
+	}
+	operator CFakeHandle* () const
+	{
+		return ptr;
+	}
+	operator CEntity* () const
+	{
+		return ptr->Get();
+	}
+	CEntity* operator->() 
+	{
+		return CEntityLookup::Instance(*ptr);
+	}
+	bool operator == (void *rhs )
+	{
+		return (ptr == rhs);
+	}
+
+public:
+	CFakeHandle* ptr;
+};
+
+
 
 class IPropTracker
 {
@@ -63,13 +224,44 @@ public:
 		m_Head = this;
 	}
 	virtual void InitProp(CEntity *pEnt) =0;
+
+	bool GetSendPropOffset(const char *classname, const char *name, unsigned int &offset)
+	{
+		sm_sendprop_info_t info;
+		if (!gamehelpers->FindSendPropInfo(classname, name, &info))
+		{
+			return false;
+		}
+
+		offset = info.actual_offset;
+		return true;
+	}
+
+	bool GetDataMapOffset(CBaseEntity *pEnt, const char *name, unsigned int &offset)
+	{
+		datamap_t *pMap = gamehelpers->GetDataMap(pEnt);
+		if (!pMap)
+		{
+			return false;
+		}
+		
+		typedescription_t *typedesc = gamehelpers->FindInDataMap(pMap, name);
+		
+		if (typedesc == NULL)
+		{
+			return false;
+		}
+
+		offset = typedesc->fieldOffset[TD_OFFSET_NORMAL];
+		return true;
+	}
 public:
 	static IPropTracker *m_Head;
 	IPropTracker *m_Next;
 };
 
 #define DECLARE_PROP(typeof, name, search) \
-typeof * name; \
+Redirect<typeof> name; \
 friend class name##PropTracker; \
 class name##PropTracker : public IPropTracker \
 { \
@@ -78,7 +270,6 @@ public: \
 	{ \
 		lookup = false; \
 		found = false; \
-		typedesc = NULL; \
 	} \
 	void InitProp(CEntity *pEnt) \
 	{ \
@@ -88,37 +279,35 @@ public: \
 			if (!lookup) \
 			{ \
 				if (search == PROP_SEND) \
-					found = gamehelpers->FindSendPropInfo(pEnt->edict()->GetNetworkable()->GetServerClass()->GetName(), #name, &info); \
+				{ \
+					found = GetSendPropOffset(pEnt->edict()->GetNetworkable()->GetServerClass()->GetName(), #name, offset); \
+				} \
 				else \
 				{ \
-					datamap_t *pMap = gamehelpers->GetDataMap(pEnt->BaseEntity()); \
-					if (pMap) \
-					{ \
-						typedesc = gamehelpers->FindInDataMap(pMap, #name); \
-						if (typedesc != NULL) \
-							found = true; \
-					} \
+					found = GetDataMapOffset(pEnt->BaseEntity(), #name, offset); \
+				} \
+				if (!found) \
+				{ \
+					g_pSM->LogError(myself,"[CENTITY] Failed lookup of prop %s on entity %s", #name, pEnt->GetClassname()); \
 				} \
 				lookup = true; \
 			} \
 			if (found) \
-				if (search == PROP_SEND) \
-					pThisType->name = (typeof *)(((uint8_t *)(pEnt->BaseEntity())) + info.actual_offset); \
-				else \
-					pThisType->name = (typeof *)(((uint8_t *)(pEnt->BaseEntity())) + typedesc->fieldOffset[TD_OFFSET_NORMAL]); \
+			{ \
+				pThisType->name.ptr = (typeof *)(((uint8_t *)(pEnt->BaseEntity())) + offset); \
+			} \
 			else \
-				pThisType->name = NULL; \
+			{ \
+				pThisType->name.ptr = NULL; \
+			} \
 		} \
 	} \
 private: \
-	sm_sendprop_info_t info; \
-	typedescription_t *typedesc; \
+	unsigned int offset; \
 	bool lookup; \
 	bool found; \
 }; \
 static name##PropTracker name##PropTrackerObj;
-
-
 
 #define DECLARE_DEFAULTHANDLER(type, name, ret, params, paramscall) \
 ret type::name params \
@@ -172,5 +361,33 @@ void type::Internal##name params \
 	if (pEnt) \
 		pEnt->m_bIn##name = false; \
 }
+
+#define DECLARE_DEFAULTHANDLER_DETOUR_void(type, name, params, paramscall) \
+void type::name params \
+{ \
+	(((type *)BaseEntity())->*name##_Actual) paramscall; \
+} \
+void type::Internal##name params \
+{ \
+	type *pEnt = (type *)CEntity::Instance((CBaseEntity *)this); \
+	assert(pEnt); \
+	pEnt->name paramscall; \
+} \
+void (type::* type::name##_Actual) params = NULL; \
+
+#define DECLARE_DEFAULTHANDLER_DETOUR(type, name, ret, params, paramscall) \
+ret type::name params \
+{ \
+	return (((type *)BaseEntity())->*name##_Actual) paramscall; \
+} \
+ret type::Internal##name params \
+{ \
+	type *pEnt = (type *)CEntity::Instance((CBaseEntity *)this); \
+	assert(pEnt); \
+	return pEnt->name paramscall; \
+} \
+ret (type::* type::name##_Actual) params = NULL;
+
+
 
 #endif // _INCLUDE_MACROS_H_
