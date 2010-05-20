@@ -145,4 +145,3 @@ extern ConVar SentryCrit;
 extern ConVar SideWinderVersion;
 
 #endif // _INCLUDE_SOURCEMOD_EXTENSION_PROPER_H_
-
