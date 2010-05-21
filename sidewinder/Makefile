@@ -20,7 +20,10 @@ PROJECT = sidewinder
 #Uncomment for Metamod: Source enabled extension
 USEMETA = true
 
-OBJECTS = sdk/smsdk_ext.cpp extension.cpp CTrackingProjectile.cpp CEntity/CEntity.cpp CEntity/CEntityManager.cpp CEntity/CPlayer.cpp CEntity/CEntityBase.cpp CEntity/rtti.cpp CEntity/CHelpers.cpp
+OBJECTS = sdk/smsdk_ext.cpp extension.cpp CTrackingProjectile.cpp CEntity/CEntity.cpp CEntity/CEntityManager.cpp \
+			CEntity/CPlayer.cpp CEntity/CEntityBase.cpp CEntity/rtti.cpp CEntity/CHelpers.cpp CEntity/util.cpp \
+			CEntity/CRecipientFilter.cpp CEntity/EntityOutput.cpp CEntity/CAnimating.cpp CEntity/CTakeDamageInfo.cpp
+
 BINARY = $(PROJECT).ext
 
 ENGINE = orangeboxvalve
