@@ -148,7 +148,7 @@ public: //Utilities
 
 public: //String Tables
 	bool AddFileToDownloadTable(const char *path);
-	void AddFolderToDownloadTable(const char *path);
+//	void AddFolderToDownloadTable(const char *path);
 	int FindStringTable(const char *table);
 	bool AddToStringTable(int tableidx, const char *str);
 	bool LockStringTables(bool lock);

@@ -77,6 +77,7 @@ bool CHelpers::AddFileToDownloadTable(const char *path)
 	return false;
 }
 
+#if 0
 void CHelpers::AddFolderToDownloadTable(const char *path)
 {
 	char newpath[256];
@@ -118,6 +119,7 @@ void CHelpers::AddFolderToDownloadTable(const char *path)
 
 	FindClose(hFind);
 }
+#endif
 
 //==========================================================================================
 // Purpose: StringTable Functions
