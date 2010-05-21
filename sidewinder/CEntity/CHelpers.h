@@ -165,6 +165,7 @@ public: //Scanned Functions
 
 extern CHelpers *pHelpers;
 
+#ifdef WIN32
 typedef int (__fastcall *LoadEventsFromFileFunction)(IGameEventManager2 * /*this*/, int /*dummy*/, const char *);
 typedef void (__fastcall *KVSetStringFunction)(KeyValues * /*this*/, int /*dummy*/, const char *, const char *);
 typedef CBaseEntity* (*CreateEntityByNameFunction)(const char *, int);
@@ -172,6 +173,15 @@ typedef int (*DispatchSpawnFunction)(CBaseEntity *);
 typedef CBaseEntity* (__fastcall *GiveNamedItemFunction) (void* /*this*/, int /*dummy*/, const char *, int, CScriptCreatedItem *, bool);
 typedef void (__fastcall *WeaponEquipFunction) (void * /*this*/, int /*dummy*/, CBaseEntity *);
 //typedef float (__fastcall *PlaySceneFunction) (void * /*this*/, int /*dummy*/, const char *, float, AI_Response *, IRecipientFilter *);
+#else
+typedef int (*LoadEventsFromFileFunction)(IGameEventManager2 * /*this*/, const char *);
+typedef void (*KVSetStringFunction)(KeyValues * /*this*/, const char *, const char *);
+typedef CBaseEntity* (*CreateEntityByNameFunction)(const char *, int);
+typedef int (*DispatchSpawnFunction)(CBaseEntity *);
+typedef CBaseEntity* (*GiveNamedItemFunction) (void* /*this*/, const char *, int, CScriptCreatedItem *, bool);
+typedef void (*WeaponEquipFunction) (void * /*this*/, CBaseEntity *);
+//typedef float (*PlaySceneFunction) (void * /*this*/, const char *, float, AI_Response *, IRecipientFilter *);
+#endif // WIN32
 
 #define StrEqual(first,second) strcmp(first,second) == 0
 

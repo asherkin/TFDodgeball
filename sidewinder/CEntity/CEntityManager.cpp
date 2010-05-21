@@ -29,9 +29,9 @@ typedef CHandle<CBaseEntity> EHANDLE;
 #include "CEntity.h"
 #include "shareddefs.h"
 #include "usercmd.h"
-#ifdef WIN32
+//#ifdef WIN32
 #include "rtti.h"
-#endif
+//#endif
 
 
 SH_DECL_HOOK1(IEntityFactoryDictionary, Create, SH_NOATTRIB, 0, IServerNetworkable *, const char *);
