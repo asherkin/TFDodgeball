@@ -1,8 +1,7 @@
 /**
-* vim: set ts=4 :
 * =============================================================================
 * CEntity Entity Handling Framework
-* Copyright (C) 2009 Matt Woodrow.  All rights reserved.
+* Copyright (C) 2010 Matt Woodrow.  All rights reserved.
 * =============================================================================
 *
 * This program is free software; you can redistribute it and/or modify it under
@@ -17,7 +16,7 @@
 * You should have received a copy of the GNU General Public License along with
 * this program.  If not, see <http://www.gnu.org/licenses/>.
 *
-* CEntity Entity Handling Framework version 1.0 by Matt 'pRED*' Woodrow
+* CEntity Entity Handling Framework version 2.0 by Matt 'pRED*' Woodrow
 *
 * - Credits:
 *		- This is largely (or entirely) based on a concept by voogru - http://voogru.com/
@@ -60,6 +59,13 @@
 *	- Change log
 *		- 1.0
 *			- Initial import of basic CEntity and CPlayer
+*		- 1.x
+*			- Unlogged fixes/changes added after original version. TODO: Grab these from the hg changelog sometime.
+*		- 2.0
+*			- Improved LINK_ENTITY_TO_CLASS to use DLL Classnames. tf_projectile_rocket changed to CTFProjectile_Rocket for example.
+*			- Added the ability to handle entity Inputs/Outputs.
+*			- Cleaned up Macros used for almost everything.
+*			- Plenty of stuff that needs adding here.
 */
 
 #ifndef _INCLUDE_CENTITY_H_

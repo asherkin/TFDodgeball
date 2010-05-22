@@ -8,6 +8,8 @@ SH_DECL_MANUALEXTERN3(FVisible, bool, CBaseEntity *, int, CBaseEntity **);
 LINK_ENTITY_TO_CLASS(CTFProjectile_Rocket, CTrackingProjectile);
 LINK_ENTITY_TO_CLASS(CTFProjectile_SentryRocket, CTrackingProjectile);
 
+//LINK_ENTITY_TO_CUSTOM_CLASS(tf_projectile_trackingrocket, tf_projectile_rocket, CTrackingProjectile)
+
 ConVar RocketSpeedMul("sm_dodgeball_speedmul", "0.5", FCVAR_NONE);
 ConVar ReflectSpeedInk("sm_dodgeball_reflectinc", "0.02", FCVAR_NONE);
 
@@ -141,7 +143,7 @@ bool CTrackingProjectile::IsValidTarget(CEntity *pEntity)
 		}
 	}
 
-	if (pEntity->GetTeam() != GetTeam() && FVisible(pEntity->BaseEntity(), MASK_OPAQUE, NULL))
+	if ((pEntity->GetTeamNumber() != GetTeamNumber()) && ((GetLocalOrigin() - pEntity->GetLocalOrigin()).Length() >= 64) && FVisible(pEntity->BaseEntity(), MASK_NPCSOLID_BRUSHONLY, NULL))
 	{
 			return true;
 	}

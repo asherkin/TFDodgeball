@@ -1,5 +1,4 @@
 /**
- * vim: set ts=4 :
  * =============================================================================
  * SourceMod Sample Extension
  * Copyright (C) 2004-2008 AlliedModders LLC.  All rights reserved.

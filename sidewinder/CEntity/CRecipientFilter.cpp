@@ -1,8 +1,7 @@
 /**
-* vim: set ts=4 :
 * =============================================================================
-* Team Fortress 2 Rocket Arena Framework
-* Copyright (C) 2009 Brett Powell.  All rights reserved.
+* CEntity Entity Handling Framework
+* Copyright (C) 2010 Matt Woodrow.  All rights reserved.
 * =============================================================================
 *
 * This program is free software; you can redistribute it and/or modify it under
