@@ -131,7 +131,7 @@ bool CTrackingProjectile::IsValidTarget(CEntity *pEntity)
 	if (pPlayer->GetPlayerClass() == PLAYERCLASS_SPY) 
 	{
 		//Cloaky
-		if (pPlayer->GetPlayerCond() & PLAYERCOND_SPYCLOAK)
+		if (pPlayer->GetPlayerCond() & PLAYERCOND_CLOAKED)
 		{
 			return false;
 		}
@@ -153,9 +153,12 @@ bool CTrackingProjectile::IsValidTarget(CEntity *pEntity)
 
 void CTrackingProjectile::TurnToTarget(CEntity *pEntity)
 {
-	Vector targetLocation = pEntity->GetLocalOrigin();
-	Vector rocketLocation = GetLocalOrigin();
+	TurnToLocaton(pEntity->GetLocalOrigin());
+}
 
+void CTrackingProjectile::TurnToLocaton(Vector targetLocation)
+{
+	Vector rocketLocation = GetLocalOrigin();
 	Vector rocketVec = GetAbsVelocity();
 
 	Vector locationToTarget = targetLocation;

@@ -17,6 +17,7 @@ public:
 	virtual void FindThink(void);
 	bool IsValidTarget(CEntity *pEntity);
 	void TurnToTarget(CEntity *pEntity);
+	void TurnToLocaton(Vector targetLocation);
 
 	bool IsCritical(void);
 	void SetCritical(bool bCritical);
