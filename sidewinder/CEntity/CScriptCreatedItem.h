@@ -1,3 +1,5 @@
+// Taken from the TF2Items extension by Asher "asherkin" Baker
+
 class CScriptCreatedAttribute							// Win Length = 204 / Lin Length = 396
 {
 public:

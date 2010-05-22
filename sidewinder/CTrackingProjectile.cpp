@@ -143,7 +143,7 @@ bool CTrackingProjectile::IsValidTarget(CEntity *pEntity)
 		}
 	}
 
-	if ((pEntity->GetTeamNumber() != GetTeamNumber()) && ((GetLocalOrigin() - pEntity->GetLocalOrigin()).Length() >= 64) && FVisible(pEntity->BaseEntity(), MASK_NPCSOLID_BRUSHONLY, NULL))
+	if ((pEntity->GetTeamNumber() != GetTeamNumber()) && ((GetLocalOrigin() - pEntity->GetLocalOrigin()).Length() >= 64) && FVisible(pEntity->BaseEntity(), MASK_SOLID, NULL))
 	{
 			return true;
 	}

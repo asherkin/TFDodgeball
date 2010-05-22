@@ -1,6 +1,5 @@
 #include "CAnimating.h"
 
-/* Yes we can link to c++ classnames now! - Windows only currently though */
 LINK_ENTITY_TO_CLASS(CBaseAnimating, CAnimating);
 
 IMPLEMENT_NULL_DATADESC(CAnimating);

@@ -131,32 +131,32 @@
 			}
 			"CanSpeakVoiceCommand"
 			{
-				"windows"	"439" // CHECK
+				"windows"	"439"
 				"linux"		"440"
 			}
 			"IsReadyToSpawn"
 			{
-				"windows"	"418" // CHECK
+				"windows"	"418"
 				"linux"		"419"
 			}
 			"OnTakeDamage_Alive"
 			{
-				"windows"	"261" // CHECK
+				"windows"	"261"
 				"linux"		"262"
 			}
 			"Jump"
 			{
-				"windows"	"318" // CHECK
+				"windows"	"318"
 				"linux"		"319"
 			}
 			"ProcessUserCmds"
 			{
-				"windows"	"402" // CHECK
+				"windows"	"402"
 				"linux"		"403"
 			}
 			"GetSoundEmissionOrigin"
 			{
-				"windows"	"147" // CHECK
+				"windows"	"147"
 				"linux"		"148"
 			}
 		}
