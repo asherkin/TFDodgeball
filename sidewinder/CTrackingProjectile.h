@@ -8,6 +8,7 @@ class CTrackingProjectile : public CEntity
 {
 public:
 	DECLARE_CLASS(CTrackingProjectile, CEntity);
+	DECLARE_DATADESC();
 
 	virtual void Init(edict_t *pEdict, CBaseEntity *pBaseEntity);
 	virtual void Spawn(void);
