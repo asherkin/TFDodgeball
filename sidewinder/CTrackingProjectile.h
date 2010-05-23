@@ -18,7 +18,6 @@ public:
 	virtual void FindThink(void);
 	bool IsValidTarget(CEntity *pEntity);
 	void TurnToTarget(CEntity *pEntity);
-	void TurnToLocaton(Vector targetLocation);
 
 	bool IsCritical(void);
 	void SetCritical(bool bCritical);
@@ -31,7 +30,7 @@ public: //Autohandlers
 
 private:
 	int m_currentTarget;
-	float m_lastSearch;
+	int m_lastTeam;
 
 protected:
 	bool   m_bHasThought;
