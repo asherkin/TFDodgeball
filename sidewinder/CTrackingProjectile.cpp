@@ -10,7 +10,10 @@ LINK_ENTITY_TO_CLASS(CTFProjectile_SentryRocket, CTrackingProjectile);
 
 //LINK_ENTITY_TO_CUSTOM_CLASS(tf_projectile_trackingrocket, tf_projectile_rocket, CTrackingProjectile)
 
-IMPLEMENT_NULL_DATADESC(CTrackingProjectile);
+BEGIN_DATADESC(CTrackingProjectile)
+	DEFINE_THINKFUNC(FindThink),
+	DEFINE_THINKFUNC(TrackThink),
+END_DATADESC()
 
 ConVar RocketSpeedMul("sm_dodgeball_speedmul", "0.5", FCVAR_NONE);
 ConVar ReflectSpeedInk("sm_dodgeball_reflectinc", "0.02", FCVAR_NONE);
@@ -44,6 +47,7 @@ void CTrackingProjectile::Spawn(void)
 
 void CTrackingProjectile::FindThink(void)
 {
+
 	CEntity *pBestVictim = NULL;
 	float flBestVictim = MAX_TRACE_LENGTH;
 	float flVictimDist;
@@ -97,7 +101,7 @@ void CTrackingProjectile::TrackThink(void)
 		m_lastTeam = GetTeamNumber();
 
 		SetThink(&CTrackingProjectile::FindThink);
-		SetNextThink(gpGlobals->curtime + 1.0); // This stuff isn't working properly yet.
+		SetNextThink(gpGlobals->curtime + 10.0); // This stuff isn't working properly yet.
 		return;
 	}
 

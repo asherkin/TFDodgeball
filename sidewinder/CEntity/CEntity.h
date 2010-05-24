@@ -106,10 +106,10 @@ typedef void (CEntity::*BASEPTR)(void);
 typedef void (CEntity::*ENTITYFUNCPTR)(CEntity *pOther);
 typedef void (CEntity::*USEPTR)(CEntity *pActivator, CEntity *pCaller, USE_TYPE useType, float value);
 
+#define DEFINE_THINKFUNC( function ) DEFINE_FUNCTION_RAW( function, BASEPTR )
+#define DEFINE_ENTITYFUNC( function ) DEFINE_FUNCTION_RAW( function, ENTITYFUNCPTR )
+#define DEFINE_USEFUNC( function ) DEFINE_FUNCTION_RAW( function, USEPTR )
 
-/**
- * Don't think this is even used yet, not sure why I pasted it in.
- */
 struct inputdata_t
 {
 	CBaseEntity *pActivator;		// The entity that initially caused this chain of output events.
