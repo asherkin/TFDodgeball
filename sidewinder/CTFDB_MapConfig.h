@@ -11,6 +11,7 @@ public:
 	DECLARE_DATADESC();
 
 	void Spawn(void);
+	void DumpDataFunc(inputdata_t &inputData);
 
 //	void InputSetMaxRockets( inputdata_t &data );
 //	void InputSetSpawnInterval( inputdata_t &data );

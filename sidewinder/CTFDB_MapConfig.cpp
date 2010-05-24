@@ -18,6 +18,8 @@ BEGIN_DATADESC_NO_BASE(CTFDB_MapConfig)
 	DEFINE_INPUT(m_fReflectInc, FIELD_FLOAT, "SetReflectInc"),
 	DEFINE_INPUT(m_fTurnRate, FIELD_FLOAT, "SetTurnRate"),
 
+	DEFINE_INPUTFUNC(FIELD_VOID, "DumpData", DumpDataFunc),
+
 	// Base Stuff
 	DEFINE_KEYFIELD( m_iClassname, FIELD_STRING, "classname" ),
 	DEFINE_GLOBAL_KEYFIELD( m_iGlobalname, FIELD_STRING, "globalname" ),
@@ -45,4 +47,24 @@ void CTFDB_MapConfig::Spawn(void)
 	m_fTurnRate = 0.0;
 
 	BaseClass::Spawn();
+
+	inputdata_t p;
+	DumpDataFunc(p);
+}
+
+void CTFDB_MapConfig::DumpDataFunc(inputdata_t &inputData)
+{
+	g_pSM->LogMessage(myself, "Datatable Dump:");
+	g_pSM->LogMessage(myself, ">>> m_iMaxRockets = %d", m_iMaxRockets);
+	g_pSM->LogMessage(myself, ">>> m_fSpawnInterval = %f", m_fSpawnInterval);
+	g_pSM->LogMessage(myself, ">>> m_fSpeedMul = %f", m_fSpeedMul);
+	g_pSM->LogMessage(myself, ">>> m_fReflectInc = %f", m_fReflectInc);
+	g_pSM->LogMessage(myself, ">>> m_fTurnRate = %f", m_fTurnRate);
+	g_pSM->LogMessage(myself, ">>> m_iClassname = %s", m_iClassname);
+	g_pSM->LogMessage(myself, ">>> m_iGlobalname = %s", m_iGlobalname);
+	g_pSM->LogMessage(myself, ">>> m_nNextThinkTick = %d", m_nNextThinkTick);
+	g_pSM->LogMessage(myself, ">>> m_iEFlags = %d", m_iEFlags);
+	g_pSM->LogMessage(myself, ">>> m_iName = %s", m_iName);
+	g_pSM->LogMessage(myself, ">>> m_spawnflags = %d", m_spawnflags);
+	g_pSM->LogMessage(myself, ">>> m_fFlags = %u", m_fFlags);
 }
