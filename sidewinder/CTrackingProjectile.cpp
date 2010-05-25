@@ -100,7 +100,7 @@ void CTrackingProjectile::TrackThink(void)
 {
 	if (m_lastTeam != GetTeamNumber())
 	{
-		g_pSM->LogMessage(myself, "Rocket Airblasted!");
+		//g_pSM->LogMessage(myself, "Rocket Airblasted!");
 
 		m_lastTeam = GetTeamNumber();
 
