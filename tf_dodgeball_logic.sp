@@ -26,7 +26,7 @@ new Handle:g_hConVars[CONVAR_COUNT] = {INVALID_HANDLE, ...};
 new g_config_iWeaponParticle;
 
 public OnPluginStart() {
-	g_hConVars[0] = CreateConVar("dodgeball_version", PLUGIN_VERSION, PLUGIN_NAME, FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
+	g_hConVars[0] = CreateConVar("tfdodgeball_version", PLUGIN_VERSION, PLUGIN_NAME, FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
 	g_hConVars[1] = CreateConVar("sm_dodgeball_weaponparticle", "0", "", FCVAR_NONE, true, 0.0, true, 5.0);
 	
 	g_config_iWeaponParticle = 0;
