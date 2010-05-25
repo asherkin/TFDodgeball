@@ -37,12 +37,12 @@
  */
 
 /* Basic information exposed publicly */
-#define SMEXT_CONF_NAME			"Sidewinder"
-#define SMEXT_CONF_DESCRIPTION	"Guided Rockets!"
+#define SMEXT_CONF_NAME			"TFDodgeball"
+#define SMEXT_CONF_DESCRIPTION	"Helper for the TFDodgeball plugin"
 #define SMEXT_CONF_VERSION		"3.0.0"
-#define SMEXT_CONF_AUTHOR		"pRED*/Naris/Asherkin"
+#define SMEXT_CONF_AUTHOR		"Asherkin (based on work by pRED*)"
 #define SMEXT_CONF_URL			"http://limetech.org/"
-#define SMEXT_CONF_LOGTAG		"SIDEWINDER"
+#define SMEXT_CONF_LOGTAG		"TFDB"
 #define SMEXT_CONF_LICENSE		"GPL"
 #define SMEXT_CONF_DATESTRING	__DATE__
 

@@ -9,7 +9,7 @@
 
 #define PLUGIN_NAME		"TFDodgeball (Weapon / Player Management)"
 #define PLUGIN_AUTHOR		"Asherkin"
-#define PLUGIN_VERSION		"1.0.0"
+#define PLUGIN_VERSION		"1.1.0"
 #define PLUGIN_CONTACT		"http://limetech.org/"
 
 public Plugin:myinfo = {
@@ -51,6 +51,9 @@ public Event_PostInventoryApplication(Handle:event, const String:name[], bool:do
 
 public Action:RemoveWeapons(Handle:timer, any:client)
 {
+	if (!IsClientInGame(client))
+		return Plugin_Stop;
+		
 	for (new slot = 1;  slot <= 5;  slot++) {
 		TF2_RemoveWeaponSlot(client, slot);
 	}

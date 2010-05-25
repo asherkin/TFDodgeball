@@ -159,13 +159,6 @@
 				"windows"	"147"
 				"linux"		"148"
 			}
-			
-			// Asher's Stuff
-			"StartBuilding" // Unused
-			{
-				"windows"	"318"
-				"linux"		"320"
-			}
 		}
 	}
 	

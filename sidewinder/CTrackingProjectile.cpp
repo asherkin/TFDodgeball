@@ -10,10 +10,14 @@ LINK_ENTITY_TO_CLASS(CTFProjectile_SentryRocket, CTrackingProjectile);
 
 //LINK_ENTITY_TO_CUSTOM_CLASS(tf_projectile_trackingrocket, tf_projectile_rocket, CTrackingProjectile)
 
+#if 0
 BEGIN_DATADESC(CTrackingProjectile)
 	DEFINE_THINKFUNC(FindThink),
 	DEFINE_THINKFUNC(TrackThink),
 END_DATADESC()
+#endif
+
+IMPLEMENT_NULL_DATADESC(CTrackingProjectile);
 
 ConVar RocketSpeedMul("sm_dodgeball_speedmul", "0.5", FCVAR_NONE);
 ConVar ReflectSpeedInk("sm_dodgeball_reflectinc", "0.02", FCVAR_NONE);

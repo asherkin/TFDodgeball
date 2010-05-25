@@ -17,7 +17,7 @@
 
 #define PLUGIN_NAME		"TFDodgeball (Rocket Management)"
 #define PLUGIN_AUTHOR		"Asherkin"
-#define PLUGIN_VERSION		"1.0.0"
+#define PLUGIN_VERSION		"1.1.0"
 #define PLUGIN_CONTACT		"http://limetech.org/"
 
 public Plugin:myinfo = {
