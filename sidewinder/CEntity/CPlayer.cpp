@@ -300,10 +300,19 @@ bool CPlayer::InternalFVisible(CBaseEntity *pEntity, int traceMask, CBaseEntity 
 		RETURN_META_VALUE(MRES_IGNORED, false);
 	}
 
+	// HACK: Fix this properly
+	CEntity *pFirstParam = *pEntity;
+	if (!pFirstParam)
+	{
+		g_pSM->LogError(myself, "No matching CEntity found for *pEntity in CPlayer::InternalFVisible, aborting call.");
+		RETURN_META_VALUE(MRES_IGNORED, false);
+	}
+
 	int index = pEnt->entindex();
 	pEnt->m_bInFVisible = true;
 	CEntity *pCopyBack;
-	bool ret = pEnt->FVisible(*pEntity, traceMask, &pCopyBack);
+
+	bool ret = pEnt->FVisible(/* *pEntity */ pFirstParam, traceMask, &pCopyBack);
 	if (pEnt == CEntity::Instance(index))
 		pEnt->m_bInFVisible = false;
 
