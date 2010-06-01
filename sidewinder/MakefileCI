@@ -3,9 +3,9 @@
 # Modified by Asher Baker (asherkin) for the "tf_dodgeball" project
 # !!! THIS VERSION IS FOR THE AUTOBUILDER !!!
 
-SMSDK = ../sourcemod
-HL2SDK_OB_VALVE = ../hl2sdk-ob-valve
-MMSOURCE18 = ../mmsource
+SMSDK = ../../sourcemod
+HL2SDK_OB_VALVE = ../../hl2sdk-ob-valve
+MMSOURCE18 = ../../mmsource
 
 #####################################
 ### EDIT BELOW FOR OTHER PROJECTS ###
