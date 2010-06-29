@@ -4,6 +4,8 @@
 #define REQUIRE_EXTENSIONS
 #include <sdktools>
 #include <sdkhooks>
+#include <tf2>
+#include <tf2_stocks>
 
 #define TEAM_SPEC 1
 #define TEAM_RED 2

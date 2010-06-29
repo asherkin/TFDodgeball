@@ -25,7 +25,7 @@ void CDodgeballPlayer::Spawn(void)
 
 CBaseEntity *CDodgeballPlayer::GiveNamedItem(char const *szName, int iSubType, CScriptCreatedItem *item, bool bUnknown)
 {
-	if (item->m_iItemDefinitionIndex != 21 && item->m_iItemDefinitionIndex != 40)
+	if (GetPlayerClass() == PLAYERCLASS_PYRO && !(item->m_iItemDefinitionIndex == 21 || item->m_iItemDefinitionIndex == 40))
 	{
 		//return BaseClass::GiveNamedItem(szName, iSubType, item, bUnknown);
 		return NULL;
