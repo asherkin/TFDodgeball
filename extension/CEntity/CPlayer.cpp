@@ -68,6 +68,7 @@ DEFINE_PROP(m_iHealth, CPlayer);
 //DEFINE_PROP(m_iMaxHealth, CPlayer);
 DEFINE_PROP(m_lifeState, CPlayer);
 DEFINE_PROP(m_iClass, CPlayer);
+DEFINE_PROP(m_iDesiredPlayerClass, CPlayer);
 DEFINE_PROP(m_nPlayerCond, CPlayer);
 DEFINE_PROP(m_bJumping, CPlayer);
 DEFINE_PROP(m_nPlayerState, CPlayer);
@@ -82,7 +83,7 @@ DEFINE_PROP(m_hObserverTarget, CPlayer);
 //Datamaps
 DEFINE_PROP(m_nButtons, CPlayer);
 
-IMPLEMENT_NULL_DATADESC(CPlayer);
+//IMPLEMENT_NULL_DATADESC(CPlayer);
 
 DECLARE_DEFAULTHANDLER_void(CPlayer, LeaveVehicle, (const Vector &vecExitPoint, const QAngle &vecExitAngles), (vecExitPoint, vecExitAngles));
 DECLARE_DEFAULTHANDLER(CPlayer, GiveNamedItem, CBaseEntity *, (char const *szName, int iSubType, CScriptCreatedItem *item, bool bUnknown), (szName, iSubType, item, bUnknown));
@@ -177,9 +178,16 @@ bool CPlayer::IsAlive()
 	return m_lifeState == LIFE_ALIVE;
 }
 
+void CPlayer::SetPlayerClass(int playerclass, bool persistant)
+{
+	*m_iClass = playerclass;
+	if (persistant)
+		*m_iDesiredPlayerClass = playerclass;
+}
+
 int CPlayer::GetPlayerClass()
 {
-	return m_iClass;
+	return *m_iClass;
 }
 
 int CPlayer::GetPlayerCond()
@@ -304,7 +312,7 @@ bool CPlayer::InternalFVisible(CBaseEntity *pEntity, int traceMask, CBaseEntity 
 	CEntity *pFirstParam = *pEntity;
 	if (!pFirstParam)
 	{
-		g_pSM->LogError(myself, "No matching CEntity found for *pEntity in CPlayer::InternalFVisible, aborting call.");
+		//g_pSM->LogError(myself, "No matching CEntity found for *pEntity in CPlayer::InternalFVisible, aborting call.");
 		RETURN_META_VALUE(MRES_IGNORED, false);
 	}
 

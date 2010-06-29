@@ -8,12 +8,12 @@
 
 "Commands"
 {
-	"TF Dodgeball"
+	"TFDodgeball"
 	{
 		"Fire Rocket"
 		{
 			"cmd"			"sm_dodgeball_rocket @1"
-			"admin"			"tf_dodgeball_admin"
+			"admin"			"tfdodgeball_admin"
 			"execute"		"player"
 			"1"
 			{
@@ -28,13 +28,13 @@
 		"Fire Rocket From Head"
 		{
 			"cmd"			"sm_dodgeball_headrocket"
-			"admin"			"tf_dodgeball_admin"
+			"admin"			"tfdodgeball_admin"
 			"execute"		"player"
 		}
 		"Spawn On/Off"
 		{
 			"cmd"			"sm_dodgeball_enabled @1"
-			"admin"			"tf_dodgeball_admin"
+			"admin"			"tfdodgeball_admin"
 			"execute"		"server"
 			"1"
 			{
@@ -45,7 +45,7 @@
 		"Criticals On/Off"
 		{
 			"cmd"			"sm_dodgeball_criticals @1"
-			"admin"			"tf_dodgeball_admin"
+			"admin"			"tfdodgeball_admin"
 			"execute"		"server"
 			"1"
 			{
@@ -56,7 +56,7 @@
 		"Spawn Interval"
 		{
 			"cmd"			"sm_dodgeball_spawninterval @1"
-			"admin"			"tf_dodgeball_admin"
+			"admin"			"tfdodgeball_admin"
 			"execute"		"server"
 			"1"
 			{
@@ -81,7 +81,7 @@
 		"Speed Multiplier"
 		{
 			"cmd"			"sm_dodgeball_speedmul @1"
-			"admin"			"tf_dodgeball_admin"
+			"admin"			"tfdodgeball_admin"
 			"execute"		"server"
 			"1"
 			{
@@ -106,7 +106,7 @@
 		"Speed Increase"
 		{
 			"cmd"			"sm_dodgeball_reflectinc @1"
-			"admin"			"tf_dodgeball_admin"
+			"admin"			"tfdodgeball_admin"
 			"execute"		"server"
 			"1"
 			{
@@ -131,7 +131,7 @@
 		"Base Damage"
 		{
 			"cmd"			"sm_dodgeball_basedamage @1"
-			"admin"			"tf_dodgeball_admin"
+			"admin"			"tfdodgeball_admin"
 			"execute"		"server"
 			"1"
 			{
@@ -156,7 +156,7 @@
 		"Max Rockets"
 		{
 			"cmd"			"sm_dodgeball_maxrockets @1"
-			"admin"			"tf_dodgeball_admin"
+			"admin"			"tfdodgeball_admin"
 			"execute"		"server"
 			"1"
 			{
@@ -181,7 +181,7 @@
 		"Weapon Particle"
 		{
 			"cmd"			"sm_dodgeball_weaponparticle @1"
-			"admin"			"tf_dodgeball_admin"
+			"admin"			"tfdodgeball_admin"
 			"execute"		"server"
 			"1"
 			{

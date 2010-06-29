@@ -17,7 +17,7 @@ BEGIN_DATADESC(CTrackingProjectile)
 END_DATADESC()
 #endif
 
-IMPLEMENT_NULL_DATADESC(CTrackingProjectile);
+//IMPLEMENT_NULL_DATADESC(CTrackingProjectile);
 
 ConVar RocketSpeedMul("sm_dodgeball_speedmul", "0.5", FCVAR_NONE);
 ConVar ReflectSpeedInk("sm_dodgeball_reflectinc", "0.02", FCVAR_NONE);

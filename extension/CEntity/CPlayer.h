@@ -34,10 +34,11 @@ class CPlayer : public CEntity
 {
 public:
 	DECLARE_CLASS(CPlayer, CEntity);
-	DECLARE_DATADESC();
+	//DECLARE_DATADESC();
 	virtual bool IsPlayer();
 
 	bool IsAlive();
+	void SetPlayerClass(int playerclass, bool persistant = true);
 	int GetPlayerClass();
 	int GetPlayerCond();
 	bool IsDisguised();
@@ -108,6 +109,7 @@ protected: // Sendprops
 	//DECLARE_SENDPROP(uint16_t, m_i);
 	DECLARE_SENDPROP(uint8_t, m_lifeState);
 	DECLARE_SENDPROP(uint8_t, m_iClass);
+	DECLARE_SENDPROP(uint8_t, m_iDesiredPlayerClass);
 	DECLARE_SENDPROP(uint16_t, m_nPlayerCond);
 	DECLARE_SENDPROP(bool, m_bJumping);
 	DECLARE_SENDPROP(uint8_t, m_nNumHealers);
@@ -124,6 +126,7 @@ protected:
 	DECLARE_DATAMAP(int, m_nButtons);
 };
 
+#define PLAYERCLASS_UNKNOWN 0
 #define PLAYERCLASS_SCOUT 1
 #define PLAYERCLASS_SNIPER 2
 #define PLAYERCLASS_SOLDIER 3
@@ -158,9 +161,10 @@ protected:
 #define PLAYERCOND_BUFFED (1<<16)
 #define PLAYERCOND_CHARGING (1<<17)
 #define PLAYERCOND_DEMOBUFF (1<<18)
-#define PLAYERCOND_HEALING (1<<19)
-#define PLAYERCOND_ONFIRE (1<<20)
-#define PLAYERCOND_OVERHEALED (1<<21)
-#define PLAYERCOND_JARATED (1<<22)
+#define PLAYERCOND_CRITCOLA (1<<19)
+#define PLAYERCOND_HEALING (1<<20)
+#define PLAYERCOND_ONFIRE (1<<21)
+#define PLAYERCOND_OVERHEALED (1<<22)
+#define PLAYERCOND_JARATED (1<<23)
 
 #endif // _INCLUDE_CPLAYER_H_

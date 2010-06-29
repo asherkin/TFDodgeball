@@ -12,12 +12,12 @@
 #define PROJECTILE_ROCKET 1
 #define PROJECTILE_ROCKET_SENTRY 2
 
-#define CONVAR_COUNT 6
+#define CONVAR_COUNT 7
 #define MAX_FAILED_LAUNCHER_SEARCHES 2
 
-#define PLUGIN_NAME		"TFDodgeball (Rocket Management)"
+#define PLUGIN_NAME		"TFDodgeball"
 #define PLUGIN_AUTHOR		"Asherkin"
-#define PLUGIN_VERSION		"1.1.0"
+#define PLUGIN_VERSION		"1.2.0"
 #define PLUGIN_CONTACT		"http://limetech.org/"
 
 public Plugin:myinfo = {
@@ -36,13 +36,19 @@ new g_config_iMaxRockets;
 new Float:g_config_flBaseDamage;
 new bool:g_config_bSpawnCriticals;
 new Float:g_config_flSpeedMul;
+new bool:g_config_bAutoJoin;
 
 new g_iRocketCount;
+
+new currentlauncherIndex_Red = -1;
+new currentlauncherIndex_Blue = -1;
 
 public OnPluginStart()
 {
 	RegAdminCmd("sm_dodgeball_rocket", Command_ForceRocket, ADMFLAG_SLAY);
 	RegAdminCmd("sm_dodgeball_headrocket", Command_HeadRocket, ADMFLAG_SLAY);
+	
+	CreateConVar("tfdodgeball_version", PLUGIN_VERSION, PLUGIN_NAME, FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
 	
 	g_hConVars[0] = CreateConVar("sm_dodgeball_enabled", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_hConVars[1] = CreateConVar("sm_dodgeball_spawninterval", "1.0", "", FCVAR_NONE, true, 0.0, false);
@@ -51,11 +57,14 @@ public OnPluginStart()
 	g_hConVars[4] = CreateConVar("sm_dodgeball_criticals", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_hConVars[5] = FindConVar("sm_dodgeball_speedmul");
 	
+	g_hConVars[6] = CreateConVar("sm_dodgeball_autojoin", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
+	
 	g_config_bSpawnEnabled = true;
 	g_config_iMaxRockets = 10;
 	g_config_flBaseDamage = 15.0;
 	g_config_bSpawnCriticals = true;
 	g_config_flSpeedMul = 0.5;
+	g_config_bAutoJoin = true;
 	
 	HookConVarChange(g_hConVars[0], config_bSpawnEnabled_changed);
 	HookConVarChange(g_hConVars[1], config_flSpawnInterval_changed);
@@ -63,11 +72,41 @@ public OnPluginStart()
 	HookConVarChange(g_hConVars[3], config_flBaseDamage_changed);
 	HookConVarChange(g_hConVars[4], config_bSpawnCriticals_changed);
 	HookConVarChange(g_hConVars[5], config_flSpeedMul_changed);
+	HookConVarChange(g_hConVars[6], config_bAutoJoin_changed);
 	
 	AutoExecConfig();
 	
 	HookEvent("teamplay_round_start", Event_TeamplayRoundStart);
 	HookEvent("teamplay_setup_finished", Event_TeamplaySetupFinished);
+	
+	HookEvent("player_spawn", Event_PlayerSpawn);
+}
+
+// Players
+
+public OnClientPutInServer(client) {
+	if (g_config_bAutoJoin)
+	{
+		FakeClientCommandEx(client, "jointeam 0");
+	}
+}
+
+public Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast) {
+	new client = GetClientOfUserId(GetEventInt(event, "userid"));
+	new TFClassType:class = TF2_GetPlayerClass(client);
+	
+	if (!(class == TFClassType:TFClass_Pyro || class == TFClassType:TFClass_Unknown)) {
+		TF2_SetPlayerClass(client, TFClassType:TFClass_Pyro, false, true);
+		TF2_RespawnPlayer(client);
+	}
+}
+
+// Rockets
+
+public OnMapEnd()
+{
+	currentlauncherIndex_Red = -1;
+	currentlauncherIndex_Blue = -1;
 }
 
 public Event_TeamplayRoundStart(Handle:event, const String:name[], bool:dontBroadcast) {
@@ -91,6 +130,7 @@ public config_iMaxRockets_changed(Handle:convar, const String:oldValue[], const 
 public config_flBaseDamage_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flBaseDamage = StringToFloat(newValue); }
 public config_bSpawnCriticals_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bSpawnCriticals = bool:StringToInt(newValue); }
 public config_flSpeedMul_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flSpeedMul = StringToFloat(newValue); }
+public config_bAutoJoin_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bAutoJoin = bool:StringToInt(newValue); }
 
 public config_flSpawnInterval_changed(Handle:convar, const String:oldValue[], const String:newValue[])
 {
@@ -177,9 +217,6 @@ fireTeamProjectile(iTeam, iType = PROJECTILE_ROCKET) {
 
 findNextTeamLaunchPosition(iTeam)
 {
-	static currentlauncherIndex_Red = -1;
-	static currentlauncherIndex_Blue = -1;
-	
 	static iFailedAttemptsToFindLauncher = 0;
 	
 	new launcherIndex = -1;

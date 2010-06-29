@@ -1,6 +1,6 @@
 # (C)2004-2010 SourceMod Development Team
 # Makefile written by David "BAILOPAN" Anderson
-# Modified by Asher Baker (asherkin) for the "tf_dodgeball" project
+# Modified by Asher Baker (asherkin) for the "tfdodgeball" project
 
 SMSDK = ../../sdks/sourcemod-1.3
 SRCDS_BASE = /home/hlds/tf2
@@ -15,7 +15,7 @@ MMSOURCE18 = ../../sdks/mmsource-1.8
 ### EDIT BELOW FOR OTHER PROJECTS ###
 #####################################
 
-PROJECT = sidewinder
+PROJECT = tfdodgeball
 
 #Uncomment for Metamod: Source enabled extension
 USEMETA = true
@@ -23,10 +23,10 @@ USEMETA = true
 OBJECTS = sdk/smsdk_ext.cpp extension.cpp
 
 OBJECTS += CEntity/CEntity.cpp CEntity/CEntityManager.cpp CEntity/CPlayer.cpp CEntity/CEntityBase.cpp CEntity/rtti.cpp \
-			CEntity/CHelpers.cpp CEntity/util.cpp CEntity/CRecipientFilter.cpp CEntity/EntityOutput.cpp CEntity/CAnimating.cpp \
+			CEntity/CHelpers.cpp CEntity/util.cpp CEntity/CRecipientFilter.cpp CEntity/EntityOutput.cpp \
 			CEntity/CTakeDamageInfo.cpp
 
-OBJECTS += CTrackingProjectile.cpp
+OBJECTS += CTrackingProjectile.cpp CDodgeballPlayer.cpp
 
 BINARY = $(PROJECT).ext
 

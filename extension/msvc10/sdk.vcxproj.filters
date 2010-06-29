@@ -1,0 +1,137 @@
+﻿<?xml version="1.0" encoding="utf-8"?>
+<Project ToolsVersion="4.0" xmlns="http://schemas.microsoft.com/developer/msbuild/2003">
+  <ItemGroup>
+    <Filter Include="Source Files">
+      <UniqueIdentifier>{4FC737F1-C7A5-4376-A066-2A32D752A2FF}</UniqueIdentifier>
+      <Extensions>cpp;c;cc;cxx;def;odl;idl;hpj;bat;asm;asmx</Extensions>
+    </Filter>
+    <Filter Include="Header Files">
+      <UniqueIdentifier>{93995380-89BD-4b04-88EB-625FBE52EBFB}</UniqueIdentifier>
+      <Extensions>h;hpp;hxx;hm;inl;inc;xsd</Extensions>
+    </Filter>
+    <Filter Include="SourceMod SDK">
+      <UniqueIdentifier>{31958233-BB2D-4e41-A8F9-CE8A4684F436}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CEntity">
+      <UniqueIdentifier>{2218fefc-dc5d-4605-949f-f1a7fc8468b2}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CEntity\Header Files">
+      <UniqueIdentifier>{1fa3d983-ad97-4eba-853d-3417c1718bcc}</UniqueIdentifier>
+    </Filter>
+    <Filter Include="CEntity\Source Files">
+      <UniqueIdentifier>{f10c795c-5a0c-4554-971e-d71c9216d1a3}</UniqueIdentifier>
+    </Filter>
+  </ItemGroup>
+  <ItemGroup>
+    <ClCompile Include="..\CTFDB_MapConfig.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CTrackingProjectile.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\extension.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\sdk\smsdk_ext.cpp">
+      <Filter>SourceMod SDK</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CEntity\CEntity.cpp">
+      <Filter>CEntity\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CEntity\CEntityBase.cpp">
+      <Filter>CEntity\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CEntity\CEntityManager.cpp">
+      <Filter>CEntity\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CEntity\CHelpers.cpp">
+      <Filter>CEntity\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CEntity\CPlayer.cpp">
+      <Filter>CEntity\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CEntity\CRecipientFilter.cpp">
+      <Filter>CEntity\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CEntity\CTakeDamageInfo.cpp">
+      <Filter>CEntity\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CEntity\EntityOutput.cpp">
+      <Filter>CEntity\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CEntity\rtti.cpp">
+      <Filter>CEntity\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CEntity\util.cpp">
+      <Filter>CEntity\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CDodgeballPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+  </ItemGroup>
+  <ItemGroup>
+    <ClInclude Include="..\CTFDB_MapConfig.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CTrackingProjectile.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\extension.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sdk\smsdk_config.h">
+      <Filter>SourceMod SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\sdk\smsdk_ext.h">
+      <Filter>SourceMod SDK</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CEntity\CEntity.h">
+      <Filter>CEntity\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CEntity\CEntityBase.h">
+      <Filter>CEntity\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CEntity\CEntityManager.h">
+      <Filter>CEntity\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CEntity\CHelpers.h">
+      <Filter>CEntity\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CEntity\CPlayer.h">
+      <Filter>CEntity\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CEntity\CRecipientFilter.h">
+      <Filter>CEntity\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CEntity\CScriptCreatedItem.h">
+      <Filter>CEntity\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CEntity\CTakeDamageInfo.h">
+      <Filter>CEntity\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CEntity\EntityOutput.h">
+      <Filter>CEntity\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CEntity\IEntityFactory.h">
+      <Filter>CEntity\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CEntity\macros.h">
+      <Filter>CEntity\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CEntity\rtti.h">
+      <Filter>CEntity\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CEntity\util.h">
+      <Filter>CEntity\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CEntity\vehicles.h">
+      <Filter>CEntity\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CDodgeballPlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+  </ItemGroup>
+  <ItemGroup>
+    <None Include="..\Makefile" />
+  </ItemGroup>
+</Project>
