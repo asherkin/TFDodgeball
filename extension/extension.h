@@ -139,8 +139,7 @@ extern IServerGameClients *gameclients;
 
 extern int gMaxClients;
 
-extern ConVar RocketSpeedMul;
-extern ConVar SentryCrit;
-extern ConVar SideWinderVersion;
+extern ConVar DodgeballVersion;
+extern ConVar DodgeballEnabled;
 
 #endif // _INCLUDE_SOURCEMOD_EXTENSION_PROPER_H_

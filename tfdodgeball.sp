@@ -19,7 +19,7 @@
 
 #define PLUGIN_NAME		"TFDodgeball"
 #define PLUGIN_AUTHOR		"Asherkin"
-#define PLUGIN_VERSION		"1.2.0"
+#define PLUGIN_VERSION		"1.2.1"
 #define PLUGIN_CONTACT		"http://limetech.org/"
 
 public Plugin:myinfo = {
@@ -50,9 +50,7 @@ public OnPluginStart()
 	RegAdminCmd("sm_dodgeball_rocket", Command_ForceRocket, ADMFLAG_SLAY);
 	RegAdminCmd("sm_dodgeball_headrocket", Command_HeadRocket, ADMFLAG_SLAY);
 	
-	CreateConVar("tfdodgeball_version", PLUGIN_VERSION, PLUGIN_NAME, FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY);
-	
-	g_hConVars[0] = CreateConVar("sm_dodgeball_enabled", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hConVars[0] = FindConVar("sm_dodgeball_enabled");
 	g_hConVars[1] = CreateConVar("sm_dodgeball_spawninterval", "1.0", "", FCVAR_NONE, true, 0.0, false);
 	g_hConVars[2] = CreateConVar("sm_dodgeball_maxrockets", "10", "", FCVAR_NONE, true, 0.0, false);
 	g_hConVars[3] = CreateConVar("sm_dodgeball_basedamage", "15.0", "", FCVAR_NONE, true, 0.0, false);

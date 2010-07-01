@@ -43,10 +43,13 @@ void CTrackingProjectile::Spawn(void)
 {
  	BaseClass::Spawn();
 
-	SetThink(&CTrackingProjectile::FindThink);
-	SetNextThink(gpGlobals->curtime);
+	if (DodgeballEnabled.GetBool())
+	{
+		SetThink(&CTrackingProjectile::FindThink);
+		SetNextThink(gpGlobals->curtime);
 
-	m_lastTeam = GetTeamNumber();
+		m_lastTeam = GetTeamNumber();
+	}
 }
 
 void CTrackingProjectile::FindThink(void)

@@ -62,7 +62,8 @@ IServerGameClients *gameclients;
 
 CGlobalVars *gpGlobals;
 
-ConVar SideWinderVersion("sidewinder_version", "3.0.0", FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY, "Sidewinder Version");
+ConVar DodgeballVersion("tfdodgeball_version", SMEXT_CONF_VERSION, FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY, "TFDodgeball Version");
+ConVar DodgeballEnabled("sm_dodgeball_enabled", "1", FCVAR_NONE, "", true, 0.0, true, 1.0);
 
 void *g_EntList = NULL;
 int gMaxClients = 0;
