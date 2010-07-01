@@ -76,8 +76,6 @@ public OnPluginStart()
 	HookConVarChange(g_hConVars[5], config_flSpeedMul_changed);
 	HookConVarChange(g_hConVars[6], config_bAutoJoin_changed);
 	
-	AutoExecConfig();
-	
 	HookEvent("teamplay_round_start", Event_TeamplayRoundStart);
 	HookEvent("teamplay_setup_finished", Event_TeamplaySetupFinished);
 	
