@@ -33,7 +33,7 @@ public Plugin:myinfo = {
 new Handle:g_hRocketSpawnTimer = INVALID_HANDLE;
 new Handle:g_hConVars[CONVAR_COUNT] = {INVALID_HANDLE, ...};
 
-new bool:g_config_bSpawnEnabled;
+new bool:g_config_bDodgeballEnabled;
 new g_config_iMaxRockets;
 new Float:g_config_flBaseDamage;
 new bool:g_config_bSpawnCriticals;
@@ -59,14 +59,14 @@ public OnPluginStart()
 	
 	g_hConVars[6] = CreateConVar("sm_dodgeball_autojoin", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
 	
-	g_config_bSpawnEnabled = true;
+	g_config_bDodgeballEnabled = true;
 	g_config_iMaxRockets = 10;
 	g_config_flBaseDamage = 15.0;
 	g_config_bSpawnCriticals = true;
 	g_config_flSpeedMul = 0.5;
 	g_config_bAutoJoin = true;
 	
-	HookConVarChange(g_hConVars[0], config_bSpawnEnabled_changed);
+	HookConVarChange(g_hConVars[0], config_bDodgeballEnabled_changed);
 	HookConVarChange(g_hConVars[1], config_flSpawnInterval_changed);
 	HookConVarChange(g_hConVars[2], config_iMaxRockets_changed);
 	HookConVarChange(g_hConVars[3], config_flBaseDamage_changed);
@@ -85,13 +85,15 @@ public OnPluginStart()
 // Players
 
 public OnClientPutInServer(client) {
-	if (g_config_bAutoJoin)
+	if (g_config_bDodgeballEnabled && g_config_bAutoJoin)
 	{
 		FakeClientCommandEx(client, "jointeam 0");
 	}
 }
 
 public Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast) {
+	if (!g_config_bDodgeballEnabled) return;
+
 	new client = GetClientOfUserId(GetEventInt(event, "userid"));
 	new TFClassType:class = TF2_GetPlayerClass(client);
 	
@@ -125,7 +127,7 @@ public Event_TeamplaySetupFinished(Handle:event, const String:name[], bool:dontB
 	g_hRocketSpawnTimer = CreateTimer(GetConVarFloat(g_hConVars[1]), SpawnRockets, _, TIMER_REPEAT);
 }
 
-public config_bSpawnEnabled_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bSpawnEnabled = bool:StringToInt(newValue); }
+public config_bDodgeballEnabled_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bDodgeballEnabled = bool:StringToInt(newValue); }
 public config_iMaxRockets_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_iMaxRockets = StringToInt(newValue); }
 public config_flBaseDamage_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flBaseDamage = StringToFloat(newValue); }
 public config_bSpawnCriticals_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bSpawnCriticals = bool:StringToInt(newValue); }
@@ -143,7 +145,7 @@ public config_flSpawnInterval_changed(Handle:convar, const String:oldValue[], co
 
 public Action:SpawnRockets(Handle:timer)
 {
-	if (!g_config_bSpawnEnabled || (g_config_iMaxRockets && (g_iRocketCount >= g_config_iMaxRockets)))
+	if (!g_config_bDodgeballEnabled || (g_config_iMaxRockets && (g_iRocketCount >= g_config_iMaxRockets)))
 		return Plugin_Continue;
 	
 	static iRocketLastTeam = TEAM_RED;
@@ -171,6 +173,8 @@ public Action:SpawnRockets(Handle:timer)
 
 public OnEntityDestroyed(entity)
 {
+	if (!g_config_bDodgeballEnabled) return;
+	
 	new String:netClassName[32];
 	GetEntityNetClass(entity, netClassName, 32);
 	if (StrEqual(netClassName, "CTFProjectile_Rocket", false) || StrEqual(netClassName, "CTFProjectile_SentryRocket", false))
@@ -184,6 +188,8 @@ public OnEntityDestroyed(entity)
 
 public Action:Command_ForceRocket(client, args)
 {
+	if (!g_config_bDodgeballEnabled) return Plugin_Continue;
+	
 	new String:arg1[32];
 	GetCmdArg(1, arg1, 32);
 	fireTeamProjectile(StringToInt(arg1), PROJECTILE_ROCKET);
@@ -192,6 +198,8 @@ public Action:Command_ForceRocket(client, args)
 
 public Action:Command_HeadRocket(client, args)
 {
+	if (!g_config_bDodgeballEnabled) return Plugin_Continue;
+	
 	new Float:vAngles[3];
 	new Float:vPosition[3];
 
