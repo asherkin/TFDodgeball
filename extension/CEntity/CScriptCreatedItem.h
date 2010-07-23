@@ -1,5 +1,28 @@
 // Taken from the TF2Items extension by Asher "asherkin" Baker
 
+template< class T, class I = int >
+class CUtlMemoryTF2Items : public CUtlMemory< T, I >
+{
+public:
+	CUtlMemoryTF2Items( int nGrowSize = 0, int nInitSize = 0 ) { CUtlMemory< T, I >( nGrowSize, nInitSize ); }
+    CUtlMemoryTF2Items( T* pMemory, int numElements ) { CUtlMemory< T, I >( pMemory, numElements ); }
+    CUtlMemoryTF2Items( const T* pMemory, int numElements ) { CUtlMemory< T, I >( pMemory, numElements ); }
+    
+	void Purge()
+	{
+		if ( !CUtlMemory< T, I >::IsExternallyAllocated() )
+		{
+			if (CUtlMemory< T, I >::m_pMemory)
+			{
+				UTLMEMORY_TRACK_FREE();
+				//free( (void*)m_pMemory );
+				CUtlMemory< T, I >::m_pMemory = 0;
+			}
+			CUtlMemory< T, I >::m_nAllocationCount = 0;
+		}
+	}
+};
+
 class CScriptCreatedAttribute							// Win Length = 204 / Lin Length = 396
 {
 public:
@@ -38,11 +61,11 @@ public:
 	char m_szBlob[20];									// Length = 20 / Win = 432 / Lin = 680
 	wchar_t m_szBlob2[1536];							// Win Length = 3072 / Lin Length = 6144 / Win = 452 / Lin = 700
 
-	CUtlVector<CScriptCreatedAttribute> m_Attributes;	// Length = 20 / Win = 3524 / Lin = 6844
+	CUtlVector<CScriptCreatedAttribute, CUtlMemoryTF2Items<CScriptCreatedAttribute> > m_Attributes;	// Length = 20 / Win = 3524 / Lin = 6844
 
 	bool m_bInitialized;								// Length = 4 / Win = 3544 / Lin = 6864
 
 #ifdef _WIN32
 	char m_Padding3[4];									// Length = 4 / Win = 3548 / Lin = N/A
-#endif									
+#endif
 };

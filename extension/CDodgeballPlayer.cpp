@@ -32,45 +32,88 @@ CBaseEntity *CDodgeballPlayer::GiveNamedItem(char const *szName, int iSubType, C
 		//return BaseClass::GiveNamedItem(szName, iSubType, item, bUnknown);
 		return NULL;
 	}
+	
+	CScriptCreatedItem newitem;
+	CSCICopy(item, &newitem);
 
-	item->m_Attributes.Purge();
+	newitem.m_Attributes.Purge();
 
 	CScriptCreatedAttribute tempAttrib;
 
 	tempAttrib.m_iAttributeDefinitionIndex = 112;
 	tempAttrib.m_flValue = 0.25;
-	item->m_Attributes.AddToTail(tempAttrib);
+	newitem.m_Attributes.AddToTail(tempAttrib);
 
 	tempAttrib.m_iAttributeDefinitionIndex = 74;
 	tempAttrib.m_flValue = 4.0;
-	item->m_Attributes.AddToTail(tempAttrib);
+	newitem.m_Attributes.AddToTail(tempAttrib);
 
 	tempAttrib.m_iAttributeDefinitionIndex = 1;
 	tempAttrib.m_flValue = 0.0;
-	item->m_Attributes.AddToTail(tempAttrib);
+	newitem.m_Attributes.AddToTail(tempAttrib);
 
 	tempAttrib.m_iAttributeDefinitionIndex = 60;
 	tempAttrib.m_flValue = 0.0;
-	item->m_Attributes.AddToTail(tempAttrib);
+	newitem.m_Attributes.AddToTail(tempAttrib);
 
 	tempAttrib.m_iAttributeDefinitionIndex = 66;
 	tempAttrib.m_flValue = 0.0;
-	item->m_Attributes.AddToTail(tempAttrib);
+	newitem.m_Attributes.AddToTail(tempAttrib);
 
 	tempAttrib.m_iAttributeDefinitionIndex = 72;
 	tempAttrib.m_flValue = 0.0;
-	item->m_Attributes.AddToTail(tempAttrib);
+	newitem.m_Attributes.AddToTail(tempAttrib);
 
 	tempAttrib.m_iAttributeDefinitionIndex = 74;
 	tempAttrib.m_flValue = 0.0;
-	item->m_Attributes.AddToTail(tempAttrib);
+	newitem.m_Attributes.AddToTail(tempAttrib);
 
 	if (WeaponParticle.GetInt() > 0)
 	{
 		tempAttrib.m_iAttributeDefinitionIndex = 134;
 		tempAttrib.m_flValue = WeaponParticle.GetFloat();
-		item->m_Attributes.AddToTail(tempAttrib);
+		newitem.m_Attributes.AddToTail(tempAttrib);
 	}
 
-	return BaseClass::GiveNamedItem(szName, iSubType, item, bUnknown);
+	return BaseClass::GiveNamedItem(szName, iSubType, &newitem, bUnknown);
 }
+
+void CSCICopy(CScriptCreatedItem *olditem, CScriptCreatedItem *newitem)
+{
+	//#define copymember(a) newitem->a = olditem->a
+	#define copymember(a) memcpy(&newitem->a, &olditem->a, sizeof(newitem->a));
+
+	copymember(m_pVTable);
+	
+#ifdef _WIN32
+	copymember(m_Padding[4]);
+#endif
+
+	copymember(m_iItemDefinitionIndex);
+	copymember(m_iEntityQuality);
+	copymember(m_iEntityLevel);
+
+#ifdef _WIN32
+	copymember(m_Padding2[4]);
+#endif
+
+	copymember(m_iGlobalIndex);
+	copymember(m_iGlobalIndexHigh);
+	copymember(m_iGlobalIndexLow);
+	copymember(m_iAccountID);
+	copymember(m_iPosition);
+	copymember(m_szWideName[128]);
+	copymember(m_szName[128]);
+
+	copymember(m_szBlob[20]);
+	copymember(m_szBlob2[1536]);
+
+	copymember(m_bInitialized);
+
+#ifdef _WIN32
+	copymember(m_Padding3[4]);
+#endif
+
+	newitem->m_Attributes = olditem->m_Attributes;
+}
+

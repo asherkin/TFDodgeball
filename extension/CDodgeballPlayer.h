@@ -20,4 +20,6 @@ public: //Autohandlers
 	DECLARE_DEFAULTHEADER(ForceRespawn, void, (void));
 };
 
+void CSCICopy(CScriptCreatedItem *olditem, CScriptCreatedItem *newitem);
+
 #endif // _INCLUDE_CDODGEBALLPLAYER_H_
