@@ -332,14 +332,6 @@ fireProjectile(Float:vPosition[3], Float:vAngles[3] = NULL_VECTOR, Float:flSpeed
 	
 	TeleportEntity(iRocket, vPosition, vAngles, vVelocity);
 	
-	new iClient = 1;
-	while (!IsClientInGame(iClient))
-	{
-		iClient++;
-	}
-	
-	SetEntPropEnt(iRocket, Prop_Send, "m_hOwnerEntity", iClient);
-	
 	SetEntData(iRocket, FindSendPropOffs(strClassname, "m_nSkin"), (iTeam-2), 1, true);
 	SetEntData(iRocket, FindSendPropOffs(strClassname, "m_bCritical"), bCritical, true);
 	SetEntDataFloat(iRocket, FindSendPropOffs(strClassname, "m_iDeflected") + 4, flDamage, true); // Credit to voogru
