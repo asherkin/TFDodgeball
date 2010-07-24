@@ -21,7 +21,7 @@ public Plugin:myinfo = {
 	name = "TFDodgeball",
 	author = "Asherkin",
 	description	= "An open-source version of the popular 'Dodgeball' gameplay modification.",
-	version = "1.2.1",
+	version = "1.2.2",
 	url = "http://limetech.org/"
 };
 
@@ -85,9 +85,13 @@ public OnPluginStart()
 // Players
 
 public OnClientPutInServer(client) {
-	if (g_config_bEnabled && g_config_bAutoJoin)
+	if (g_config_bEnabled)
 	{
-		FakeClientCommandEx(client, "jointeam 0");
+		if (g_config_bAutoJoin)
+		{
+			FakeClientCommandEx(client, "jointeam 0");
+		}
+		SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	}
 }
 
@@ -184,6 +188,29 @@ public OnEntityDestroyed(entity)
 		if (g_iRocketCount < 0)
 			g_iRocketCount = 0;
 	}
+}
+
+public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damagetype)
+{
+	new String:netClassName[32];
+	GetEntityNetClass(inflictor, netClassName, 32);
+	if (StrEqual(netClassName, "CTFProjectile_Rocket", false))
+	{
+		new iDeflected = GetEntData(inflictor, FindSendPropOffs("CTFProjectile_Rocket", "m_iDeflected"));
+		if (iDeflected == 0)
+		{
+			attacker = victim;
+			return Plugin_Changed;
+		}
+	} else if (StrEqual(netClassName, "CTFProjectile_SentryRocket", false)) {
+		new iDeflected = GetEntData(inflictor, FindSendPropOffs("CTFProjectile_SentryRocket", "m_iDeflected"));
+		if (iDeflected == 0)
+		{
+			attacker = victim;
+			return Plugin_Changed;
+		}
+	}
+	return Plugin_Continue;
 }
 
 public Action:Command_ForceRocket(client, args)
@@ -304,6 +331,14 @@ fireProjectile(Float:vPosition[3], Float:vAngles[3] = NULL_VECTOR, Float:flSpeed
 	vVelocity[2] = vBuffer[2]*flSpeed;
 	
 	TeleportEntity(iRocket, vPosition, vAngles, vVelocity);
+	
+	new iClient = 1;
+	while (!IsClientInGame(iClient))
+	{
+		iClient++;
+	}
+	
+	SetEntPropEnt(iRocket, Prop_Send, "m_hOwnerEntity", iClient);
 	
 	SetEntData(iRocket, FindSendPropOffs(strClassname, "m_nSkin"), (iTeam-2), 1, true);
 	SetEntData(iRocket, FindSendPropOffs(strClassname, "m_bCritical"), bCritical, true);
