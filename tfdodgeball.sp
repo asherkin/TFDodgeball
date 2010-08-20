@@ -98,7 +98,6 @@ public OnClientPutInServer(client) {
 		{
 			FakeClientCommandEx(client, "jointeam 0");
 		}
-		SDKHook(client, SDKHook_OnTakeDamage, OnTakeDamage);
 	}
 }
 
