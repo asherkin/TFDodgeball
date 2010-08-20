@@ -212,6 +212,7 @@ public: // CBaseEntity non virtual helpers
 	const char* GetClassname();
 	void SetClassname(const char *pClassName);
 	CEntity *GetOwner();
+	void SetOwner(CEntity *pOwnerEntity);
 
 	int GetTeamNumber()  const;
 	virtual void ChangeTeam(int iTeamNum);

@@ -49,6 +49,7 @@ void CTrackingProjectile::Spawn(void)
 		SetNextThink(gpGlobals->curtime);
 
 		m_lastTeam = GetTeamNumber();
+		//*m_iDeflected = 1;
 	}
 }
 
@@ -120,6 +121,8 @@ void CTrackingProjectile::TrackThink(void)
 		FindThink();
 		return;
 	}
+
+	//SetOwner(pVictim);
 
 	TurnToTarget(pVictim);
 }
@@ -193,7 +196,7 @@ void CTrackingProjectile::TurnToTarget(CEntity *pEntity)
 	VectorAngles(newVec, angles);
 
 	vec_t speed = 1100.0 * RocketSpeedMul.GetFloat();
-	speed *= (ReflectSpeedInk.GetFloat() * *m_iDeflected) + 1.0;
+	speed *= (ReflectSpeedInk.GetFloat() * (*m_iDeflected/* - 1*/)) + 1.0;
 	newVec *= speed;
 
 	Teleport(NULL, &angles, &newVec);
@@ -209,7 +212,7 @@ void CTrackingProjectile::TurnToTarget(CEntity *pEntity)
 
 	// Calculate speed and orientation.
 	fCurrentSpeed = /*fRocketOrientation.Length()*/ 1100.0 * RocketSpeedMul.GetFloat();
-	fCurrentSpeed *= (ReflectSpeedInk.GetFloat() * *m_iDeflected) + 1.0;
+	fCurrentSpeed *= (ReflectSpeedInk.GetFloat() * (*m_iDeflected/* - 1*/)) + 1.0;
 	fRocketOrientation.NormalizeInPlace();
 
 	// Retrieve client position and calculate new orientation.

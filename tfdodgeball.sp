@@ -215,29 +215,6 @@ public OnEntityDestroyed(entity)
 	}
 }
 
-public Action:OnTakeDamage(victim, &attacker, &inflictor, &Float:damage, &damagetype)
-{
-	new String:netClassName[32];
-	GetEntityNetClass(inflictor, netClassName, 32);
-	if (StrEqual(netClassName, "CTFProjectile_Rocket", false))
-	{
-		new iDeflected = GetEntData(inflictor, FindSendPropOffs("CTFProjectile_Rocket", "m_iDeflected"));
-		if (iDeflected == 0)
-		{
-			attacker = victim;
-			return Plugin_Changed;
-		}
-	} else if (StrEqual(netClassName, "CTFProjectile_SentryRocket", false)) {
-		new iDeflected = GetEntData(inflictor, FindSendPropOffs("CTFProjectile_SentryRocket", "m_iDeflected"));
-		if (iDeflected == 0)
-		{
-			attacker = victim;
-			return Plugin_Changed;
-		}
-	}
-	return Plugin_Continue;
-}
-
 public Action:Command_ForceRocket(client, args)
 {
 	if (!g_config_bEnabled) return Plugin_Continue;

@@ -608,6 +608,11 @@ CEntity *CEntity::GetOwner()
 	return m_hOwnerEntity;
 }
 
+void CEntity::SetOwner(CEntity *pOwnerEntity)
+{
+	(*m_hOwnerEntity.ptr).Set(pOwnerEntity->edict()->GetIServerEntity());
+}
+
 void CEntity::TakeDamage(const CEntityTakeDamageInfo &inputInfo)
 {
 #ifndef WIN32
