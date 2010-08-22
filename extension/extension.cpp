@@ -41,6 +41,8 @@
 
 #include "CEntity.h"
 
+#include "CDetour/detours.h"
+
 /**
  * @file extension.cpp
  * @brief Implement extension code here.

@@ -23,13 +23,25 @@ void CDodgeballPlayer::Spawn(void)
 	}*/
 }
 
+void CDodgeballPlayer::HandleCommand_JoinClass(const char *pClass, bool unk)
+{
+	if (DodgeballEnabled.GetBool())
+	{
+		BaseClass::HandleCommand_JoinClass("pyro", unk);
+	} else {
+		BaseClass::HandleCommand_JoinClass(pClass, unk);
+	}
+}
+
 CBaseEntity *CDodgeballPlayer::GiveNamedItem(char const *szName, int iSubType, CScriptCreatedItem *item, bool bUnknown)
 {
 	if (!DodgeballEnabled.GetBool() || !item)
 	{
 		return BaseClass::GiveNamedItem(szName, iSubType, item, bUnknown);
-	} else if (GetPlayerClass() == PLAYERCLASS_PYRO && !(item->m_iItemDefinitionIndex == 21 || item->m_iItemDefinitionIndex == 40)) {
-		//return BaseClass::GiveNamedItem(szName, iSubType, item, bUnknown);
+	} else if (GetPlayerClass() != PLAYERCLASS_PYRO) {
+		g_pSM->LogError(myself, "WARNING: Server tried to give a weapon to a player that isn't a pyro.");
+		return BaseClass::GiveNamedItem(szName, iSubType, item, bUnknown);
+	} else if (!(item->m_iItemDefinitionIndex == 21 || item->m_iItemDefinitionIndex == 40)) {
 		return NULL;
 	}
 	

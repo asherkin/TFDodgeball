@@ -68,6 +68,12 @@
     <ClCompile Include="..\CDodgeballPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\..\..\zombiefix_ext\asm\asm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\..\..\zombiefix_ext\CDetour\detours.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CTFDB_MapConfig.h">
@@ -128,6 +134,15 @@
       <Filter>CEntity\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\CDodgeballPlayer.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\zombiefix_ext\asm\asm.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\zombiefix_ext\CDetour\detourhelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\..\..\zombiefix_ext\CDetour\detours.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

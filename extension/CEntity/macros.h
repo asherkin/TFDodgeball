@@ -105,7 +105,7 @@ class name##cl##DetourTracker : public IDetourTracker \
 public: \
 	void AddHook(IGameConfig *pConfig) \
 	{ \
-		void *callback = (void *)GetCodeAddress(&cl::name##Internal); \
+		void *callback = (void *)GetCodeAddress(&cl::Internal##name); \
 		void **trampoline = (void **)(&cl::name##_Actual); \
 		m_##name##Detour = CDetourManager::CreateDetour(callback, trampoline, #name); \
 	} \

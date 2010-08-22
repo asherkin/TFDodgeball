@@ -57,6 +57,8 @@ DECLARE_HOOK(Weapon_Equip, CPlayer);
 DECLARE_HOOK(Weapon_GetSlot, CPlayer);
 DECLARE_HOOK(GetClientEyeAngles, CPlayer);
 
+DECLARE_DETOUR(HandleCommand_JoinClass, CPlayer);
+
 LINK_ENTITY_TO_CLASS(CTFPlayer, CPlayer);
 
 //Sendprops
@@ -91,6 +93,8 @@ DECLARE_DEFAULTHANDLER(CPlayer, RemovePlayerItem, bool, (CBaseEntity *pItem), (p
 DECLARE_DEFAULTHANDLER_void(CPlayer, Weapon_Equip, (CBaseEntity *pWeapon), (pWeapon));
 DECLARE_DEFAULTHANDLER(CPlayer, Weapon_GetSlot, CBaseEntity *, (int slot), (slot));
 DECLARE_DEFAULTHANDLER(CPlayer, GetClientEyeAngles, QAngle *, (), ());
+
+DECLARE_DEFAULTHANDLER_DETOUR_void(CPlayer, HandleCommand_JoinClass, (const char *pClass, bool unk), (pClass, unk))
 
 void CPlayer::PlayerRunCmd(CUserCmd *pCmd, IMoveHelper *pHelper)
 {

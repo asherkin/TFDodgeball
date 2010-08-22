@@ -9,7 +9,7 @@
       <Configuration>Release - Orange Box</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
-	<ProjectConfiguration Include="Release - Alien Swarm|Win32">
+    <ProjectConfiguration Include="Release - Alien Swarm|Win32">
       <Configuration>Release - Alien Swarm</Configuration>
       <Platform>Win32</Platform>
     </ProjectConfiguration>
@@ -119,6 +119,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
+    <ClCompile Include="..\..\..\zombiefix_ext\asm\asm.c" />
+    <ClCompile Include="..\..\..\zombiefix_ext\CDetour\detours.cpp" />
     <ClCompile Include="..\CDodgeballPlayer.cpp" />
     <ClCompile Include="..\CTFDB_MapConfig.cpp" />
     <ClCompile Include="..\CTrackingProjectile.cpp" />
@@ -136,6 +138,9 @@
     <ClCompile Include="..\CEntity\util.cpp" />
   </ItemGroup>
   <ItemGroup>
+    <ClInclude Include="..\..\..\zombiefix_ext\asm\asm.h" />
+    <ClInclude Include="..\..\..\zombiefix_ext\CDetour\detourhelpers.h" />
+    <ClInclude Include="..\..\..\zombiefix_ext\CDetour\detours.h" />
     <ClInclude Include="..\CDodgeballPlayer.h" />
     <ClInclude Include="..\CTFDB_MapConfig.h" />
     <ClInclude Include="..\CTrackingProjectile.h" />

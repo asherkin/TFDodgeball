@@ -1,0 +1,24 @@
+@PointClass iconsprite("editor/info_target.vmt")  = tfdb_mapconfig : 
+	"Optional entity to set map specific settings for TFDodgeball"
+[
+	targetname(target_source) : "Name" : "tfdb_controler" : "The name that other entities refer to this entity by."
+	
+	maxrockets(integer) : "Max Rockets" : : "Max number of rockets to have spawned at once, 0 is infinite."
+	spawninterval(float) : "Spawn Interval" : : "Timer interval that each rocket is spawned on."
+	speedmul(float) : "Speed Multiplier" : : "Value that the base rocket speed (1100) is multiplied by."
+	reflectinc(float) : "Reflect Speed Increase" : : "Percentage(ish) the rocket speed is increased per-airblast."
+	turnrate(float) : "Turn Rate" : : "Maximum ammount a rocket can turn each frame."
+	
+	input SetMaxRockets(integer) : "Set Max Rockets"
+	input SetSpawnInterval(float) : "Set Spawn Interval"
+	input SetSpeedMul(float) : "Set Speed Multiplier"
+	input SetReflectInc(float) : "Set Reflect Speed Increase"
+	input SetTurnRate(float) : "Set Turn Rate"
+	
+	input DumpData(void) : "Debug Function"
+	
+	spawnflags( Flags ) =
+	[
+		1 : "Transmit to client" : 0
+	]
+]
