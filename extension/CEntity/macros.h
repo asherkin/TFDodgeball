@@ -109,11 +109,8 @@ public: \
 		void *callback = (void *)GetCodeAddress(&cl::Internal##name); \
 		void **trampoline = (void **)(&cl::name##_Actual); \
 		m_##name##Detour = CDetourManager::CreateDetour(callback, trampoline, #name); \
-		if (!m_##name##Detour) \
+		if (m_##name##Detour) \
 		{ \
-			g_pSM->LogMessage(myself, "CreateDetour for %s failed.", #name); \
-		} else { \
-			g_pSM->LogMessage(myself, "CreateDetour for %s passed, enabling...", #name); \
 			m_##name##Detour->EnableDetour(); \
 		} \
 	} \
