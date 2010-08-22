@@ -166,6 +166,7 @@ $(BIN_DIR)/%.o: %.cpp
 all: check
 	mkdir -p $(BIN_DIR)/sdk
 	mkdir -p $(BIN_DIR)/CEntity
+	mkdir -p $(BIN_DIR)/CDetour
 	if [ "$(USEMETA)" = "true" ]; then \
 		ln -sf $(HL2LIB)/$(LIB_PREFIX)vstdlib$(LIB_SUFFIX); \
 		ln -sf $(HL2LIB)/$(LIB_PREFIX)tier0$(LIB_SUFFIX); \
@@ -191,4 +192,5 @@ clean: check
 	rm -rf $(BIN_DIR)/*.o
 	rm -rf $(BIN_DIR)/sdk/*.o
 	rm -rf $(BIN_DIR)/CEntity/*.o
+	rm -rf $(BIN_DIR)/CDetour/*.o
 	rm -rf $(BIN_DIR)/$(FULL_BINARY)
