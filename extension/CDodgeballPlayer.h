@@ -10,15 +10,8 @@ class CDodgeballPlayer : public CPlayer
 public:
 	DECLARE_CLASS(CDodgeballPlayer, CPlayer);
 
-	virtual void Spawn(void);
 	virtual CBaseEntity *GiveNamedItem(char const *szName, int iSubType, CScriptCreatedItem *item, bool bUnknown);
 	virtual void HandleCommand_JoinClass(const char *pClass, bool unk);
-
-public: // CBasePlayer virtuals
-	virtual	void ForceRespawn(void);
-
-public: //Autohandlers
-	DECLARE_DEFAULTHEADER(ForceRespawn, void, (void));
 };
 
 void CSCICopy(CScriptCreatedItem *olditem, CScriptCreatedItem *newitem);

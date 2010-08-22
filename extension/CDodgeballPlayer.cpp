@@ -2,26 +2,9 @@
 #include "CDodgeballPlayer.h"
 #include "CPlayer.h"
 
-SH_DECL_MANUALHOOK0_void(ForceRespawn, 0, 0, 0);
-
 LINK_ENTITY_TO_CLASS(CTFPlayer, CDodgeballPlayer);
 
 ConVar WeaponParticle("sm_dodgeball_weaponparticle", "0.0", FCVAR_NONE, "", true, 0.0, true, 5.0);
-
-DECLARE_HOOK(ForceRespawn, CDodgeballPlayer);
-
-DECLARE_DEFAULTHANDLER_void(CDodgeballPlayer, ForceRespawn, (void), ());
-
-void CDodgeballPlayer::Spawn(void)
-{
-	BaseClass::Spawn();
-
-	/*if (GetPlayerClass() != PLAYERCLASS_PYRO && GetPlayerClass() != PLAYERCLASS_UNKNOWN)
-	{
-		SetPlayerClass(PLAYERCLASS_PYRO, true);
-		ForceRespawn();
-	}*/
-}
 
 void CDodgeballPlayer::HandleCommand_JoinClass(const char *pClass, bool unk)
 {
