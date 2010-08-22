@@ -1,3 +1,6 @@
+#ifndef CScriptCreatedItem_h__
+#define CScriptCreatedItem_h__
+
 // Taken from the TF2Items extension by Asher "asherkin" Baker
 
 template< class T, class I = int >
@@ -25,6 +28,15 @@ public:
 
 class CScriptCreatedAttribute							// Win Length = 204 / Lin Length = 396
 {
+public:
+	CScriptCreatedAttribute() {};
+
+	CScriptCreatedAttribute(int iAttributeDefinitionIndex, float flValue)
+	{
+		this->m_iAttributeDefinitionIndex = iAttributeDefinitionIndex;
+		this->m_flValue = flValue;
+	}
+
 public:
 	void * m_pVTable;									// Length = 4 / Win = 0 / Lin = 0
 
@@ -69,3 +81,5 @@ public:
 	char m_Padding3[4];									// Length = 4 / Win = 3548 / Lin = N/A
 #endif
 };
+
+#endif // CScriptCreatedItem_h__

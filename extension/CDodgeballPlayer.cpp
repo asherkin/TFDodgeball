@@ -33,41 +33,17 @@ CBaseEntity *CDodgeballPlayer::GiveNamedItem(char const *szName, int iSubType, C
 
 	newitem.m_Attributes.Purge();
 
-	CScriptCreatedAttribute tempAttrib;
-
-	tempAttrib.m_iAttributeDefinitionIndex = 112;
-	tempAttrib.m_flValue = 0.25;
-	newitem.m_Attributes.AddToTail(tempAttrib);
-
-	tempAttrib.m_iAttributeDefinitionIndex = 74;
-	tempAttrib.m_flValue = 4.0;
-	newitem.m_Attributes.AddToTail(tempAttrib);
-
-	tempAttrib.m_iAttributeDefinitionIndex = 1;
-	tempAttrib.m_flValue = 0.0;
-	newitem.m_Attributes.AddToTail(tempAttrib);
-
-	tempAttrib.m_iAttributeDefinitionIndex = 60;
-	tempAttrib.m_flValue = 0.0;
-	newitem.m_Attributes.AddToTail(tempAttrib);
-
-	tempAttrib.m_iAttributeDefinitionIndex = 66;
-	tempAttrib.m_flValue = 0.0;
-	newitem.m_Attributes.AddToTail(tempAttrib);
-
-	tempAttrib.m_iAttributeDefinitionIndex = 72;
-	tempAttrib.m_flValue = 0.0;
-	newitem.m_Attributes.AddToTail(tempAttrib);
-
-	tempAttrib.m_iAttributeDefinitionIndex = 74;
-	tempAttrib.m_flValue = 0.0;
-	newitem.m_Attributes.AddToTail(tempAttrib);
+	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(112,	0.25));
+	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(74,	4.00));
+	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(1,	0.00));
+	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(60,	0.00));
+	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(66,	0.00));
+	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(72,	0.00));
+	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(74,	0.00));
 
 	if (WeaponParticle.GetInt() > 0)
 	{
-		tempAttrib.m_iAttributeDefinitionIndex = 134;
-		tempAttrib.m_flValue = WeaponParticle.GetFloat();
-		newitem.m_Attributes.AddToTail(tempAttrib);
+		newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(134, WeaponParticle.GetFloat()));
 	}
 
 	return BaseClass::GiveNamedItem(szName, iSubType, &newitem, bUnknown);
