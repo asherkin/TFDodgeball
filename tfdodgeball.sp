@@ -21,7 +21,7 @@ public Plugin:myinfo = {
 	name = "TFDodgeball",
 	author = "Asherkin",
 	description	= "An open-source version of the popular 'Dodgeball' gameplay modification.",
-	version = "1.2.2",
+	version = "1.2.3",
 	url = "http://limetech.org/"
 };
 
@@ -87,8 +87,6 @@ public OnPluginStart()
 	
 	HookEvent("teamplay_round_start", Event_TeamplayRoundStart);
 	HookEvent("teamplay_setup_finished", Event_TeamplaySetupFinished);
-	
-	HookEvent("player_spawn", Event_PlayerSpawn);
 }
 
 public OnClientPutInServer(client) {
@@ -98,18 +96,6 @@ public OnClientPutInServer(client) {
 		{
 			FakeClientCommandEx(client, "jointeam 0");
 		}
-	}
-}
-
-public Event_PlayerSpawn(Handle:event, const String:name[], bool:dontBroadcast) {
-	if (!g_config_bEnabled) return;
-
-	new client = GetClientOfUserId(GetEventInt(event, "userid"));
-	new TFClassType:class = TF2_GetPlayerClass(client);
-	
-	if (!(class == TFClassType:TFClass_Pyro || class == TFClassType:TFClass_Unknown)) {
-		TF2_SetPlayerClass(client, TFClassType:TFClass_Pyro, false, true);
-		TF2_RespawnPlayer(client);
 	}
 }
 
