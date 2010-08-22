@@ -296,7 +296,7 @@ public: \
 				} \
 				if (!found) \
 				{ \
-					if (pEnt->entindex() == 0) \
+					if (pEnt->entindex() != 0) \
 						g_pSM->LogError(myself,"[CENTITY] Failed lookup of prop %s on entity %s", #name, pEnt->GetClassname()); \
 				} \
 				lookup = true; \

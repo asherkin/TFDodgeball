@@ -210,12 +210,19 @@ public: // CBaseEntity non virtual helpers
 
 	const char* GetClassname();
 	void SetClassname(const char *pClassName);
+	const char* GetTargetName();
+	void SetTargetName(const char *pTargetName);
 	CEntity *GetOwner();
 	void SetOwner(CEntity *pOwnerEntity);
 
 	int GetTeamNumber()  const;
 	virtual void ChangeTeam(int iTeamNum);
 	bool InSameTeam(CEntity *pEntity) const;
+
+	int GetMoveType() const;
+	void SetMoveType(int MoveType);
+	int GetMoveCollide() const;
+	void SetMoveCollide(int MoveCollide);
 
 	const Vector &GetLocalOrigin() const;
 	const Vector &GetAbsVelocity() const;
@@ -271,6 +278,9 @@ protected: //Datamaps
 	DECLARE_DATAMAP(IPhysicsObject *, m_pPhysicsObject);
 	DECLARE_DATAMAP(int, m_nNextThinkTick);
 	DECLARE_DATAMAP(CFakeHandle, m_pParent);
+	DECLARE_DATAMAP(int, m_MoveType);
+	DECLARE_DATAMAP(int, m_MoveCollide);
+	DECLARE_DATAMAP(string_t, m_iName);
 	
 	/* Thinking Stuff */
 	void (CEntity::*m_pfnThink)(void);

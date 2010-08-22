@@ -53,6 +53,15 @@ void CTrackingProjectile::Spawn(void)
 	}
 }
 
+void CTrackingProjectile::Touch(CEntity *pOther)
+{
+	if (!(*m_iDeflected) && (pOther->entindex() > 0 && pOther->entindex() < gMaxClients))
+	{
+		SetOwner(pOther);
+	}
+	BaseClass::Touch(pOther);
+}
+
 void CTrackingProjectile::FindThink(void)
 {
 

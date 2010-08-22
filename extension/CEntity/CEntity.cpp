@@ -80,6 +80,9 @@ DEFINE_PROP(m_hMoveParent, CEntity);
 DEFINE_PROP(m_iEFlags, CEntity);
 DEFINE_PROP(m_pPhysicsObject, CEntity);
 DEFINE_PROP(m_pParent, CEntity);
+DEFINE_PROP(m_MoveType, CEntity);
+DEFINE_PROP(m_MoveCollide, CEntity);
+DEFINE_PROP(m_iName, CEntity);
 
 /* Hacked Datamap declaration to fallback to the corresponding real entities one */
 datamap_t CEntity::m_DataMap = { 0, 0, "CEntity", NULL };
@@ -451,6 +454,16 @@ void CEntity::SetClassname(const char *pClassName)
 	m_iClassname = MAKE_STRING(pClassName);
 }
 
+const char* CEntity::GetTargetName()
+{
+	return STRING(m_iName);
+}
+
+void CEntity::SetTargetName(const char *pTargetName)
+{
+	m_iName = MAKE_STRING(pTargetName);
+}
+
 void CEntity::ChangeTeam(int iTeamNum)
 {
 	m_iTeamNum = iTeamNum;
@@ -656,4 +669,24 @@ void CEntity::CollisionRulesChanged()
 				pList[i]->RecheckCollisionFilter();
 		}
 	}
+}
+
+int CEntity::GetMoveType() const
+{
+	return *m_MoveType;
+}
+
+void CEntity::SetMoveType( int MoveType )
+{
+	*m_MoveType = MoveType;
+}
+
+int CEntity::GetMoveCollide() const
+{
+	return *m_MoveCollide;
+}
+
+void CEntity::SetMoveCollide( int MoveCollide )
+{
+	*m_MoveCollide = MoveCollide;
 }

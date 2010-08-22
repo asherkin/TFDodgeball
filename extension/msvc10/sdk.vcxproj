@@ -122,7 +122,6 @@
     <ClCompile Include="..\..\..\zombiefix_ext\asm\asm.c" />
     <ClCompile Include="..\..\..\zombiefix_ext\CDetour\detours.cpp" />
     <ClCompile Include="..\CDodgeballPlayer.cpp" />
-    <ClCompile Include="..\CTFDB_MapConfig.cpp" />
     <ClCompile Include="..\CTrackingProjectile.cpp" />
     <ClCompile Include="..\extension.cpp" />
     <ClCompile Include="..\sdk\smsdk_ext.cpp" />
@@ -142,7 +141,6 @@
     <ClInclude Include="..\..\..\zombiefix_ext\CDetour\detourhelpers.h" />
     <ClInclude Include="..\..\..\zombiefix_ext\CDetour\detours.h" />
     <ClInclude Include="..\CDodgeballPlayer.h" />
-    <ClInclude Include="..\CTFDB_MapConfig.h" />
     <ClInclude Include="..\CTrackingProjectile.h" />
     <ClInclude Include="..\extension.h" />
     <ClInclude Include="..\sdk\smsdk_config.h" />
