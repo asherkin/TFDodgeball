@@ -31,6 +31,7 @@ typedef CHandle<CBaseEntity> EHANDLE;
 //#ifdef WIN32
 #include "rtti.h"
 //#endif
+#include "../CDetour/detours.h"
 
 
 SH_DECL_HOOK1(IEntityFactoryDictionary, Create, SH_NOATTRIB, 0, IServerNetworkable *, const char *);
@@ -103,10 +104,12 @@ bool CEntityManager::Init(IGameConfig *pConfig)
 		pTracker = pTracker->m_Next;
 	}
 
+	CDetourManager::Init(g_pSM->GetScriptingEngine(), pConfig);
+
 	IDetourTracker *pDetourTracker = IDetourTracker::m_Head;
 	while (pDetourTracker)
 	{
-		pDetourTracker->AddHook(pConfig);
+		pDetourTracker->AddHook();
 		pDetourTracker = pDetourTracker->m_Next;
 	}
 

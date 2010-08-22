@@ -93,7 +93,7 @@ public:
 		m_Head = this;
 	}
 
-	virtual void AddHook(IGameConfig *pConfig) =0;
+	virtual void AddHook() = 0;
 
 	static IDetourTracker *m_Head;
 	IDetourTracker *m_Next;
@@ -103,13 +103,21 @@ public:
 class name##cl##DetourTracker : public IDetourTracker \
 { \
 public: \
-	void AddHook(IGameConfig *pConfig) \
+	CDetour *m_##name##Detour; \
+	void AddHook() \
 	{ \
 		void *callback = (void *)GetCodeAddress(&cl::Internal##name); \
 		void **trampoline = (void **)(&cl::name##_Actual); \
 		m_##name##Detour = CDetourManager::CreateDetour(callback, trampoline, #name); \
+		if (!m_##name##Detour) \
+		{ \
+			g_pSM->LogMessage(myself, "CreateDetour for %s failed.", #name); \
+		} else { \
+			g_pSM->LogMessage(myself, "CreateDetour for %s passed, enabling...", #name); \
+			m_##name##Detour->EnableDetour(); \
+		} \
 	} \
-} \
+}; \
 name##cl##DetourTracker name##cl##DetourTrackerObj;
 
 #define PROP_SEND 0

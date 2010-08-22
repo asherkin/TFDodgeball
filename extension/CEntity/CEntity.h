@@ -127,8 +127,8 @@ class CFakeHandle;
 
 #define DECLARE_DEFAULTHEADER_DETOUR(name, ret, params) \
 	ret Internal##name params; \
-	static ret (ThisClass::* name##_Actual) params; \
-	CDetour *m_##name##Detour;
+	static ret (ThisClass::* name##_Actual) params;// \
+	//CDetour *m_##name##Detour;
 
 #define SetThink(a) ThinkSet(static_cast <void (CEntity::*)(void)> (a), 0, NULL)
 
