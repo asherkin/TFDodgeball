@@ -33,13 +33,13 @@ CBaseEntity *CDodgeballPlayer::GiveNamedItem(char const *szName, int iSubType, C
 
 	newitem.m_Attributes.Purge();
 
-	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(112,	0.25));
-	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(74,	4.00));
-	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(1,	0.00));
-	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(60,	0.00));
-	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(66,	0.00));
-	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(72,	0.00));
-	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(74,	0.00));
+	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(112,	0.25)); // +%s1% ammo regenerated every 5 seconds on wearer
+	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(76,	4.00)); // +%s1% max primary ammo on wearer
+	////newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(1,	0.00)); // %s1% damage done
+	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(60,	0.00)); // +%s1% fire damage resistance on wearer
+	//newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(66,	0.00)); // +%s1% bullet damage resistance on wearer
+	////newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(72,	0.00)); // %s1% burn damage
+	////newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(74,	0.00)); // %s1% burn duration
 
 	if (WeaponParticle.GetInt() > 0)
 	{
