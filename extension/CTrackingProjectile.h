@@ -13,8 +13,6 @@ public:
 	virtual void Init(edict_t *pEdict, CBaseEntity *pBaseEntity);
 	virtual void Spawn(void);
 
-	virtual void Touch(CEntity *pOther);
-
 public:
 	virtual void TrackThink(void);
 	virtual void FindThink(void);

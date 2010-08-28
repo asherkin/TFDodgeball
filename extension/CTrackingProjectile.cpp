@@ -50,16 +50,8 @@ void CTrackingProjectile::Spawn(void)
 
 		m_lastTeam = GetTeamNumber();
 		//*m_iDeflected = 1;
+		SetOwner(CEntity::Instance(0));
 	}
-}
-
-void CTrackingProjectile::Touch(CEntity *pOther)
-{
-	if (!(*m_iDeflected) && (pOther->entindex() > 0 && pOther->entindex() < gMaxClients))
-	{
-		SetOwner(pOther);
-	}
-	BaseClass::Touch(pOther);
 }
 
 void CTrackingProjectile::FindThink(void)
