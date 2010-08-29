@@ -187,7 +187,7 @@ public Action:SpawnRockets(Handle:timer)
 
 public OnEntityDestroyed(entity)
 {
-	if (!g_config_bEnabled) return;
+	if (g_iRocketCount == 0) return;
 	
 	new String:netClassName[32];
 	GetEntityNetClass(entity, netClassName, 32);
