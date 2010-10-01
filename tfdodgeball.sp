@@ -63,7 +63,7 @@ public OnPluginStart()
 	g_hConVars[4] = CreateConVar("sm_dodgeball_criticals", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_hConVars[5] = FindConVar("sm_dodgeball_speedmul");
 	g_hConVars[6] = CreateConVar("sm_dodgeball_autojoin", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_hConVars[7] = CreateConVar("sm_dodgeball_gamedesc", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hConVars[7] = CreateConVar("sm_dodgeball_gamedesc", "0", "", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_hConVars[8] = CreateConVar("sm_dodgeball_gamedesc_manifix", "0", "", FCVAR_NONE, true, 0.0, true, 1.0);
 	
 	g_config_bEnabled = true;

@@ -1,6 +1,7 @@
 #include "extension.h"
 #include "CTrackingProjectile.h"
 #include "CPlayer.h"
+#include "CHelpers.h"
 #include "worldsize.h"
 
 SH_DECL_MANUALEXTERN3(FVisible, bool, CBaseEntity *, int, CBaseEntity **);
@@ -79,6 +80,9 @@ void CTrackingProjectile::FindThink(void)
 
 		flVictimDist = (GetLocalOrigin() - pEntity->GetLocalOrigin()).Length();
 
+		if (flVictimDist < 64.0)
+			continue;
+
 		//Find closest
 		if (flVictimDist < flBestVictim)
 		{
@@ -96,6 +100,8 @@ void CTrackingProjectile::FindThink(void)
 
 	//TurnToTarget(pBestVictim);
 
+	//pHelpers->EmitSoundToClient(static_cast<CPlayer *>(pBestVictim), "weapons/sentry_spot_client.wav");
+
 	m_currentTarget = pBestVictim->entindex();
 	SetThink(&CTrackingProjectile::TrackThink);
 	SetNextThink(gpGlobals->curtime);
@@ -110,7 +116,7 @@ void CTrackingProjectile::TrackThink(void)
 		m_lastTeam = GetTeamNumber();
 
 		SetThink(&CTrackingProjectile::FindThink);
-		SetNextThink(gpGlobals->curtime + 10.0); // This stuff isn't working properly yet.
+		SetNextThink(gpGlobals->curtime + 10.0);
 		return;
 	}
 
@@ -163,11 +169,6 @@ bool CTrackingProjectile::IsValidTarget(CEntity *pEntity)
 	}
 
 	if (pEntity->GetTeamNumber() == GetTeamNumber())
-	{
-		return false;
-	}
-
-	if ((GetLocalOrigin() - pEntity->GetLocalOrigin()).Length() <= 64)
 	{
 		return false;
 	}
