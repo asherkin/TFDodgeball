@@ -45,7 +45,7 @@ public:
 	wchar_t m_szDescription[96];						// Win Length = 192 / Lin Length = 384 / Win = 12 / Lin = 12
 };
 
-class CScriptCreatedItem								// Win Length = 3552 / Lin Length = 6868
+class CScriptCreatedItem								// Win Length = 3552 / Lin Length = 6872
 {
 public:
 	void * m_pVTable;									// Length = 4 / Win = 0 / Lin = 0
@@ -73,13 +73,11 @@ public:
 	char m_szBlob[20];									// Length = 20 / Win = 432 / Lin = 680
 	wchar_t m_szBlob2[1536];							// Win Length = 3072 / Lin Length = 6144 / Win = 452 / Lin = 700
 
-	CUtlVector<CScriptCreatedAttribute, CUtlMemoryTF2Items<CScriptCreatedAttribute> > m_Attributes;	// Length = 20 / Win = 3524 / Lin = 6844
+	void * m_pUnknown;									// Length = 4 / Win = 3524 / Lin = 6844
 
-	bool m_bInitialized;								// Length = 4 / Win = 3544 / Lin = 6864
+	CUtlVector<CScriptCreatedAttribute, CUtlMemoryTF2Items<CScriptCreatedAttribute> > m_Attributes;	// Length = 20 / Win = 3528 / Lin = 6848
 
-#ifdef _WIN32
-	char m_Padding3[4];									// Length = 4 / Win = 3548 / Lin = N/A
-#endif
+	bool m_bInitialized;								// Length = 4 / Win = 3548 / Lin = 6868
 };
 
 #endif // CScriptCreatedItem_h__
