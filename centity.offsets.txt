@@ -91,8 +91,8 @@
 			}
 			"GiveNamedItem"
 			{
-				"windows"	"454"
-				"linux"		"461"
+				"windows"	"455"
+				"linux"		"462"
 			}
 			"RemovePlayerItem"
 			{
@@ -131,8 +131,8 @@
 			}
 			"CanSpeakVoiceCommand"
 			{
-				"windows"	"443"
-				"linux"		"444"
+				"windows"	"444"
+				"linux"		"445"
 			}
 			"IsReadyToSpawn"
 			{
