@@ -4,7 +4,7 @@
 
 LINK_ENTITY_TO_CLASS(CTFPlayer, CDodgeballPlayer);
 
-ConVar WeaponParticle("sm_dodgeball_weaponparticle", "0.0", FCVAR_NONE, "", true, 0.0, true, 5.0);
+ConVar WeaponParticle("sm_dodgeball_weaponparticle", "0.0", FCVAR_NONE, "", true, 0.0, true, 19.0);
 
 void CDodgeballPlayer::HandleCommand_JoinClass(const char *pClass, bool unk)
 {
@@ -16,6 +16,54 @@ void CDodgeballPlayer::HandleCommand_JoinClass(const char *pClass, bool unk)
 	}
 }
 
+bool IsFlamethrower(int index) {
+	return (index == 21 ||	// TF_WEAPON_FLAMETHROWER
+			index == 40 ||	// The Backburner
+			index == 215);	// The Degreaser
+}
+
+bool IsPyroHat(int index) {
+	return (index == 51 ||	// Pyro's Beanie
+			index == 102 ||	// Respectless Rubber Glove
+			index == 105 ||	// Brigade Helm
+			index == 151 ||	// Pyro Brain Sucker
+			index == 175 ||	// Pyro Monocle
+			index == 182 ||	// Pyro Helm
+			index == 213 ||	// The Attendant
+			index == 247 ||	// Old Guadalajara
+			index == 248 ||	// Napper's Respite
+			index == 253);	// Handyman's Handle
+}
+
+bool IsAllClassHat(int index) {
+	return (index == 115 ||	// Mildly Disturbing Halloween Mask
+			index == 116 ||	// Ghastly Gibus
+			index == 125 ||	// Honest Halo
+			index == 126 ||	// L4D Hat
+			index == 134 ||	// Propaganda Contest First Place
+			index == 135 ||	// Towering Pillar of Hats
+			index == 136 ||	// Propaganda Contest Second Place
+			index == 137 ||	// Noble Amassment of Hats
+			index == 138 ||	// Propaganda Contest Third Place
+			index == 139 ||	// Modest Pile of Hat
+			index == 143 ||	// OSX Item
+			index == 162 ||	// TTG Max Hat
+			index == 164 ||	// Employee Badge A
+			index == 165 ||	// Employee Badge B
+			index == 166 ||	// Employee Badge C
+			index == 170 ||	// Employee Badge Plat
+			index == 189 ||	// Parasite Hat
+			// Unknown if action items need to be here.
+			index == 242 ||	// Duel Medal Bronze
+			index == 243 ||	// Duel Medal Silver
+			index == 244 ||	// Duel Medal Gold
+			index == 245 ||	// Duel Medal Plat
+			index == 260 ||	// Wiki Cap
+			index == 261 ||	// Mann Co. Cap
+			index == 262 ||	// Polycount Pin
+			index == 263);	// Ellis Hat
+}
+
 CBaseEntity *CDodgeballPlayer::GiveNamedItem(char const *szName, int iSubType, CScriptCreatedItem *item, bool bUnknown)
 {
 	if (!DodgeballEnabled.GetBool() || !item)
@@ -24,7 +72,9 @@ CBaseEntity *CDodgeballPlayer::GiveNamedItem(char const *szName, int iSubType, C
 	} else if (GetPlayerClass() != PLAYERCLASS_PYRO) {
 		g_pSM->LogError(myself, "WARNING: Server tried to give a weapon to a player that isn't a pyro.");
 		return BaseClass::GiveNamedItem(szName, iSubType, item, bUnknown);
-	} else if (!(item->m_iItemDefinitionIndex == 21 || item->m_iItemDefinitionIndex == 40)) {
+	} else if (IsPyroHat(item->m_iItemDefinitionIndex) || IsAllClassHat(item->m_iItemDefinitionIndex)) {
+		return BaseClass::GiveNamedItem(szName, iSubType, item, bUnknown);
+	} else if (!IsFlamethrower(item->m_iItemDefinitionIndex)) {
 		return NULL;
 	}
 	
@@ -80,6 +130,8 @@ void CSCICopy(CScriptCreatedItem *olditem, CScriptCreatedItem *newitem)
 
 	copymember(m_szBlob);
 	copymember(m_szBlob2);
+
+	copymember(m_pUnknown);
 
 	copymember(m_bInitialized);
 
