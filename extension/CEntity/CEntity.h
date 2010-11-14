@@ -264,7 +264,7 @@ protected: //Sendprops
 	DECLARE_SENDPROP(Vector, m_vecOrigin);
 	DECLARE_SENDPROP(uint8_t, m_CollisionGroup);
 	DECLARE_SENDPROP(CFakeHandle, m_hOwnerEntity);
-	DECLARE_SENDPROP(uint16_t, m_fFlags);
+	DECLARE_SENDPROP(uint16_t, m_fEffects);
 
 protected: //Datamaps
 	DECLARE_DATAMAP(Vector, m_vecAbsVelocity);

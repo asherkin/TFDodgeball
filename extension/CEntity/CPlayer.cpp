@@ -94,7 +94,7 @@ DECLARE_DEFAULTHANDLER_void(CPlayer, Weapon_Equip, (CBaseEntity *pWeapon), (pWea
 DECLARE_DEFAULTHANDLER(CPlayer, Weapon_GetSlot, CBaseEntity *, (int slot), (slot));
 DECLARE_DEFAULTHANDLER(CPlayer, GetClientEyeAngles, QAngle *, (), ());
 
-DECLARE_DEFAULTHANDLER_DETOUR_void(CPlayer, HandleCommand_JoinClass, (const char *pClass, bool unk), (pClass, unk))
+DECLARE_DEFAULTHANDLER_DETOUR_void(CPlayer, HandleCommand_JoinClass, (const char *pClass, bool unk), (pClass, unk));
 
 void CPlayer::PlayerRunCmd(CUserCmd *pCmd, IMoveHelper *pHelper)
 {

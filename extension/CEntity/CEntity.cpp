@@ -66,7 +66,7 @@ DEFINE_PROP(m_iTeamNum, CEntity);
 DEFINE_PROP(m_vecOrigin, CEntity);
 DEFINE_PROP(m_CollisionGroup, CEntity);
 DEFINE_PROP(m_hOwnerEntity, CEntity);
-DEFINE_PROP(m_fFlags, CEntity);
+DEFINE_PROP(m_fEffects, CEntity);
 DEFINE_PROP(m_vecVelocity, CEntity);
 
 //Datamaps

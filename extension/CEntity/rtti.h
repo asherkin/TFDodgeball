@@ -36,22 +36,27 @@ IType *GetType(const void *ptr);
 /* Returns the classname for a given type - Removes platform specific formatting */
 const char *GetTypeName(const std::type_info &type);
 
-inline void PrintSpaces(int indent)
+inline void DumpType(IBaseType *pType, int level)
 {
-	for (int i=0; i<indent; i++)
-		META_CONPRINT("  ");
-}
+	for (int i = 0; i < level; i++)
+		META_CONPRINT("-");
 
-inline void DumpType(IBaseType *pType, int indent)
-{
-	PrintSpaces(indent);
-	META_CONPRINTF("%s (%i)\n", GetTypeName(pType->GetTypeInfo()), pType->GetOffset());
+	META_CONPRINTF("%s\n", GetTypeName(pType->GetTypeInfo()));
 
-	for (size_t i=0; i<pType->GetNumBaseClasses(); i++)
+	for (size_t i = 0; i < pType->GetNumBaseClasses(); i++)
 	{
-		DumpType(pType->GetBaseClass(i), indent+1);
+		DumpType(pType->GetBaseClass(i), level + 1);
 	}
 }
 
+inline void PrintTypeTree(void *pClass)
+{
+	IType *pType = GetType(pClass);
+	IBaseType *pBase = pType->GetBaseType();
+
+	DumpType(pBase, 0);
+
+	pType->Destroy();
+}
 
 #endif // RTTI_H_

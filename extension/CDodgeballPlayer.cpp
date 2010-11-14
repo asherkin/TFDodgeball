@@ -17,13 +17,14 @@ void CDodgeballPlayer::HandleCommand_JoinClass(const char *pClass, bool unk)
 }
 
 bool IsFlamethrower(int index) {
-	return (index == 21 ||	// TF_WEAPON_FLAMETHROWER
-			index == 40 ||	// The Backburner
-			index == 215);	// The Degreaser
+	return (index == 21  ||	// TF_WEAPON_FLAMETHROWER
+			index == 40  ||	// The Backburner
+			index == 208 || // Upgradeable TF_WEAPON_FLAMETHROWER
+			index == 215 );	// The Degreaser
 }
 
 bool IsPyroHat(int index) {
-	return (index == 51 ||	// Pyro's Beanie
+	return (index == 51  ||	// Pyro's Beanie
 			index == 102 ||	// Respectless Rubber Glove
 			index == 105 ||	// Brigade Helm
 			index == 151 ||	// Pyro Brain Sucker
@@ -32,7 +33,7 @@ bool IsPyroHat(int index) {
 			index == 213 ||	// The Attendant
 			index == 247 ||	// Old Guadalajara
 			index == 248 ||	// Napper's Respite
-			index == 253);	// Handyman's Handle
+			index == 253 );	// Handyman's Handle
 }
 
 bool IsAllClassHat(int index) {
@@ -61,7 +62,22 @@ bool IsAllClassHat(int index) {
 			index == 260 ||	// Wiki Cap
 			index == 261 ||	// Mann Co. Cap
 			index == 262 ||	// Polycount Pin
-			index == 263);	// Ellis Hat
+			index == 263 ||	// Ellis Hat
+			index == 268 ||	// Halloween Mask - Scout
+			index == 269 ||	// Halloween Mask - Sniper
+			index == 270 ||	// Halloween Mask - Soldier
+			index == 271 ||	// Halloween Mask - Demoman
+			index == 272 ||	// Halloween Mask - Medic
+			index == 273 ||	// Halloween Mask - Heavy
+			index == 274 ||	// Halloween Mask - Spy
+			index == 275 ||	// Halloween Mask - Engineer
+			index == 276 ||	// Halloween Mask - Pyro
+			index == 277 ||	// Halloween Mask - Saxton Hale
+			index == 278 ||	// Horseless Headless Horseman's Head
+			index == 279 ||	// Ghastly Gibus 2010
+			index == 287 ||	// Spine-Chilling Skull
+			index == 289 ||	// Voodoo Juju
+			index == 291 );	// Horrific Headsplitter
 }
 
 CBaseEntity *CDodgeballPlayer::GiveNamedItem(char const *szName, int iSubType, CScriptCreatedItem *item, bool bUnknown)

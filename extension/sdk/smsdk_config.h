@@ -39,7 +39,7 @@
 /* Basic information exposed publicly */
 #define SMEXT_CONF_NAME			"TFDodgeball"
 #define SMEXT_CONF_DESCRIPTION	"Helper for the TFDodgeball plugin"
-#define SMEXT_CONF_VERSION		"1.2.4"
+#define SMEXT_CONF_VERSION		"1.2.5"
 #define SMEXT_CONF_AUTHOR		"Asherkin (based on work by pRED*)"
 #define SMEXT_CONF_URL			"http://limetech.org/"
 #define SMEXT_CONF_LOGTAG		"TFDB"
@@ -65,11 +65,11 @@
 #define SMEXT_ENABLE_GAMECONF
 //#define SMEXT_ENABLE_MEMUTILS
 #define SMEXT_ENABLE_GAMEHELPERS
-#define SMEXT_ENABLE_TIMERSYS
+//#define SMEXT_ENABLE_TIMERSYS
 //#define SMEXT_ENABLE_THREADER
 //#define SMEXT_ENABLE_LIBSYS
 //#define SMEXT_ENABLE_MENUS
-#define SMEXT_ENABLE_ADTFACTORY
+//#define SMEXT_ENABLE_ADTFACTORY
 //#define SMEXT_ENABLE_PLUGINSYS
 //#define SMEXT_ENABLE_ADMINSYS
 //#define SMEXT_ENABLE_TEXTPARSERS
