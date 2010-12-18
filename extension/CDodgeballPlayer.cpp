@@ -147,7 +147,8 @@ void CSCICopy(CScriptCreatedItem *olditem, CScriptCreatedItem *newitem)
 	copymember(m_szBlob);
 	copymember(m_szBlob2);
 
-	copymember(m_pUnknown);
+	copymember(m_Unknown);
+	copymember(m_Unknown2);
 
 	copymember(m_bInitialized);
 

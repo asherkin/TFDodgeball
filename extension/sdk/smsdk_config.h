@@ -39,7 +39,7 @@
 /* Basic information exposed publicly */
 #define SMEXT_CONF_NAME			"TFDodgeball"
 #define SMEXT_CONF_DESCRIPTION	"Helper for the TFDodgeball plugin"
-#define SMEXT_CONF_VERSION		"1.2.5"
+#define SMEXT_CONF_VERSION		"1.2.6"
 #define SMEXT_CONF_AUTHOR		"Asherkin (based on work by pRED*)"
 #define SMEXT_CONF_URL			"http://limetech.org/"
 #define SMEXT_CONF_LOGTAG		"TFDB"

@@ -41,8 +41,8 @@
 			}
 			"PlayerRunCmd"
 			{
-				"windows"	"404"
-				"linux"		"405"
+				"windows"	"405"
+				"linux"		"406"
 			}
 			"GetDataDescMap"
 			{
@@ -76,8 +76,8 @@
 			}
 			"LeaveVehicle"
 			{
-				"windows"	"379"
-				"linux"		"380"
+				"windows"	"380"
+				"linux"		"381"
 			}
 			"VPhysicsTakeDamage"
 			{
@@ -91,8 +91,8 @@
 			}
 			"GiveNamedItem"
 			{
-				"windows"	"455"
-				"linux"		"462"
+				"windows"	"456"
+				"linux"		"463"
 			}
 			"RemovePlayerItem"
 			{
@@ -101,8 +101,8 @@
 			}
 			"Weapon_GetSlot"
 			{
-				"windows"	"257"
-				"linux"		"258"
+				"windows"	"258"
+				"linux"		"259"
 			}
 			"GetClientEyeAngles"
 			{
@@ -111,48 +111,48 @@
 			}
 			"Weapon_Equip"
 			{
-				"windows"	"250"
-				"linux"		"251"
+				"windows"	"251"
+				"linux"		"252"
 			}
 			"PreThink"
-			{
-				"windows"	"321"
-				"linux"		"322"
-			}
-			"PostThink"
 			{
 				"windows"	"322"
 				"linux"		"323"
 			}
+			"PostThink"
+			{
+				"windows"	"323"
+				"linux"		"324"
+			}
 			"WeaponSwitch"
 			{
-				"windows"	"253"
-				"linux"		"254"
+				"windows"	"254"
+				"linux"		"255"
 			}
 			"CanSpeakVoiceCommand"
 			{
-				"windows"	"444"
-				"linux"		"445"
+				"windows"	"445"
+				"linux"		"446"
 			}
 			"IsReadyToSpawn"
 			{
-				"windows"	"419"
-				"linux"		"420"
+				"windows"	"420"
+				"linux"		"421"
 			}
 			"OnTakeDamage_Alive"
 			{
-				"windows"	"261"
-				"linux"		"262"
+				"windows"	"262"
+				"linux"		"263"
 			}
 			"Jump"
 			{
-				"windows"	"319"
-				"linux"		"320"
+				"windows"	"320"
+				"linux"		"321"
 			}
 			"ProcessUserCmds"
 			{
-				"windows"	"403"
-				"linux"		"404"
+				"windows"	"404"
+				"linux"		"405"
 			}
 			"GetSoundEmissionOrigin"
 			{
@@ -161,8 +161,8 @@
 			}
 			"ForceRespawn"
 			{
-				"windows"	"314"
-				"linux"		"315"
+				"windows"	"315"
+				"linux"		"316"
 			}
 		}
 	}
