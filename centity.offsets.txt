@@ -164,6 +164,11 @@
 				"windows"	"315"
 				"linux"		"316"
 			}
+			"GetServerClass"
+			{
+				"windows"	"9"
+				"linux"		"10"
+			}
 		}
 	}
 	

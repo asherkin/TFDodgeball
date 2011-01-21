@@ -197,6 +197,7 @@ public: // CBaseEntity virtuals
 	void TakeDamage(const CEntityTakeDamageInfo &inputInfo);
 	virtual int VPhysicsTakeDamage(const CEntityTakeDamageInfo &inputInfo);
 	virtual int	VPhysicsGetObjectList(IPhysicsObject **pList, int listMax);
+	virtual ServerClass *GetServerClass();
 
 public: // CBaseEntity non virtual helpers
 	BASEPTR	ThinkSet(BASEPTR func, float thinkTime, const char *szContext);
@@ -254,6 +255,7 @@ public: // All the internal hook implementations for the above virtuals
 	DECLARE_DEFAULTHEADER(GetServerVehicle, IServerVehicle *, ());
 	DECLARE_DEFAULTHEADER(VPhysicsTakeDamage, int, (const CEntityTakeDamageInfo &inputInfo));
 	DECLARE_DEFAULTHEADER(VPhysicsGetObjectList, int, (IPhysicsObject **pList, int listMax));
+	DECLARE_DEFAULTHEADER(GetServerClass, ServerClass *, ());
 
 protected: // CEntity
 	CBaseEntity *m_pEntity;

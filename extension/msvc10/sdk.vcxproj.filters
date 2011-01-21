@@ -71,6 +71,12 @@
     <ClCompile Include="..\..\..\zombiefix_ext\CDetour\detours.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\CTrackingProjectile_Nuke.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CVisibleNuke.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CTrackingProjectile.h">
@@ -137,6 +143,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\..\..\zombiefix_ext\CDetour\detours.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CTrackingProjectile_Nuke.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CVisibleNuke.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

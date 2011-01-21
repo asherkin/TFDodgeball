@@ -44,6 +44,7 @@ SH_DECL_MANUALHOOK0(GetSoundEmissionOrigin, 0, 0, 0, Vector);
 SH_DECL_MANUALHOOK0(GetServerVehicle, 0, 0, 0, IServerVehicle *);
 SH_DECL_MANUALHOOK1(VPhysicsTakeDamage, 0, 0, 0, int, const CEntityTakeDamageInfo &);
 SH_DECL_MANUALHOOK2(VPhysicsGetObjectList, 0, 0, 0, int, IPhysicsObject **, int);
+SH_DECL_MANUALHOOK0(GetServerClass, 0, 0, 0, ServerClass *);
 
 DECLARE_HOOK(Teleport, CEntity);
 DECLARE_HOOK(UpdateOnRemove, CEntity);
@@ -59,7 +60,7 @@ DECLARE_HOOK(GetSoundEmissionOrigin, CEntity);
 DECLARE_HOOK(GetServerVehicle, CEntity);
 DECLARE_HOOK(VPhysicsTakeDamage, CEntity);
 DECLARE_HOOK(VPhysicsGetObjectList, CEntity);
-
+DECLARE_HOOK(GetServerClass, CEntity);
 
 //Sendprops
 DEFINE_PROP(m_iTeamNum, CEntity);
@@ -193,6 +194,7 @@ DECLARE_DEFAULTHANDLER(CEntity, OnTakeDamage, int, (CEntityTakeDamageInfo &info)
 //DECLARE_DEFAULTHANDLER(CEntity, GetServerVehicle, IServerVehicle *, (), ());
 DECLARE_DEFAULTHANDLER(CEntity, VPhysicsTakeDamage, int, (const CEntityTakeDamageInfo &inputInfo), (inputInfo));
 DECLARE_DEFAULTHANDLER(CEntity, VPhysicsGetObjectList, int, (IPhysicsObject **pList, int listMax), (pList, listMax));
+DECLARE_DEFAULTHANDLER(CEntity, GetServerClass, ServerClass *, (), ());
 
 IServerVehicle *CEntity::GetServerVehicle()
 {

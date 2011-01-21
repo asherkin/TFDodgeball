@@ -50,6 +50,8 @@ public:
 public:
 	static IHookTracker *m_Head;
 	IHookTracker *m_Next;
+public:
+	int m_iHookID;
 };
 
 #define DECLARE_HOOK(name, cl) \
@@ -60,17 +62,20 @@ public: \
 	{ \
 		int offset; \
 		if (!pConfig->GetOffset(#name, &offset)) \
-		{\
+		{ \
 			g_pSM->LogError(myself, "[CENTITY] Failed to retrieve offset %s from gamedata file", #name); \
+			SH_REMOVE_HOOK_ID(m_iHookID); \
+			m_iHookID = 0; \
+		} else { \
+			SH_MANUALHOOK_RECONFIGURE(name, offset, 0, 0); \
 		} \
-		SH_MANUALHOOK_RECONFIGURE(name, offset, 0, 0); \
 	} \
 	void AddHook(CEntity *pEnt) \
 	{ \
 		cl *pThisType = dynamic_cast<cl *>(pEnt); \
 		if (pThisType) \
 		{ \
-			SH_ADD_MANUALVPHOOK(name, pEnt->BaseEntity(), SH_MEMBER(pThisType, &cl::Internal##name), false); \
+			m_iHookID = SH_ADD_MANUALVPHOOK(name, pEnt->BaseEntity(), SH_MEMBER(pThisType, &cl::Internal##name), false); \
 		} \
 	} \
 	void ClearFlag(CEntity *pEnt) \

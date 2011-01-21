@@ -123,6 +123,8 @@
     <ClCompile Include="..\..\..\zombiefix_ext\CDetour\detours.cpp" />
     <ClCompile Include="..\CDodgeballPlayer.cpp" />
     <ClCompile Include="..\CTrackingProjectile.cpp" />
+    <ClCompile Include="..\CTrackingProjectile_Nuke.cpp" />
+    <ClCompile Include="..\CVisibleNuke.cpp" />
     <ClCompile Include="..\extension.cpp" />
     <ClCompile Include="..\sdk\smsdk_ext.cpp" />
     <ClCompile Include="..\CEntity\CEntity.cpp" />
@@ -142,6 +144,8 @@
     <ClInclude Include="..\..\..\zombiefix_ext\CDetour\detours.h" />
     <ClInclude Include="..\CDodgeballPlayer.h" />
     <ClInclude Include="..\CTrackingProjectile.h" />
+    <ClInclude Include="..\CTrackingProjectile_Nuke.h" />
+    <ClInclude Include="..\CVisibleNuke.h" />
     <ClInclude Include="..\extension.h" />
     <ClInclude Include="..\sdk\smsdk_config.h" />
     <ClInclude Include="..\sdk\smsdk_ext.h" />

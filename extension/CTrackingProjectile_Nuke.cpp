@@ -1,50 +1,57 @@
 #include "extension.h"
-#include "CTrackingProjectile.h"
+#include "CTrackingProjectile_Nuke.h"
 #include "CPlayer.h"
 #include "CHelpers.h"
 #include "worldsize.h"
 
 SH_DECL_MANUALEXTERN3(FVisible, bool, CBaseEntity *, int, CBaseEntity **);
 
-LINK_ENTITY_TO_CLASS(CTFProjectile_Rocket, CTrackingProjectile);
-//LINK_ENTITY_TO_CLASS(CTFProjectile_SentryRocket, CTrackingProjectile);
+LINK_ENTITY_TO_CLASS(CTFProjectile_SentryRocket, CTrackingProjectile_Nuke);
 
 #if 0
-BEGIN_DATADESC(CTrackingProjectile)
+BEGIN_DATADESC(CTrackingProjectile_Nuke)
 	DEFINE_THINKFUNC(FindThink),
 	DEFINE_THINKFUNC(TrackThink),
 END_DATADESC()
 #endif
 
-//IMPLEMENT_NULL_DATADESC(CTrackingProjectile);
+//IMPLEMENT_NULL_DATADESC(CTrackingProjectile_Nuke);
 
-ConVar RocketSpeedMul("sm_dodgeball_speedmul", "0.5", FCVAR_NONE);
-ConVar ReflectSpeedInk("sm_dodgeball_reflectinc", "0.02", FCVAR_NONE);
-ConVar RocketTurnRate("sm_dodgeball_turnrate", "0.25", FCVAR_NONE);
+ConVar RocketSpeedMul_Nuke("sm_dodgeball_speedmul_nuke", "0.5", FCVAR_NONE);
+ConVar ReflectSpeedInc_Nuke("sm_dodgeball_reflectinc_nuke", "0.02", FCVAR_NONE);
+ConVar RocketTurnRate_Nuke("sm_dodgeball_turnrate_nuke", "0.25", FCVAR_NONE);
 
-DEFINE_PROP(m_bCritical, CTrackingProjectile);
-DEFINE_PROP(m_iDeflected, CTrackingProjectile);
+DEFINE_PROP(m_bCritical, CTrackingProjectile_Nuke);
+DEFINE_PROP(m_iDeflected, CTrackingProjectile_Nuke);
 
-DECLARE_HOOK(FVisible, CTrackingProjectile);
+DECLARE_HOOK(FVisible, CTrackingProjectile_Nuke);
 
-DECLARE_DEFAULTHANDLER(CTrackingProjectile, FVisible, bool, (CBaseEntity *pEntity, int traceMask, CBaseEntity **ppBlocker), (pEntity, traceMask, ppBlocker));
+DECLARE_DEFAULTHANDLER(CTrackingProjectile_Nuke, FVisible, bool, (CBaseEntity *pEntity, int traceMask, CBaseEntity **ppBlocker), (pEntity, traceMask, ppBlocker));
 
-void CTrackingProjectile::Init(edict_t *pEdict, CBaseEntity *pBaseEntity)
+void CTrackingProjectile_Nuke::Init(edict_t *pEdict, CBaseEntity *pBaseEntity)
 {
 	m_bHasThought = false;
+	m_pMyLittlePony = NULL;
 
 	BaseClass::Init(pEdict, pBaseEntity);
 
 	//m_flDamage = (float *)((char *)BaseEntity() + (info.actual_offset+sizeof(int)));
 }
 
-void CTrackingProjectile::Spawn(void)
+void CTrackingProjectile_Nuke::Spawn(void)
 {
+	for (int i = 0; i < gpGlobals->maxEntities; i++) {
+		if (CEntity::Instance(i) && CEntity::Instance(i)->GetMoveParent() == this) {
+			m_pMyLittlePony = static_cast<CVisibleNuke *>(CEntity::Instance(i));
+			break;
+		}
+	}
+
  	BaseClass::Spawn();
 
 	if (DodgeballEnabled.GetBool())
 	{
-		SetThink(&CTrackingProjectile::FindThink);
+		SetThink(&CTrackingProjectile_Nuke::FindThink);
 		SetNextThink(gpGlobals->curtime);
 
 		m_lastTeam = GetTeamNumber();
@@ -53,7 +60,7 @@ void CTrackingProjectile::Spawn(void)
 	}
 }
 
-void CTrackingProjectile::FindThink(void)
+void CTrackingProjectile_Nuke::FindThink(void)
 {
 
 	CEntity *pBestVictim = NULL;
@@ -91,29 +98,34 @@ void CTrackingProjectile::FindThink(void)
 
 	if (pBestVictim == NULL) 
 	{
-		SetThink(&CTrackingProjectile::FindThink);
+		SetThink(&CTrackingProjectile_Nuke::FindThink);
 		SetNextThink(gpGlobals->curtime);
 		return;
 	}
 
 	//TurnToTarget(pBestVictim);
 
-	//pHelpers->EmitSoundToClient(static_cast<CPlayer *>(pBestVictim), "weapons/sentry_spot_client.wav");
+	pHelpers->EmitSoundToClient(static_cast<CPlayer *>(pBestVictim), "weapons/sentry_spot_client.wav");
 
 	m_currentTarget = pBestVictim->entindex();
-	SetThink(&CTrackingProjectile::TrackThink);
+	SetThink(&CTrackingProjectile_Nuke::TrackThink);
 	SetNextThink(gpGlobals->curtime);
 }
 
-void CTrackingProjectile::TrackThink(void)
+void CTrackingProjectile_Nuke::TrackThink(void)
 {
 	if (m_lastTeam != GetTeamNumber())
 	{
 		//g_pSM->LogMessage(myself, "Rocket Airblasted!");
 
+		m_pMyLittlePony->ChangeTeam(GetTeamNumber());
+
+		if (GetTeamNumber() > 2)
+			m_pMyLittlePony->SetSkin(GetTeamNumber() - 2);
+
 		m_lastTeam = GetTeamNumber();
 
-		SetThink(&CTrackingProjectile::FindThink);
+		SetThink(&CTrackingProjectile_Nuke::FindThink);
 		SetNextThink(gpGlobals->curtime + 10.0);
 		return;
 	}
@@ -132,7 +144,7 @@ void CTrackingProjectile::TrackThink(void)
 	TurnToTarget(pVictim);
 }
 
-bool CTrackingProjectile::IsValidTarget(CEntity *pEntity)
+bool CTrackingProjectile_Nuke::IsValidTarget(CEntity *pEntity)
 {
 	if(!pEntity)
 	{
@@ -180,7 +192,7 @@ bool CTrackingProjectile::IsValidTarget(CEntity *pEntity)
 }
 
 #if 0
-void CTrackingProjectile::TurnToTarget(CEntity *pEntity)
+void CTrackingProjectile_Nuke::TurnToTarget(CEntity *pEntity)
 {
 	Vector targetLocation = pEntity->GetLocalOrigin();
 	Vector rocketLocation = GetLocalOrigin();
@@ -203,7 +215,7 @@ void CTrackingProjectile::TurnToTarget(CEntity *pEntity)
 }
 #endif
 
-void CTrackingProjectile::TurnToTarget(CEntity *pEntity)
+void CTrackingProjectile_Nuke::TurnToTarget(CEntity *pEntity)
 {
 	// Retrieve rocket info.
 	Vector fRocketPosition = GetLocalOrigin();
@@ -211,8 +223,8 @@ void CTrackingProjectile::TurnToTarget(CEntity *pEntity)
 	vec_t fCurrentSpeed;
 
 	// Calculate speed and orientation.
-	fCurrentSpeed = /*fRocketOrientation.Length()*/ 1100.0 * RocketSpeedMul.GetFloat();
-	fCurrentSpeed *= (ReflectSpeedInk.GetFloat() * (*m_iDeflected/* - 1*/)) + 1.0;
+	fCurrentSpeed = /*fRocketOrientation.Length()*/ 1100.0 * RocketSpeedMul_Nuke.GetFloat();
+	fCurrentSpeed *= (ReflectSpeedInc_Nuke.GetFloat() * (*m_iDeflected/* - 1*/)) + 1.0;
 	fRocketOrientation.NormalizeInPlace();
 
 	// Retrieve client position and calculate new orientation.
@@ -223,9 +235,9 @@ void CTrackingProjectile::TurnToTarget(CEntity *pEntity)
 	fOrientation.NormalizeInPlace();
 
 	// Lerp from the current orientation to the new one.
-	fRocketOrientation[0] = Lerp<vec_t>(RocketTurnRate.GetFloat(), fRocketOrientation[0], fOrientation[0]);
-	fRocketOrientation[1] = Lerp<vec_t>(RocketTurnRate.GetFloat(), fRocketOrientation[1], fOrientation[1]);
-	fRocketOrientation[2] = Lerp<vec_t>(RocketTurnRate.GetFloat(), fRocketOrientation[2], fOrientation[2]);
+	fRocketOrientation[0] = Lerp<vec_t>(RocketTurnRate_Nuke.GetFloat(), fRocketOrientation[0], fOrientation[0]);
+	fRocketOrientation[1] = Lerp<vec_t>(RocketTurnRate_Nuke.GetFloat(), fRocketOrientation[1], fOrientation[1]);
+	fRocketOrientation[2] = Lerp<vec_t>(RocketTurnRate_Nuke.GetFloat(), fRocketOrientation[2], fOrientation[2]);
 	fRocketOrientation.NormalizeInPlace();
 
 	// Calculate angles and final speed.
@@ -240,12 +252,12 @@ void CTrackingProjectile::TurnToTarget(CEntity *pEntity)
 	Teleport(NULL, &fRocketAngles, &fRocketSpeed);
 }
 
-bool CTrackingProjectile::IsCritical(void)
+bool CTrackingProjectile_Nuke::IsCritical(void)
 {
 	return (m_bCritical) ? *m_bCritical : false;
 }
 
-void CTrackingProjectile::SetCritical(bool bCritical)
+void CTrackingProjectile_Nuke::SetCritical(bool bCritical)
 {
 	if (m_bCritical)
 		*m_bCritical = bCritical;
