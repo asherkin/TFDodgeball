@@ -113,6 +113,13 @@ bool CEntityManager::Init(IGameConfig *pConfig)
 		pDetourTracker = pDetourTracker->m_Next;
 	}
 
+	ISigOffsetTracker *pSigOffsetTracker = ISigOffsetTracker::m_Head;
+	while (pSigOffsetTracker)
+	{
+		pSigOffsetTracker->FindSig(pConfig);
+		pSigOffsetTracker = pSigOffsetTracker->m_Next;
+	}
+
 	/* Start the creation hooks! */
 	SH_ADD_HOOK(IEntityFactoryDictionary, Create, pDict, SH_MEMBER(this, &CEntityManager::Create), true);
 	SH_ADD_HOOK(IVEngineServer, RemoveEdict, engine, SH_MEMBER(this, &CEntityManager::RemoveEdict), true);

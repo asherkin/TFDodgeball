@@ -122,6 +122,42 @@ public: \
 }; \
 name##cl##DetourTracker name##cl##DetourTrackerObj;
 
+class ISigOffsetTracker
+{
+public:
+	ISigOffsetTracker()
+	{
+		m_Next = m_Head;
+		m_Head = this;
+	}
+
+	virtual void FindSig(IGameConfig *pConfig) = 0;
+
+	static ISigOffsetTracker *m_Head;
+	ISigOffsetTracker *m_Next;
+
+public:
+	void *pPointer;
+};
+
+#define DECLARE_SIGOFFSET(name) \
+class name##SigOffsetTracker : public ISigOffsetTracker \
+{ \
+public: \
+	void FindSig(IGameConfig *pConfig) \
+	{ \
+		if (!pConfig->GetMemSig(#name, &pPointer)) \
+		{ \
+			g_pSM->LogError(myself, "[CENTITY] Failed to retrieve %s from gamedata file", #name); \
+		} else if (!pPointer) { \
+			g_pSM->LogError(myself, "[CENTITY] Failed to retrieve pointer from %s", #name); \
+		} \
+	} \
+}; \
+name##SigOffsetTracker name##SigOffsetTrackerObj;
+
+#define GET_SIGOFFSET(name) name##SigOffsetTrackerObj.pPointer
+
 #define PROP_SEND 0
 #define PROP_DATA 1
 

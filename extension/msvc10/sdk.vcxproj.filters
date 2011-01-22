@@ -77,6 +77,9 @@
     <ClCompile Include="..\CVisibleNuke.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\CTFDBCreatedItem.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CTrackingProjectile.h">
@@ -149,6 +152,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\CVisibleNuke.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CTFDBCreatedItem.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

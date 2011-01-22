@@ -27,6 +27,7 @@
 IHookTracker *IHookTracker::m_Head = NULL;
 IPropTracker *IPropTracker::m_Head = NULL;
 IDetourTracker *IDetourTracker::m_Head = NULL;
+ISigOffsetTracker *ISigOffsetTracker::m_Head = NULL;
 
 ISaveRestoreOps *eventFuncs = NULL;
 

@@ -4,6 +4,7 @@
 #include "CEntityManager.h"
 #include "CEntity.h"
 #include "CPlayer.h"
+#include "CTFDBCreatedItem.h"
 
 class CDodgeballPlayer : public CPlayer
 {

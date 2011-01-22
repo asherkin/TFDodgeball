@@ -16,81 +16,18 @@ void CDodgeballPlayer::HandleCommand_JoinClass(const char *pClass, bool unk)
 	}
 }
 
-bool IsFlamethrower(int index) {
-	return (index == 21  ||	// TF_WEAPON_FLAMETHROWER
-			index == 40  ||	// The Backburner
-			index == 208 || // Upgradeable TF_WEAPON_FLAMETHROWER
-			index == 215 );	// The Degreaser
-}
-
-bool IsPyroHat(int index) {
-	return (index == 51  ||	// Pyro's Beanie
-			index == 102 ||	// Respectless Rubber Glove
-			index == 105 ||	// Brigade Helm
-			index == 151 ||	// Pyro Brain Sucker
-			index == 175 ||	// Pyro Monocle
-			index == 182 ||	// Pyro Helm
-			index == 213 ||	// The Attendant
-			index == 247 ||	// Old Guadalajara
-			index == 248 ||	// Napper's Respite
-			index == 253 );	// Handyman's Handle
-}
-
-bool IsAllClassHat(int index) {
-	return (index == 115 ||	// Mildly Disturbing Halloween Mask
-			index == 116 ||	// Ghastly Gibus
-			index == 125 ||	// Honest Halo
-			index == 126 ||	// L4D Hat
-			index == 134 ||	// Propaganda Contest First Place
-			index == 135 ||	// Towering Pillar of Hats
-			index == 136 ||	// Propaganda Contest Second Place
-			index == 137 ||	// Noble Amassment of Hats
-			index == 138 ||	// Propaganda Contest Third Place
-			index == 139 ||	// Modest Pile of Hat
-			index == 143 ||	// OSX Item
-			index == 162 ||	// TTG Max Hat
-			index == 164 ||	// Employee Badge A
-			index == 165 ||	// Employee Badge B
-			index == 166 ||	// Employee Badge C
-			index == 170 ||	// Employee Badge Plat
-			index == 189 ||	// Parasite Hat
-			// Unknown if action items need to be here.
-			index == 242 ||	// Duel Medal Bronze
-			index == 243 ||	// Duel Medal Silver
-			index == 244 ||	// Duel Medal Gold
-			index == 245 ||	// Duel Medal Plat
-			index == 260 ||	// Wiki Cap
-			index == 261 ||	// Mann Co. Cap
-			index == 262 ||	// Polycount Pin
-			index == 263 ||	// Ellis Hat
-			index == 268 ||	// Halloween Mask - Scout
-			index == 269 ||	// Halloween Mask - Sniper
-			index == 270 ||	// Halloween Mask - Soldier
-			index == 271 ||	// Halloween Mask - Demoman
-			index == 272 ||	// Halloween Mask - Medic
-			index == 273 ||	// Halloween Mask - Heavy
-			index == 274 ||	// Halloween Mask - Spy
-			index == 275 ||	// Halloween Mask - Engineer
-			index == 276 ||	// Halloween Mask - Pyro
-			index == 277 ||	// Halloween Mask - Saxton Hale
-			index == 278 ||	// Horseless Headless Horseman's Head
-			index == 279 ||	// Ghastly Gibus 2010
-			index == 287 ||	// Spine-Chilling Skull
-			index == 289 ||	// Voodoo Juju
-			index == 291 );	// Horrific Headsplitter
-}
-
 CBaseEntity *CDodgeballPlayer::GiveNamedItem(char const *szName, int iSubType, CScriptCreatedItem *item, bool bUnknown)
 {
+	CTFDBCreatedItem *pItem = (CTFDBCreatedItem *)item;
 	if (!DodgeballEnabled.GetBool() || !item)
 	{
 		return BaseClass::GiveNamedItem(szName, iSubType, item, bUnknown);
 	} else if (GetPlayerClass() != PLAYERCLASS_PYRO) {
 		g_pSM->LogError(myself, "WARNING: Server tried to give a weapon to a player that isn't a pyro.");
 		return BaseClass::GiveNamedItem(szName, iSubType, item, bUnknown);
-	} else if (IsPyroHat(item->m_iItemDefinitionIndex) || IsAllClassHat(item->m_iItemDefinitionIndex)) {
+	} else if (pItem->GetLoadoutSlot(PLAYERCLASS_PYRO) == LOADOUTSLOT_MISC || pItem->GetLoadoutSlot(PLAYERCLASS_PYRO) == LOADOUTSLOT_ACTION) {
 		return BaseClass::GiveNamedItem(szName, iSubType, item, bUnknown);
-	} else if (!IsFlamethrower(item->m_iItemDefinitionIndex)) {
+	} else if (pItem->GetLoadoutSlot(PLAYERCLASS_PYRO) != LOADOUTSLOT_PRIMARY) {
 		return NULL;
 	}
 	
@@ -101,11 +38,7 @@ CBaseEntity *CDodgeballPlayer::GiveNamedItem(char const *szName, int iSubType, C
 
 	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(112,	0.25)); // +%s1% ammo regenerated every 5 seconds on wearer
 	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(76,	4.00)); // +%s1% max primary ammo on wearer
-	////newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(1,	0.00)); // %s1% damage done
 	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(60,	0.00)); // +%s1% fire damage resistance on wearer
-	//newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(66,	0.00)); // +%s1% bullet damage resistance on wearer
-	////newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(72,	0.00)); // %s1% burn damage
-	////newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(74,	0.00)); // %s1% burn duration
 
 	if (WeaponParticle.GetInt() > 0)
 	{
@@ -166,4 +99,3 @@ void CSCICopy(CScriptCreatedItem *olditem, CScriptCreatedItem *newitem)
 	}
 	*/
 }
-

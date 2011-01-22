@@ -1,3 +1,5 @@
+#include "CEntity.h"
+
 #ifndef CScriptCreatedItem_h__
 #define CScriptCreatedItem_h__
 
