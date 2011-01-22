@@ -12,6 +12,8 @@ DEFINE_PROP(m_nSkin, CVisibleNuke);
 
 ServerClass *g_pFlagClass;
 
+ConVar NukeGlow("sm_dodgeball_nuke_glow", "1", FCVAR_NONE, "", true, 0.0, true, 1.0);
+
 void CVisibleNuke::Init(edict_t *pEdict, CBaseEntity *pBaseEntity)
 {
 	if (!g_pFlagClass) 
@@ -32,7 +34,7 @@ void CVisibleNuke::Spawn(void)
 
 ServerClass *CVisibleNuke::GetServerClass(void)
 {
-	if (g_pFlagClass)
+	if (g_pFlagClass && NukeGlow.GetBool())
 		return g_pFlagClass;
 	else
 		return BaseClass::GetServerClass();

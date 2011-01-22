@@ -14,14 +14,17 @@
 #define PROJECTILE_ROCKET 1
 #define PROJECTILE_ROCKET_SENTRY 2
 
-#define CONVAR_COUNT 10
+#define CONVAR_COUNT 13
+
 #define MAX_FAILED_LAUNCHER_SEARCHES 2
+
+#define NUKE_MODEL "models\\TFAdmin\\smileyhat\\voogru_smileyhat_v1.mdl"
 
 public Plugin:myinfo = {
 	name = "TFDodgeball",
 	author = "Asherkin",
 	description	= "An open-source version of the popular 'Dodgeball' gameplay modification.",
-	version = "1.3.0",
+	version = "1.3",
 	url = "http://limetech.org/"
 };
 
@@ -38,15 +41,19 @@ new Handle:g_hConVars[CONVAR_COUNT] = {INVALID_HANDLE, ...};
 
 new bool:g_config_bEnabled;
 new g_config_iMaxRockets;
+new g_config_iMaxRockets_Nuke;
 new Float:g_config_flBaseDamage;
+new Float:g_config_flBaseDamage_Nuke;
 new bool:g_config_bSpawnCriticals;
 new Float:g_config_flSpeedMul;
 new Float:g_config_flSpeedMul_Nuke;
 new bool:g_config_bAutoJoin;
 new bool:g_config_bGameDesc;
 new bool:g_config_bManiFix;
+new Float:g_config_flNukeChance;
 
 new g_iRocketCount;
+new g_iRocketCount_Nuke;
 new bool:g_bMapRoaded;
 
 new currentlauncherIndex_Red = -1;
@@ -63,46 +70,52 @@ public OnPluginStart()
 	g_hConVars[0] = FindConVar("sm_dodgeball_enabled");
 	g_hConVars[1] = CreateConVar("sm_dodgeball_spawninterval", "1.0", "", FCVAR_NONE, true, 0.0, false);
 	g_hConVars[2] = CreateConVar("sm_dodgeball_maxrockets", "10", "", FCVAR_NONE, true, 0.0, false);
-	g_hConVars[3] = CreateConVar("sm_dodgeball_basedamage", "15.0", "", FCVAR_NONE, true, 0.0, false);
-	g_hConVars[4] = CreateConVar("sm_dodgeball_criticals", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_hConVars[5] = FindConVar("sm_dodgeball_speedmul");
-	g_hConVars[6] = FindConVar("sm_dodgeball_speedmul_nuke");
-	g_hConVars[7] = CreateConVar("sm_dodgeball_autojoin", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_hConVars[8] = CreateConVar("sm_dodgeball_gamedesc", "0", "", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_hConVars[9] = CreateConVar("sm_dodgeball_gamedesc_manifix", "0", "", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hConVars[3] = CreateConVar("sm_dodgeball_maxrockets_nuke", "1", "", FCVAR_NONE, true, 0.0, false);
+	g_hConVars[4] = CreateConVar("sm_dodgeball_basedamage", "15.0", "", FCVAR_NONE, true, 0.0, false);
+	g_hConVars[5] = CreateConVar("sm_dodgeball_basedamage_nuke", "500.0", "", FCVAR_NONE, true, 0.0, false);
+	g_hConVars[6] = CreateConVar("sm_dodgeball_criticals", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hConVars[7] = FindConVar("sm_dodgeball_speedmul");
+	g_hConVars[8] = FindConVar("sm_dodgeball_speedmul_nuke");
+	g_hConVars[9] = CreateConVar("sm_dodgeball_autojoin", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hConVars[10] = CreateConVar("sm_dodgeball_gamedesc", "0", "", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hConVars[11] = CreateConVar("sm_dodgeball_gamedesc_manifix", "0", "", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hConVars[12] = CreateConVar("sm_dodgeball_nuke_chance", "0.01", "", FCVAR_NONE, true, 0.0, true, 1.0);
 	
 	g_config_bEnabled = true;
 	g_config_iMaxRockets = 10;
+	g_config_iMaxRockets_Nuke = 1;
 	g_config_flBaseDamage = 15.0;
+	g_config_flBaseDamage_Nuke = 500.0;
 	g_config_bSpawnCriticals = true;
 	g_config_flSpeedMul = 0.5;
 	g_config_flSpeedMul_Nuke = 0.5;
 	g_config_bAutoJoin = true;
 	g_config_bGameDesc = false;
 	g_config_bManiFix = false;
+	g_config_flNukeChance = 0.1;
 	
 	HookConVarChange(g_hConVars[0], config_bEnabled_changed);
 	HookConVarChange(g_hConVars[1], config_flSpawnInterval_changed);
 	HookConVarChange(g_hConVars[2], config_iMaxRockets_changed);
-	HookConVarChange(g_hConVars[3], config_flBaseDamage_changed);
-	HookConVarChange(g_hConVars[4], config_bSpawnCriticals_changed);
-	HookConVarChange(g_hConVars[5], config_flSpeedMul_changed);
-	HookConVarChange(g_hConVars[6], config_flSpeedMul_Nuke_changed);
-	HookConVarChange(g_hConVars[7], config_bAutoJoin_changed);
-	HookConVarChange(g_hConVars[8], config_bGameDesc_changed);
-	HookConVarChange(g_hConVars[9], config_bManiFix_changed);
+	HookConVarChange(g_hConVars[3], config_iMaxRockets_Nuke_changed);
+	HookConVarChange(g_hConVars[4], config_flBaseDamage_changed);
+	HookConVarChange(g_hConVars[5], config_flBaseDamage_Nuke_changed);
+	HookConVarChange(g_hConVars[6], config_bSpawnCriticals_changed);
+	HookConVarChange(g_hConVars[7], config_flSpeedMul_changed);
+	HookConVarChange(g_hConVars[8], config_flSpeedMul_Nuke_changed);
+	HookConVarChange(g_hConVars[9], config_bAutoJoin_changed);
+	HookConVarChange(g_hConVars[10], config_bGameDesc_changed);
+	HookConVarChange(g_hConVars[11], config_bManiFix_changed);
+	HookConVarChange(g_hConVars[12], config_flNukeChance_changed);
 	
 	HookEvent("teamplay_round_start", Event_TeamplayRoundStart);
 	HookEvent("teamplay_setup_finished", Event_TeamplaySetupFinished);
 }
 
 public OnClientPutInServer(client) {
-	if (g_config_bEnabled)
+	if (g_config_bEnabled && g_config_bAutoJoin)
 	{
-		if (g_config_bAutoJoin)
-		{
-			FakeClientCommandEx(client, "jointeam 0");
-		}
+		FakeClientCommandEx(client, "jointeam 0");
 	}
 }
 
@@ -110,7 +123,7 @@ public OnMapStart()
 {
 	g_bMapRoaded = true;
 	
-	PrecacheModel("models\\TFAdmin\\smileyhat\\voogru_smileyhat_v1.mdl");
+	PrecacheModel(NUKE_MODEL);
 }
 
 public OnMapEnd()
@@ -150,13 +163,16 @@ public Event_TeamplaySetupFinished(Handle:event, const String:name[], bool:dontB
 
 public config_bEnabled_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bEnabled = bool:StringToInt(newValue); }
 public config_iMaxRockets_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_iMaxRockets = StringToInt(newValue); }
+public config_iMaxRockets_Nuke_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_iMaxRockets_Nuke = StringToInt(newValue); }
 public config_flBaseDamage_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flBaseDamage = StringToFloat(newValue); }
+public config_flBaseDamage_Nuke_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flBaseDamage_Nuke = StringToFloat(newValue); }
 public config_bSpawnCriticals_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bSpawnCriticals = bool:StringToInt(newValue); }
 public config_flSpeedMul_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flSpeedMul = StringToFloat(newValue); }
 public config_flSpeedMul_Nuke_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flSpeedMul_Nuke = StringToFloat(newValue); }
 public config_bAutoJoin_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bAutoJoin = bool:StringToInt(newValue); }
 public config_bGameDesc_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bGameDesc = bool:StringToInt(newValue); }
 public config_bManiFix_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bManiFix = bool:StringToInt(newValue); }
+public config_flNukeChance_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flNukeChance = StringToFloat(newValue); }
 
 public config_flSpawnInterval_changed(Handle:convar, const String:oldValue[], const String:newValue[])
 {
@@ -169,21 +185,43 @@ public config_flSpawnInterval_changed(Handle:convar, const String:oldValue[], co
 
 public Action:SpawnRockets(Handle:timer)
 {
-	if (!g_config_bEnabled || (g_config_iMaxRockets && (g_iRocketCount >= g_config_iMaxRockets)))
+	static iRocketLastTeam = TEAM_RED;
+	
+	if (!g_config_bEnabled)
 		return Plugin_Continue;
 	
-	static iRocketLastTeam = TEAM_RED;
+	new bool:isNuke = (GetURandomFloat() < g_config_flNukeChance);
+	
+	if (!isNuke) {
+		if (g_config_iMaxRockets && (g_iRocketCount >= g_config_iMaxRockets)) {
+			return Plugin_Continue;
+		}
+	} else {
+		if (g_config_iMaxRockets_Nuke && (g_iRocketCount_Nuke >= g_config_iMaxRockets_Nuke)) {
+			if (g_config_iMaxRockets && (g_iRocketCount >= g_config_iMaxRockets)) {
+				return Plugin_Continue;
+			} else {
+				isNuke = false;
+			}
+		}
+	}
 	
 	new rocketEnt;
 	if (iRocketLastTeam == TEAM_BLUE) {
-		rocketEnt = fireTeamProjectile(TEAM_RED, PROJECTILE_ROCKET_SENTRY);
+		rocketEnt = fireTeamProjectile(TEAM_RED, (isNuke)?(PROJECTILE_ROCKET_SENTRY):(PROJECTILE_ROCKET));
 		iRocketLastTeam = TEAM_RED;
 	} else if (iRocketLastTeam == TEAM_RED) {
-		rocketEnt = fireTeamProjectile(TEAM_BLUE, PROJECTILE_ROCKET_SENTRY);
+		rocketEnt = fireTeamProjectile(TEAM_BLUE, (isNuke)?(PROJECTILE_ROCKET_SENTRY):(PROJECTILE_ROCKET));
 		iRocketLastTeam = TEAM_BLUE;
 	}
 	//SDKHook(rocketEnt, SDKHook_StartTouch, OnRocketDestroyed);
-	g_iRocketCount++;
+	
+	if (!isNuke) {
+		g_iRocketCount++;
+	} else {
+		g_iRocketCount_Nuke++;
+	}
+	
 	return Plugin_Continue;
 }
 
@@ -201,12 +239,18 @@ public OnEntityDestroyed(entity)
 	
 	new String:netClassName[32];
 	GetEntityNetClass(entity, netClassName, 32);
-	if (StrEqual(netClassName, "CTFProjectile_Rocket", false) || StrEqual(netClassName, "CTFProjectile_SentryRocket", false))
+	if (StrEqual(netClassName, "CTFProjectile_Rocket", false))
 	{
 		g_iRocketCount--;
 	
 		if (g_iRocketCount < 0)
 			g_iRocketCount = 0;
+	} else if (StrEqual(netClassName, "CTFProjectile_SentryRocket", false))
+	{
+		g_iRocketCount_Nuke--;
+	
+		if (g_iRocketCount_Nuke < 0)
+			g_iRocketCount_Nuke = 0;
 	}
 }
 
@@ -255,7 +299,7 @@ public Action:Command_HeadRocket_Nuke(client, args)
 	GetClientEyeAngles(client, vAngles);
 	GetClientEyePosition(client, vPosition);
 	
-	fireProjectile(vPosition, vAngles, (1100.0*g_config_flSpeedMul), g_config_flBaseDamage, GetClientTeam(client), PROJECTILE_ROCKET_SENTRY, g_config_bSpawnCriticals);
+	fireProjectile(vPosition, vAngles, (1100.0*g_config_flSpeedMul_Nuke), g_config_flBaseDamage_Nuke, GetClientTeam(client), PROJECTILE_ROCKET_SENTRY, g_config_bSpawnCriticals);
 	
 	return Plugin_Handled;
 }
@@ -269,7 +313,7 @@ fireTeamProjectile(iTeam, iType = PROJECTILE_ROCKET) {
 	GetEntPropVector(launcherIndex, Prop_Data, "m_vecOrigin", vPosition);
 	GetEntPropVector(launcherIndex, Prop_Data, "m_angRotation", vAngles);
 	
-	return fireProjectile(vPosition, vAngles, (1100.0 * ((iType == PROJECTILE_ROCKET)?(g_config_flSpeedMul):(g_config_flSpeedMul_Nuke))), g_config_flBaseDamage, iTeam, iType, g_config_bSpawnCriticals);
+	return fireProjectile(vPosition, vAngles, (1100.0 * ((iType == PROJECTILE_ROCKET)?(g_config_flSpeedMul):(g_config_flSpeedMul_Nuke))), ((iType == PROJECTILE_ROCKET)?(g_config_flBaseDamage):(g_config_flBaseDamage_Nuke)), iTeam, iType, g_config_bSpawnCriticals);
 }
 
 findNextTeamLaunchPosition(iTeam)
@@ -354,9 +398,9 @@ fireProjectile(Float:vPosition[3], Float:vAngles[3] = NULL_VECTOR, Float:flSpeed
 	
 	TeleportEntity(iRocket, vPosition, vAngles, vVelocity);
 	
+	SetEntData(iRocket, FindSendPropOffs(strClassname, "m_nSkin"), (iTeam-2), 1, true);
 	if (iType == PROJECTILE_ROCKET)
 	{
-		SetEntData(iRocket, FindSendPropOffs(strClassname, "m_nSkin"), (iTeam-2), 1, true);
 		SetEntData(iRocket, FindSendPropOffs(strClassname, "m_bCritical"), bCritical, true);
 	} else {
 		
@@ -372,13 +416,14 @@ fireProjectile(Float:vPosition[3], Float:vAngles[3] = NULL_VECTOR, Float:flSpeed
 	if (iType == PROJECTILE_ROCKET_SENTRY)
 	{
 		new iVisModel = CreateEntityByName("tfdb_nukeskin");
-		SetEntityModel(iVisModel, "models\\TFAdmin\\smileyhat\\voogru_smileyhat_v1.mdl");
-		SetEntityModel(iRocket, "models\\TFAdmin\\smileyhat\\voogru_smileyhat_v1.mdl");
-		//SetEntPropEnt(iVisModel, Prop_Send, "moveparent", iRocket);
+		
+		SetEntityModel(iVisModel, NUKE_MODEL);
+		SetEntityModel(iRocket, NUKE_MODEL);
 		SetVariantString("!activator");
 		AcceptEntityInput(iVisModel, "SetParent", iRocket);
 		new Float:vOrigin[3] = {0.0, 0.0, 0.0};
 		TeleportEntity(iVisModel, vOrigin, vAngles, NULL_VECTOR);
+		SetEntData(iVisModel, FindSendPropOffs(strClassname, "m_nSkin"), (iTeam-2), 1, true);
 		SetVariantInt(iTeam);
 		AcceptEntityInput(iVisModel, "TeamNum", -1, -1, 0);
 		SetVariantInt(iTeam);

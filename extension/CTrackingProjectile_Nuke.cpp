@@ -17,9 +17,11 @@ END_DATADESC()
 
 //IMPLEMENT_NULL_DATADESC(CTrackingProjectile_Nuke);
 
-ConVar RocketSpeedMul_Nuke("sm_dodgeball_speedmul_nuke", "0.5", FCVAR_NONE);
+ConVar RocketSpeedMul_Nuke("sm_dodgeball_speedmul_nuke", "0.2", FCVAR_NONE);
 ConVar ReflectSpeedInc_Nuke("sm_dodgeball_reflectinc_nuke", "0.02", FCVAR_NONE);
-ConVar RocketTurnRate_Nuke("sm_dodgeball_turnrate_nuke", "0.25", FCVAR_NONE);
+ConVar RocketTurnRate_Nuke("sm_dodgeball_turnrate_nuke", "0.1", FCVAR_NONE);
+
+ConVar NukeBeepOnTarget("sm_dodgeball_nuke_targetbeep", "1", FCVAR_NONE, "", true, 0.0, true, 1.0);
 
 DEFINE_PROP(m_bCritical, CTrackingProjectile_Nuke);
 DEFINE_PROP(m_iDeflected, CTrackingProjectile_Nuke);
@@ -105,7 +107,8 @@ void CTrackingProjectile_Nuke::FindThink(void)
 
 	//TurnToTarget(pBestVictim);
 
-	pHelpers->EmitSoundToClient(static_cast<CPlayer *>(pBestVictim), "weapons/sentry_spot_client.wav");
+	if (NukeBeepOnTarget.GetBool())
+		pHelpers->EmitSoundToClient(static_cast<CPlayer *>(pBestVictim), "weapons/sentry_spot_client.wav");
 
 	m_currentTarget = pBestVictim->entindex();
 	SetThink(&CTrackingProjectile_Nuke::TrackThink);
