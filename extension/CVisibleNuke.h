@@ -21,6 +21,4 @@ protected: //Sendprops
 	DECLARE_SENDPROP(int, m_nSkin);
 };
 
-ServerClass *FindServerClass(const char *classname);
-
 #endif // _INCLUDE_CVisibleNuke_H_

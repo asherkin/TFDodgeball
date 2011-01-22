@@ -18,7 +18,7 @@ void CVisibleNuke::Init(edict_t *pEdict, CBaseEntity *pBaseEntity)
 {
 	if (!g_pFlagClass) 
 	{
-		g_pFlagClass = FindServerClass("CCaptureFlag");
+		g_pFlagClass = gamehelpers->FindServerClass("CCaptureFlag");
 
 		if (!g_pFlagClass)
 			g_pSM->LogError(myself, "CCaptureFlag ServerClass not found.");
@@ -43,17 +43,4 @@ ServerClass *CVisibleNuke::GetServerClass(void)
 void CVisibleNuke::SetSkin(int nSkin)
 {
 	*m_nSkin = nSkin;
-}
-
-ServerClass *FindServerClass(const char *classname)
-{
-	ServerClass *sc = gamedll->GetAllServerClasses();
-	while (sc)
-	{
-		if (strcmp(sc->GetName(), classname) == 0){
-			return sc;
-		}
-		sc = sc->m_pNext;
-	}
-	return NULL;
 }
