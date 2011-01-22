@@ -33,7 +33,7 @@ DECLARE_DEFAULTHANDLER(CTrackingProjectile_Nuke, FVisible, bool, (CBaseEntity *p
 void CTrackingProjectile_Nuke::Init(edict_t *pEdict, CBaseEntity *pBaseEntity)
 {
 	m_bHasThought = false;
-	m_pMyLittlePony = NULL;
+	m_pGlowModel = NULL;
 
 	BaseClass::Init(pEdict, pBaseEntity);
 
@@ -42,17 +42,17 @@ void CTrackingProjectile_Nuke::Init(edict_t *pEdict, CBaseEntity *pBaseEntity)
 
 void CTrackingProjectile_Nuke::Spawn(void)
 {
-	for (int i = 0; i < gpGlobals->maxEntities; i++) {
-		if (CEntity::Instance(i) && CEntity::Instance(i)->GetMoveParent() == this) {
-			m_pMyLittlePony = static_cast<CVisibleNuke *>(CEntity::Instance(i));
-			break;
-		}
-	}
-
  	BaseClass::Spawn();
 
 	if (DodgeballEnabled.GetBool())
 	{
+		for (int i = 0; i < gpGlobals->maxEntities; i++) {
+			if (CEntity::Instance(i) && CEntity::Instance(i)->GetMoveParent() == this) {
+				m_pGlowModel = static_cast<CVisibleNuke *>(CEntity::Instance(i));
+				break;
+			}
+		}
+
 		SetThink(&CTrackingProjectile_Nuke::FindThink);
 		SetNextThink(gpGlobals->curtime);
 
@@ -121,10 +121,13 @@ void CTrackingProjectile_Nuke::TrackThink(void)
 	{
 		//g_pSM->LogMessage(myself, "Rocket Airblasted!");
 
-		m_pMyLittlePony->ChangeTeam(GetTeamNumber());
+		if (m_pGlowModel)
+		{
+			m_pGlowModel->ChangeTeam(GetTeamNumber());
 
-		if (GetTeamNumber() > 2)
-			m_pMyLittlePony->SetSkin(GetTeamNumber() - 2);
+			if (GetTeamNumber() > 2)
+				m_pGlowModel->SetSkin(GetTeamNumber() - 2);
+		}
 
 		m_lastTeam = GetTeamNumber();
 

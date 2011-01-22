@@ -32,7 +32,7 @@ public: //Autohandlers
 private:
 	int m_currentTarget;
 	int m_lastTeam;
-	CVisibleNuke *m_pMyLittlePony;
+	CVisibleNuke *m_pGlowModel;
 
 protected:
 	bool   m_bHasThought;
