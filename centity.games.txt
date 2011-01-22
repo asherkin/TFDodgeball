@@ -4,11 +4,6 @@
 	{
 		"Offsets"
 		{
-			"FVisible"
-			{
-				"windows"	"139"
-				"linux"		"139"
-			}
 			"Teleport"
 			{
 				"windows"	"105"
@@ -68,11 +63,6 @@
 			{
 				"windows"	"86"
 				"linux"		"87"
-			}
-			"StudioFrameAdvance"
-			{
-				"windows"	"185"
-				"linux"		"186"
 			}
 			"LeaveVehicle"
 			{
@@ -159,11 +149,6 @@
 				"windows"	"147"
 				"linux"		"148"
 			}
-			"ForceRespawn"
-			{
-				"windows"	"315"
-				"linux"		"316"
-			}
 			"GetServerClass"
 			{
 				"windows"	"9"
@@ -171,8 +156,6 @@
 			}
 		}
 	}
-	
-	/* EntityFactoryDictionary function */
 	"#default"
 	{
 		"Signatures"
@@ -200,12 +183,6 @@
 				"library"	"server"
 				"windows"	"\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x74\x0E\x8B\x01\x8B\x90\x8C\x00\x00\x00\xFF\xD2\x84\xC0\x75\x09\x83\x3D\x2A\x2A\x2A\x2A\x00\x7E\x03\xB0\x01\xC3"
 				"linux"		"@_Z16PhysIsInCallbackv"
-			}
-			"HandleCommand_JoinClass"
-			{
-				"library"		"server"
-				"windows"		"\xA1\x2A\x2A\x2A\x2A\x83\xEC\x0C\x83\xB8\x2A\x03\x00\x00\x08\x56"
-				"linux"			"@_ZN9CTFPlayer23HandleCommand_JoinClassEPKcb"
 			}
 		}
 	}

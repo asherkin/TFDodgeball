@@ -78,11 +78,11 @@ SH_DECL_HOOK1_void(IServerGameClients, SetCommandClient, SH_NOATTRIB, 0, int);
 bool Sidewinder::SDK_OnLoad(char *error, size_t maxlength, bool late)
 {
 	char conf_error[255] = "";
-	if (!gameconfs->LoadGameConfigFile("centity.offsets", &g_pGameConf, conf_error, sizeof(conf_error)))
+	if (!gameconfs->LoadGameConfigFile("tfdodgeball.games", &g_pGameConf, conf_error, sizeof(conf_error)))
 	{
 		if (conf_error[0])
 		{
-			g_pSM->Format(error, maxlength, "Could not read centity.offsets.txt: %s", conf_error);
+			g_pSM->Format(error, maxlength, "Could not read tfdodgeball.games: %s", conf_error);
 		}
 		return false;
 	}
@@ -141,5 +141,5 @@ void Sidewinder::ServerActivate(edict_t *pEdictList, int edictCount, int clientM
 
 void Sidewinder::SetCommandClient( int cmd )
 {
-	gCmdIndex = cmd + 1; //HL2 is offset by -1 for some reason...
+	gCmdIndex = cmd + 1; //offset by -1 due to using the engine's client index.
 }
