@@ -1,6 +1,7 @@
 #include "extension.h"
 #include "CTFDBAmmoPack.h"
 #include "CAnimating.h"
+#include "CTFDBPlayer.h"
 
 LINK_ENTITY_TO_CLASS(CTFAmmoPack, CTFDBAmmoPack);
 
@@ -11,5 +12,5 @@ void CTFDBAmmoPack::Spawn(void)
 	BaseClass::Spawn();
 
 	if (DodgeballEnabled.GetBool() && DissolveWeapons.GetBool())
-		Dissolve(NULL, gpGlobals->curtime + 1.0, false, ENTITY_DISSOLVE_NORMAL, GetAbsOrigin(), 250);
+		Dissolve(NULL, gpGlobals->curtime + DissolveDelay.GetFloat(), false, ENTITY_DISSOLVE_NORMAL, GetAbsOrigin(), 250);
 }

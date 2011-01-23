@@ -6,7 +6,7 @@
 
 LINK_ENTITY_TO_CUSTOM_CLASS(tfdb_dissolve_field, trigger_multiple, CTFDBDissolveField);
 
-ConVar DissolveOffset("sm_dodgeball_dissolve_weapons", "-1.5");
+ConVar DissolveOffset("sm_dodgeball_dissolvefield_offset", "-1.5");
 
 void CTFDBDissolveField::Spawn(void)
 {
@@ -21,7 +21,6 @@ void CTFDBDissolveField::StartTouch(CEntity *pOther)
 
 	if (pOther->IsPlayer())
 	{
-		// Simply immediately kill the player.
 		CPlayer *pPlayer = assert_cast< CPlayer* >(pOther);
 		CEntityTakeDamageInfo info;
 
@@ -30,7 +29,7 @@ void CTFDBDissolveField::StartTouch(CEntity *pOther)
 		info.m_flDamage = 10000;
 		info.m_bitsDamageType = (DMG_GENERIC | DMG_PREVENT_PHYSICS_FORCE);
 
-		pPlayer->TakeDamage(info);
+		pPlayer->OnTakeDamage(info);
 		
 		pOther = pPlayer->GetRagdoll();
 		flStartTime = gpGlobals->curtime;

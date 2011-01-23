@@ -1,5 +1,5 @@
-#ifndef _INCLUDE_CDODGEBALLPLAYER_H_
-#define _INCLUDE_CDODGEBALLPLAYER_H_
+#ifndef _INCLUDE_CTFDBAmmoPack_H_
+#define _INCLUDE_CTFDBAmmoPack_H_
 
 #include "CEntityManager.h"
 #include "CEntity.h"
@@ -13,4 +13,4 @@ public:
 	virtual void Spawn(void);
 };
 
-#endif // _INCLUDE_CDODGEBALLPLAYER_H_
+#endif // _INCLUDE_CTFDBAmmoPack_H_

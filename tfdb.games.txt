@@ -15,12 +15,6 @@
 	{
 		"Signatures"
 		{
-			"HandleCommand_JoinClass"
-			{
-				"library"		"server"
-				"windows"		"\xA1\x2A\x2A\x2A\x2A\x83\xEC\x0C\x83\xB8\x2A\x03\x00\x00\x08\x56"
-				"linux"			"@_ZN9CTFPlayer23HandleCommand_JoinClassEPKcb"
-			}
 			"GetLoadoutSlot"
 			{
 				"library"		"server"

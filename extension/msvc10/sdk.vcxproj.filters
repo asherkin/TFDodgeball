@@ -62,9 +62,6 @@
     <ClCompile Include="..\CEntity\util.cpp">
       <Filter>CEntity\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\CDodgeballPlayer.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\..\..\zombiefix_ext\asm\asm.c">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -87,6 +84,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\CTFDBDissolveField.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CTFDBPlayer.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -145,9 +145,6 @@
     <ClInclude Include="..\CEntity\vehicles.h">
       <Filter>CEntity\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\CDodgeballPlayer.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\..\..\zombiefix_ext\asm\asm.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -173,6 +170,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\CTFDBDissolveField.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CTFDBPlayer.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

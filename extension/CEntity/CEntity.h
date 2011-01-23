@@ -194,7 +194,6 @@ public: // CBaseEntity virtuals
 	virtual void EndTouch(CEntity *pOther);
 	virtual Vector GetSoundEmissionOrigin();
 	virtual IServerVehicle *GetServerVehicle();
-	void TakeDamage(CEntityTakeDamageInfo &inputInfo);
 	virtual int VPhysicsTakeDamage(const CEntityTakeDamageInfo &inputInfo);
 	virtual int	VPhysicsGetObjectList(IPhysicsObject **pList, int listMax);
 	virtual ServerClass *GetServerClass();
@@ -257,7 +256,6 @@ public: // All the internal hook implementations for the above virtuals
 	DECLARE_DEFAULTHEADER(VPhysicsTakeDamage, int, (const CEntityTakeDamageInfo &inputInfo));
 	DECLARE_DEFAULTHEADER(VPhysicsGetObjectList, int, (IPhysicsObject **pList, int listMax));
 	DECLARE_DEFAULTHEADER(GetServerClass, ServerClass *, ());
-	DECLARE_DEFAULTHEADER_DETOUR(TakeDamage, void, (CEntityTakeDamageInfo &inputInfo));
 
 protected: // CEntity
 	CBaseEntity *m_pEntity;

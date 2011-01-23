@@ -154,6 +154,16 @@
 				"windows"	"9"
 				"linux"		"10"
 			}
+			"StudioFrameAdvance"
+			{
+				"windows"	"185"
+				"linux"		"186"
+			}
+			"ShouldGib"
+			{
+				"windows"	"455"
+				"linux"		"456"
+			}
 		}
 	}
 	"#default"
@@ -172,17 +182,23 @@
 				"windows"	"\x81\xEC\x1C\x01\x00\x00\x53\x55\x56\x8B\x71\x14\x85\xF6"
 				"linux"		"@_ZN17CBaseEntityOutput10FireOutputE9variant_tP11CBaseEntityS2_f"
 			}
-			"TakeDamage"
-			{
-				"library"	"server"
-				"windows"	"\x83\xEC\x5C\x57\x8B\xF9\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x0F\x84\x94\x01\x00\x00"
-				"linux"		"@_ZN11CBaseEntity10TakeDamageERK15CTakeDamageInfo"
-			}
 			"PhysIsInCallback"
 			{
 				"library"	"server"
 				"windows"	"\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x74\x0E\x8B\x01\x8B\x90\x8C\x00\x00\x00\xFF\xD2\x84\xC0\x75\x09\x83\x3D\x2A\x2A\x2A\x2A\x00\x7E\x03\xB0\x01\xC3"
 				"linux"		"@_Z16PhysIsInCallbackv"
+			}
+			"HandleCommand_JoinClass"
+			{
+				"library"		"server"
+				"windows"		"\xA1\x2A\x2A\x2A\x2A\x83\xEC\x0C\x83\xB8\x2A\x03\x00\x00\x08\x56"
+				"linux"			"@_ZN9CTFPlayer23HandleCommand_JoinClassEPKcb"
+			}
+			"Dissolve"
+			{
+				"library"		"server"
+				"windows"		"\x83\xEC\x0C\x80\x7C\x24\x18\x00\x57\x8B\xF9\x74\x15\xF7\x87\x00\x01\x00\x00\x00\x40\x00\x00\x75\x09"
+				"linux"			"@_ZN14CBaseAnimating8DissolveEPKcfbi6Vectori"
 			}
 		}
 	}

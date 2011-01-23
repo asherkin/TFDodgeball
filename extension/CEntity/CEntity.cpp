@@ -63,8 +63,6 @@ DECLARE_HOOK(VPhysicsTakeDamage, CEntity);
 DECLARE_HOOK(VPhysicsGetObjectList, CEntity);
 DECLARE_HOOK(GetServerClass, CEntity);
 
-DECLARE_DETOUR(TakeDamage, CEntity);
-
 //Sendprops
 DEFINE_PROP(m_iTeamNum, CEntity);
 DEFINE_PROP(m_vecOrigin, CEntity);
@@ -198,8 +196,6 @@ DECLARE_DEFAULTHANDLER(CEntity, OnTakeDamage, int, (CEntityTakeDamageInfo &info)
 DECLARE_DEFAULTHANDLER(CEntity, VPhysicsTakeDamage, int, (const CEntityTakeDamageInfo &inputInfo), (inputInfo));
 DECLARE_DEFAULTHANDLER(CEntity, VPhysicsGetObjectList, int, (IPhysicsObject **pList, int listMax), (pList, listMax));
 DECLARE_DEFAULTHANDLER(CEntity, GetServerClass, ServerClass *, (), ());
-
-DECLARE_DEFAULTHANDLER_DETOUR_void(CEntity, TakeDamage, (CEntityTakeDamageInfo &inputInfo), (inputInfo));
 
 IServerVehicle *CEntity::GetServerVehicle()
 {

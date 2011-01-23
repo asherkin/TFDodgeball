@@ -22,13 +22,17 @@ USEMETA = true
 
 OBJECTS = sdk/smsdk_ext.cpp extension.cpp
 
-OBJECTS += CEntity/CEntity.cpp CEntity/CEntityManager.cpp CEntity/CPlayer.cpp CEntity/CEntityBase.cpp CEntity/rtti.cpp \
+OBJECTS += CEntity/CEntity.cpp CEntity/CEntityManager.cpp CEntity/CAnimating.cpp CEntity/CPlayer.cpp CEntity/CEntityBase.cpp CEntity/rtti.cpp \
 			CEntity/CHelpers.cpp CEntity/util.cpp CEntity/CRecipientFilter.cpp CEntity/EntityOutput.cpp \
 			CEntity/CTakeDamageInfo.cpp
 			
 OBJECTS += CDetour/detours.cpp asm/asm.c
 
-OBJECTS += CTrackingProjectile.cpp CDodgeballPlayer.cpp
+OBJECTS += CTrackingProjectile.cpp CTrackingProjectile_Nuke.cpp CVisibleNuke.cpp
+
+OBJECTS += CTFDBPlayer.cpp CTFDBAmmoPack.cpp CTFDBCreatedItem.cpp
+
+OBJECTS += CTFDBDissolveField.cpp
 
 BINARY = $(PROJECT).ext
 

@@ -1,13 +1,14 @@
 #include "extension.h"
-#include "CDodgeballPlayer.h"
+#include "CTFDBPlayer.h"
 #include "CPlayer.h"
 
-LINK_ENTITY_TO_CLASS(CTFPlayer, CDodgeballPlayer);
+LINK_ENTITY_TO_CLASS(CTFPlayer, CTFDBPlayer);
 
 ConVar WeaponParticle("sm_dodgeball_weaponparticle", "0.0", FCVAR_NONE, "", true, 0.0, true, 19.0);
-ConVar DissolvePlayers("sm_dodgeball_dissolve_players", "1", FCVAR_NONE, "", true, 0.0, true, 1.0);
+ConVar DissolvePlayers("sm_dodgeball_dissolve_players", "0", FCVAR_NONE, "", true, 0.0, true, 1.0);
+ConVar DissolveDelay("sm_dodgeball_dissolve_delay", "1.0", FCVAR_NONE, "");
 
-void CDodgeballPlayer::HandleCommand_JoinClass(const char *pClass, bool unk)
+void CTFDBPlayer::HandleCommand_JoinClass(const char *pClass, bool unk)
 {
 	if (DodgeballEnabled.GetBool())
 	{
@@ -17,27 +18,30 @@ void CDodgeballPlayer::HandleCommand_JoinClass(const char *pClass, bool unk)
 	}
 }
 
-void CDodgeballPlayer::TakeDamage(CEntityTakeDamageInfo &inputInfo)
+int CTFDBPlayer::OnTakeDamage(CEntityTakeDamageInfo &info)
 {
-	if (!DodgeballEnabled.GetBool() || !DissolvePlayers.GetBool())
-		return BaseClass::TakeDamage(inputInfo);
+	if (!DodgeballEnabled.GetBool() || (!DissolvePlayers.GetBool() && (info.m_bitsDamageType & DMG_ACID) != 0))
+		return BaseClass::OnTakeDamage(info);
 
-	META_CONPRINTF("TakeDamage called: %d\n", inputInfo.GetDamage());
-
-	inputInfo.m_bitsDamageType |= DMG_NEVERGIB;
-	inputInfo.m_bitsDamageType |= DMG_PREVENT_PHYSICS_FORCE;
-
-	BaseClass::TakeDamage(inputInfo);
+	int ret = BaseClass::OnTakeDamage(info);
 
 	CAnimating *pRagdoll = dynamic_cast<CAnimating *>(GetRagdoll());
 
 	if (pRagdoll)
-		pRagdoll->Dissolve(NULL, gpGlobals->curtime + 1.0, false, ENTITY_DISSOLVE_NORMAL, GetAbsOrigin(), 250);
+		pRagdoll->Dissolve(NULL, gpGlobals->curtime + DissolveDelay.GetFloat(), false, ENTITY_DISSOLVE_NORMAL, GetAbsOrigin(), 250);
 
-	return;
+	return ret;
 }
 
-CBaseEntity *CDodgeballPlayer::GiveNamedItem(char const *szName, int iSubType, CScriptCreatedItem *item, bool bUnknown)
+bool CTFDBPlayer::ShouldGib(const CEntityTakeDamageInfo &info, bool unk)
+{
+	if (DodgeballEnabled.GetBool() && (DissolvePlayers.GetBool() || (info.m_bitsDamageType & DMG_ACID) == 0))
+		return false;
+	else
+		return BaseClass::ShouldGib(info, unk);
+}
+
+CBaseEntity *CTFDBPlayer::GiveNamedItem(char const *szName, int iSubType, CScriptCreatedItem *item, bool bUnknown)
 {
 	CTFDBCreatedItem *pItem = (CTFDBCreatedItem *)item;
 	if (!DodgeballEnabled.GetBool() || !item)
