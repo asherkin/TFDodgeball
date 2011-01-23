@@ -81,6 +81,7 @@ DEFINE_PROP(m_iDisguiseHealth, CPlayer);
 DEFINE_PROP(m_flMaxspeed, CPlayer);
 DEFINE_PROP(m_iObserverMode, CPlayer);
 DEFINE_PROP(m_hObserverTarget, CPlayer);
+DEFINE_PROP(m_hRagdoll, CPlayer);
 
 //Datamaps
 DEFINE_PROP(m_nButtons, CPlayer);
@@ -275,6 +276,11 @@ CEntity *CPlayer::GetAimTarget(bool playersOnly=false)
 	}
 
 	return NULL;
+}
+
+CEntity *CPlayer::GetRagdoll()
+{
+	return Instance(m_hRagdoll);
 }
 
 bool CPlayer::FVisible(CEntity *pEntity, int traceMask, CEntity **ppBlocker)

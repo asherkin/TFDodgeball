@@ -72,6 +72,7 @@ DEFINE_PROP(m_fEffects, CEntity);
 DEFINE_PROP(m_vecVelocity, CEntity);
 
 //Datamaps
+DEFINE_PROP(m_vecAbsOrigin, CEntity);
 DEFINE_PROP(m_vecAbsVelocity, CEntity);
 DEFINE_PROP(m_nNextThinkTick, CEntity);
 DEFINE_PROP(m_iClassname, CEntity);
@@ -488,6 +489,11 @@ bool CEntity::InSameTeam(CEntity *pEntity) const
 const Vector& CEntity::GetLocalOrigin(void) const
 {
 	return m_vecOrigin;
+}
+
+const Vector& CEntity::GetAbsOrigin(void) const
+{
+	return m_vecAbsOrigin;
 }
 
 const Vector &CEntity::GetAbsVelocity() const

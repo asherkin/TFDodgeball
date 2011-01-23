@@ -122,7 +122,10 @@
     <ClCompile Include="..\..\..\zombiefix_ext\asm\asm.c" />
     <ClCompile Include="..\..\..\zombiefix_ext\CDetour\detours.cpp" />
     <ClCompile Include="..\CDodgeballPlayer.cpp" />
+    <ClCompile Include="..\CEntity\CAnimating.cpp" />
+    <ClCompile Include="..\CTFDBAmmoPack.cpp" />
     <ClCompile Include="..\CTFDBCreatedItem.cpp" />
+    <ClCompile Include="..\CTFDBDissolveField.cpp" />
     <ClCompile Include="..\CTrackingProjectile.cpp" />
     <ClCompile Include="..\CTrackingProjectile_Nuke.cpp" />
     <ClCompile Include="..\CVisibleNuke.cpp" />
@@ -144,7 +147,10 @@
     <ClInclude Include="..\..\..\zombiefix_ext\CDetour\detourhelpers.h" />
     <ClInclude Include="..\..\..\zombiefix_ext\CDetour\detours.h" />
     <ClInclude Include="..\CDodgeballPlayer.h" />
+    <ClInclude Include="..\CEntity\CAnimating.h" />
+    <ClInclude Include="..\CTFDBAmmoPack.h" />
     <ClInclude Include="..\CTFDBCreatedItem.h" />
+    <ClInclude Include="..\CTFDBDissolveField.h" />
     <ClInclude Include="..\CTrackingProjectile.h" />
     <ClInclude Include="..\CTrackingProjectile_Nuke.h" />
     <ClInclude Include="..\CVisibleNuke.h" />

@@ -3,12 +3,13 @@
 
 #include "CEntityManager.h"
 #include "CEntity.h"
+#include "CAnimating.h"
 #include "CVisibleNuke.h"
 
-class CTrackingProjectile_Nuke : public CEntity
+class CTrackingProjectile_Nuke : public CAnimating
 {
 public:
-	DECLARE_CLASS(CTrackingProjectile_Nuke, CEntity);
+	DECLARE_CLASS(CTrackingProjectile_Nuke, CAnimating);
 	//DECLARE_DATADESC();
 
 	virtual void Init(edict_t *pEdict, CBaseEntity *pBaseEntity);

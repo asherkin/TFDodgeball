@@ -3,11 +3,12 @@
 
 #include "CEntityManager.h"
 #include "CEntity.h"
+#include "CAnimating.h"
 
-class CVisibleNuke : public CEntity
+class CVisibleNuke : public CAnimating
 {
 public:
-	DECLARE_CLASS(CVisibleNuke, CEntity);
+	DECLARE_CLASS(CVisibleNuke, CAnimating);
 	//DECLARE_DATADESC();
 
 	virtual void Init(edict_t *pEdict, CBaseEntity *pBaseEntity);

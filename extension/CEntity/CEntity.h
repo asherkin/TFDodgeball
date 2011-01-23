@@ -225,6 +225,7 @@ public: // CBaseEntity non virtual helpers
 	int GetMoveCollide() const;
 	void SetMoveCollide(int MoveCollide);
 
+	const Vector &GetAbsOrigin() const;
 	const Vector &GetLocalOrigin() const;
 	const Vector &GetAbsVelocity() const;
 	const Vector &GetVelocity() const;
@@ -269,6 +270,7 @@ protected: //Sendprops
 	DECLARE_SENDPROP(uint16_t, m_fEffects);
 
 protected: //Datamaps
+	DECLARE_DATAMAP(Vector, m_vecAbsOrigin);
 	DECLARE_DATAMAP(Vector, m_vecAbsVelocity);
 	DECLARE_DATAMAP(string_t, m_iClassname);
 	DECLARE_DATAMAP(matrix3x4_t, m_rgflCoordinateFrame);

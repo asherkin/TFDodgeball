@@ -80,6 +80,15 @@
     <ClCompile Include="..\CTFDBCreatedItem.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\CEntity\CAnimating.cpp">
+      <Filter>CEntity\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CTFDBAmmoPack.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CTFDBDissolveField.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CTrackingProjectile.h">
@@ -155,6 +164,15 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\CTFDBCreatedItem.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CEntity\CAnimating.h">
+      <Filter>CEntity\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CTFDBAmmoPack.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CTFDBDissolveField.h">
       <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>

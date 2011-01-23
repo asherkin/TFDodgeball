@@ -5,6 +5,7 @@
 LINK_ENTITY_TO_CLASS(CTFPlayer, CDodgeballPlayer);
 
 ConVar WeaponParticle("sm_dodgeball_weaponparticle", "0.0", FCVAR_NONE, "", true, 0.0, true, 19.0);
+ConVar DissolvePlayers("sm_dodgeball_dissolve_players", "1", FCVAR_NONE, "", true, 0.0, true, 1.0);
 
 void CDodgeballPlayer::HandleCommand_JoinClass(const char *pClass, bool unk)
 {
@@ -14,6 +15,26 @@ void CDodgeballPlayer::HandleCommand_JoinClass(const char *pClass, bool unk)
 	} else {
 		BaseClass::HandleCommand_JoinClass(pClass, unk);
 	}
+}
+
+void CDodgeballPlayer::TakeDamage(const CEntityTakeDamageInfo &inputInfo)
+{
+	if (!DodgeballEnabled.GetBool() || !DissolvePlayers.GetBool())
+		return BaseClass::TakeDamage(inputInfo);
+
+	META_CONPRINTF("TakeDamage called: %d\n", inputInfo.GetDamage());
+
+	//inputInfo.m_bitsDamageType |= DMG_NEVERGIB;
+	//inputInfo.m_bitsDamageType |= DMG_PREVENT_PHYSICS_FORCE;
+
+	BaseClass::TakeDamage(inputInfo);
+
+	CAnimating *pRagdoll = dynamic_cast<CAnimating *>(GetRagdoll());
+
+	if (pRagdoll)
+		pRagdoll->Dissolve(NULL, gpGlobals->curtime + 1.0, false, ENTITY_DISSOLVE_NORMAL, GetAbsOrigin(), 250);
+
+	return;
 }
 
 CBaseEntity *CDodgeballPlayer::GiveNamedItem(char const *szName, int iSubType, CScriptCreatedItem *item, bool bUnknown)

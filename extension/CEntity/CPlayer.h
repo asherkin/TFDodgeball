@@ -28,13 +28,12 @@
 #include "vehicles.h"
 #include "mathlib.h"
 #include "CScriptCreatedItem.h"
+#include "CAnimating.h"
 
-#include "../CDetour/detours.h"
-
-class CPlayer : public CEntity
+class CPlayer : public CAnimating
 {
 public:
-	DECLARE_CLASS(CPlayer, CEntity);
+	DECLARE_CLASS(CPlayer, CAnimating);
 	//DECLARE_DATADESC();
 	virtual bool IsPlayer();
 
@@ -63,6 +62,7 @@ public:
 	int GetObserverMode();
 	CEntity* GetObserverTarget();
 	CEntity* GetAimTarget(bool playersOnly);
+	CEntity* GetRagdoll();
 
 public: // CBasePlayer virtuals
 	virtual	bool FVisible(CEntity *pEntity, int traceMask = MASK_BLOCKLOS, CEntity **ppBlocker = NULL);
@@ -124,6 +124,7 @@ protected: // Sendprops
 	DECLARE_SENDPROP(float, m_flMaxspeed);
 	DECLARE_SENDPROP(uint16_t, m_iObserverMode);
 	DECLARE_SENDPROP(CBaseHandle, m_hObserverTarget);
+	DECLARE_SENDPROP(CBaseHandle, m_hRagdoll);
 
 protected:
 	DECLARE_DATAMAP(int, m_nButtons);

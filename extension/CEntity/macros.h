@@ -3,6 +3,7 @@
 
 #include "CEntityBase.h"
 #include "CEntity.h"
+#include "../CDetour/detours.h"
 
 #undef DECLARE_CLASS
 #define DECLARE_CLASS( className, baseClassName ) \
@@ -99,24 +100,35 @@ public:
 	}
 
 	virtual void AddHook() = 0;
+	virtual void RemoveHook() = 0;
 
 	static IDetourTracker *m_Head;
 	IDetourTracker *m_Next;
+
+public:
+	CDetour *m_Detour; \
 };
 
 #define DECLARE_DETOUR(name, cl) \
 class name##cl##DetourTracker : public IDetourTracker \
 { \
 public: \
-	CDetour *m_##name##Detour; \
 	void AddHook() \
 	{ \
 		void *callback = (void *)GetCodeAddress(&cl::Internal##name); \
 		void **trampoline = (void **)(&cl::name##_Actual); \
-		m_##name##Detour = CDetourManager::CreateDetour(callback, trampoline, #name); \
-		if (m_##name##Detour) \
+		m_Detour = CDetourManager::CreateDetour(callback, trampoline, #name); \
+		if (m_Detour) \
 		{ \
-			m_##name##Detour->EnableDetour(); \
+			m_Detour->EnableDetour(); \
+		} \
+	} \
+	void RemoveHook() \
+	{ \
+		if (m_Detour) \
+		{ \
+			m_Detour->Destroy(); \
+			m_Detour = NULL; \
 		} \
 	} \
 }; \

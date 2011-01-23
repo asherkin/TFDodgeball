@@ -134,6 +134,13 @@ void CEntityManager::Shutdown()
 {
 	SH_REMOVE_HOOK(IEntityFactoryDictionary, Create, pDict, SH_MEMBER(this, &CEntityManager::Create), true);
 	SH_REMOVE_HOOK(IVEngineServer, RemoveEdict, engine, SH_MEMBER(this, &CEntityManager::RemoveEdict), true);
+
+	IDetourTracker *pDetourTracker = IDetourTracker::m_Head;
+	while (pDetourTracker)
+	{
+		pDetourTracker->RemoveHook();
+		pDetourTracker = pDetourTracker->m_Next;
+	}
 }
 
 void CEntityManager::LinkEntityToClass(IEntityFactory *pFactory, const char *className)
