@@ -63,6 +63,8 @@ DECLARE_HOOK(VPhysicsTakeDamage, CEntity);
 DECLARE_HOOK(VPhysicsGetObjectList, CEntity);
 DECLARE_HOOK(GetServerClass, CEntity);
 
+DECLARE_DETOUR(TakeDamage, CEntity);
+
 //Sendprops
 DEFINE_PROP(m_iTeamNum, CEntity);
 DEFINE_PROP(m_vecOrigin, CEntity);
@@ -94,7 +96,6 @@ datamap_t *CEntity::GetBaseMap() { return NULL; }
 BEGIN_DATADESC_GUTS(CEntity)
 END_DATADESC()
 
-TakeDamageFuncType TakeDamageFunc;
 PhysIsInCallbackFuncType PhysIsInCallback;
 
 datamap_t* CEntity::GetDataDescMap()
@@ -197,6 +198,8 @@ DECLARE_DEFAULTHANDLER(CEntity, OnTakeDamage, int, (CEntityTakeDamageInfo &info)
 DECLARE_DEFAULTHANDLER(CEntity, VPhysicsTakeDamage, int, (const CEntityTakeDamageInfo &inputInfo), (inputInfo));
 DECLARE_DEFAULTHANDLER(CEntity, VPhysicsGetObjectList, int, (IPhysicsObject **pList, int listMax), (pList, listMax));
 DECLARE_DEFAULTHANDLER(CEntity, GetServerClass, ServerClass *, (), ());
+
+DECLARE_DEFAULTHANDLER_DETOUR_void(CEntity, TakeDamage, (CEntityTakeDamageInfo &inputInfo), (inputInfo));
 
 IServerVehicle *CEntity::GetServerVehicle()
 {
@@ -633,15 +636,6 @@ CEntity *CEntity::GetOwner()
 void CEntity::SetOwner(CEntity *pOwnerEntity)
 {
 	(*m_hOwnerEntity.ptr).Set(pOwnerEntity->edict()->GetIServerEntity());
-}
-
-void CEntity::TakeDamage(const CEntityTakeDamageInfo &inputInfo)
-{
-#ifndef WIN32
-	TakeDamageFunc(*this, inputInfo);
-#else
-	TakeDamageFunc(*this, NULL, inputInfo);
-#endif
 }
 
 IPhysicsObject *CEntity::VPhysicsGetObject(void) const

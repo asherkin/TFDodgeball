@@ -13,7 +13,7 @@ public:
 
 	virtual CBaseEntity *GiveNamedItem(char const *szName, int iSubType, CScriptCreatedItem *item, bool bUnknown);
 	virtual void HandleCommand_JoinClass(const char *pClass, bool unk);
-	void TakeDamage(const CEntityTakeDamageInfo &inputInfo);
+	void TakeDamage(CEntityTakeDamageInfo &inputInfo);
 };
 
 void CSCICopy(CScriptCreatedItem *olditem, CScriptCreatedItem *newitem);

@@ -80,14 +80,6 @@ bool CEntityManager::Init(IGameConfig *pConfig)
 
 	FireOutputFunc= (FireOutputFuncType)addr;
 
-	if (!pConfig->GetMemSig("TakeDamage", &addr) || addr == NULL)
-	{
-		g_pSM->LogError(myself, "[CENTITY] Couldn't find sig: %s.", "TakeDamage");
-		return false;
-	}
-
-	TakeDamageFunc= (TakeDamageFuncType)addr;
-
 	if (!pConfig->GetMemSig("PhysIsInCallback", &addr) || addr == NULL)
 	{
 		g_pSM->LogError(myself, "[CENTITY] Couldn't find sig: %s.", "PhysIsInCallback");

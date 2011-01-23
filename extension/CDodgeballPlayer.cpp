@@ -17,15 +17,15 @@ void CDodgeballPlayer::HandleCommand_JoinClass(const char *pClass, bool unk)
 	}
 }
 
-void CDodgeballPlayer::TakeDamage(const CEntityTakeDamageInfo &inputInfo)
+void CDodgeballPlayer::TakeDamage(CEntityTakeDamageInfo &inputInfo)
 {
 	if (!DodgeballEnabled.GetBool() || !DissolvePlayers.GetBool())
 		return BaseClass::TakeDamage(inputInfo);
 
 	META_CONPRINTF("TakeDamage called: %d\n", inputInfo.GetDamage());
 
-	//inputInfo.m_bitsDamageType |= DMG_NEVERGIB;
-	//inputInfo.m_bitsDamageType |= DMG_PREVENT_PHYSICS_FORCE;
+	inputInfo.m_bitsDamageType |= DMG_NEVERGIB;
+	inputInfo.m_bitsDamageType |= DMG_PREVENT_PHYSICS_FORCE;
 
 	BaseClass::TakeDamage(inputInfo);
 

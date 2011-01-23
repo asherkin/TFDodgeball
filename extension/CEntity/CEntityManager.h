@@ -38,14 +38,6 @@ typedef void (__fastcall * FireOutputFuncType)(CBaseEntityOutput *, void *, vari
 #endif
 extern FireOutputFuncType FireOutputFunc;
 
-class CEntityTakeDamageInfo;
-#ifndef WIN32
-typedef void (* TakeDamageFuncType)(CBaseEntity *pThis, const CEntityTakeDamageInfo &inputInfo);
-#else
-typedef void (__fastcall *TakeDamageFuncType)(CBaseEntity *pThis, void *dummy, const CEntityTakeDamageInfo &inputInfo);
-#endif
-extern TakeDamageFuncType TakeDamageFunc;
-
 typedef bool (* PhysIsInCallbackFuncType)();
 extern PhysIsInCallbackFuncType PhysIsInCallback;
 
