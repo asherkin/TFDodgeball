@@ -18,7 +18,8 @@
 
 #define MAX_FAILED_LAUNCHER_SEARCHES 2
 
-#define NUKE_MODEL "models\\TFAdmin\\smileyhat\\voogru_smileyhat_v1.mdl"
+#define NUKE_MODEL "models/buildables/sentry3_rockets.mdl"
+#define NUKE_SOUND "weapons/det_pack_timer.wav"
 
 public Plugin:myinfo = {
 	name = "TFDodgeball",
@@ -77,7 +78,7 @@ public OnPluginStart()
 	g_hConVars[7] = FindConVar("sm_dodgeball_speedmul");
 	g_hConVars[8] = FindConVar("sm_dodgeball_speedmul_nuke");
 	g_hConVars[9] = CreateConVar("sm_dodgeball_autojoin", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_hConVars[10] = CreateConVar("sm_dodgeball_gamedesc", "0", "", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hConVars[10] = CreateConVar("sm_dodgeball_gamedesc", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_hConVars[11] = CreateConVar("sm_dodgeball_gamedesc_manifix", "0", "", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_hConVars[12] = CreateConVar("sm_dodgeball_nuke_chance", "0.01", "", FCVAR_NONE, true, 0.0, true, 1.0);
 	
@@ -90,7 +91,7 @@ public OnPluginStart()
 	g_config_flSpeedMul = 0.5;
 	g_config_flSpeedMul_Nuke = 0.5;
 	g_config_bAutoJoin = true;
-	g_config_bGameDesc = false;
+	g_config_bGameDesc = true;
 	g_config_bManiFix = false;
 	g_config_flNukeChance = 0.1;
 	
@@ -124,6 +125,7 @@ public OnMapStart()
 	g_bMapRoaded = true;
 	
 	PrecacheModel(NUKE_MODEL);
+	PrecacheSound(NUKE_SOUND);
 }
 
 public OnMapEnd()

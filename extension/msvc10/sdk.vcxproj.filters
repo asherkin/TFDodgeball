@@ -178,5 +178,6 @@
   </ItemGroup>
   <ItemGroup>
     <None Include="..\Makefile" />
+    <None Include="..\MakefileCI" />
   </ItemGroup>
 </Project>
