@@ -1,8 +1,7 @@
 /**
-
 * =============================================================================
 * CEntity Entity Handling Framework
-* Copyright (C) 2010 Matt Woodrow.  All rights reserved.
+* Copyright (C) 2011 Matt Woodrow.  All rights reserved.
 * =============================================================================
 *
 * This program is free software; you can redistribute it and/or modify it under

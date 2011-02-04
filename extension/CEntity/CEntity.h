@@ -1,7 +1,7 @@
 /**
 * =============================================================================
 * CEntity Entity Handling Framework
-* Copyright (C) 2010 Matt Woodrow.  All rights reserved.
+* Copyright (C) 2011 Matt Woodrow.  All rights reserved.
 * =============================================================================
 *
 * This program is free software; you can redistribute it and/or modify it under
@@ -15,12 +15,16 @@
 *
 * You should have received a copy of the GNU General Public License along with
 * this program.  If not, see <http://www.gnu.org/licenses/>.
-*
-* CEntity Entity Handling Framework version 2.0 by Matt 'pRED*' Woodrow
+*/
+
+/**
+* CEntity Entity Handling Framework version 2.0 by Matt "pRED*" Woodrow
 *
 * - Credits:
 *		- This is largely (or entirely) based on a concept by voogru - http://voogru.com/
 *		- The virtual function hooking is powered by the SourceHook library by Pavol "PM OnoTo" Marko.
+*		- Contains code contributed by Brett "Brutal" Powell.
+*		- Contains code contributed by Asher "asherkin" Baker.
 *
 * - About:
 *		- CEntity is (and its derived classes are) designed to emulate the CBaseEntity class from the HL2 SDK.
@@ -42,18 +46,11 @@
 * - TODO (in no particular order):
 *		- Add handling of custom keyvalues commands
 *			- Add datamapping to class values so keyvalues can parse to them
-*		- Add handling of Inputs
-*		- Outputs
 *		- Include more CEntity virtuals and props/datamaps
 *		- Create more derived classes
 *		- Include more Think/Touch etc handlers
-*			- Can we access the actual valve internal m_pfnThink somehow - no we can't. Virtual function pointer. Unless we swap out the vtable. Just no. nononono.
 *			- Valve code now has lists of thinks, can we access this?
 *		- Forcibly deleting entities? - Implemented AcceptInput("Kill"...), UTIL_Remove sig scan would be cleaner.
-*		- Handling of custom entity names in Create
-*			- Requires a pre-hook to switch out the custom string with one it can actually handle
-*				- Probably need a new LINK_ENTITY_TO_CUSTOM_CLASS to define which real entity name to use instead
-*			- Need to hook FindFactory and return the matched real entity factory so CanCreate (sp?) will succeed. - This appears to be never used. Ignore for now
 *		- Support mods other than TF2 (CPlayer should only contain CBasePlayer sdk stuff and create optional CTFPlayer/CCSPlayer derives)
 *
 *	- Change log
@@ -65,7 +62,15 @@
 *			- Improved LINK_ENTITY_TO_CLASS to use DLL Classnames. tf_projectile_rocket changed to CTFProjectile_Rocket for example.
 *			- Added the ability to handle entity Inputs/Outputs.
 *			- Cleaned up Macros used for almost everything.
-*			- Plenty of stuff that needs adding here.
+*			- Added many new hooks and props for CEntity and CPlayer.
+*			- Support for custom classnames with LINK_ENTITY_TO_CUSTOM_CLASS.
+*			- Added support for detours, needs CDetours folder in the parent directory.
+*			- Added a helpers class that makes common functions easy (from CrimsonGT).
+*			- CScriptCreatedItem and CScriptCreatedAttribute (from TF2Items).
+*			- A new 'tracker', designed to get a generic pointer from a sig in a gamedata file.
+*			- A lot of CPlayer defines, including PLAYERCONDs, WEAPONSLOTs and LOADOUTSLOTs.
+*			- Added CAnimating with StudioFrameAdvance and Dissolve.
+*			- Changed CPlayer to inherit from CAnimating.
 */
 
 #ifndef _INCLUDE_CENTITY_H_

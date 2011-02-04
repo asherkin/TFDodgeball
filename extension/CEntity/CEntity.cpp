@@ -1,7 +1,7 @@
 /**
 * =============================================================================
 * CEntity Entity Handling Framework
-* Copyright (C) 2010 Matt Woodrow.  All rights reserved.
+* Copyright (C) 2011 Matt Woodrow.  All rights reserved.
 * =============================================================================
 *
 * This program is free software; you can redistribute it and/or modify it under
@@ -184,9 +184,10 @@ void CEntity::InternalUpdateOnRemove()
 	pEnt->m_bInUpdateOnRemove = true;
 	pEnt->UpdateOnRemove();
 	if (pEnt == CEntity::Instance(index))
+	{
 		pEnt->m_bInUpdateOnRemove = false;
-
-	pEnt->Destroy();
+		pEnt->Destroy();
+	}
 }
 
 DECLARE_DEFAULTHANDLER_void(CEntity, Teleport, (const Vector *origin, const QAngle* angles, const Vector *velocity), (origin, angles, velocity));
