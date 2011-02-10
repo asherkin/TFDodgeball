@@ -91,14 +91,14 @@ DEFINE_PROP(m_nButtons, CPlayer);
 //IMPLEMENT_NULL_DATADESC(CPlayer);
 
 DECLARE_DEFAULTHANDLER_void(CPlayer, LeaveVehicle, (const Vector &vecExitPoint, const QAngle &vecExitAngles), (vecExitPoint, vecExitAngles));
-DECLARE_DEFAULTHANDLER(CPlayer, GiveNamedItem, CBaseEntity *, (char const *szName, int iSubType, CScriptCreatedItem *item, bool bUnknown), (szName, iSubType, item, bUnknown));
+DECLARE_DEFAULTHANDLER(CPlayer, GiveNamedItem, CBaseEntity *, (char const *szName, int iSubType, CScriptCreatedItem *pScriptItem, bool bForce), (szName, iSubType, pScriptItem, bForce));
 DECLARE_DEFAULTHANDLER(CPlayer, RemovePlayerItem, bool, (CBaseEntity *pItem), (pItem));
 DECLARE_DEFAULTHANDLER_void(CPlayer, Weapon_Equip, (CBaseEntity *pWeapon), (pWeapon));
 DECLARE_DEFAULTHANDLER(CPlayer, Weapon_GetSlot, CBaseEntity *, (int slot), (slot));
 DECLARE_DEFAULTHANDLER(CPlayer, GetClientEyeAngles, QAngle *, (), ());
-DECLARE_DEFAULTHANDLER(CPlayer, ShouldGib, bool, (const CEntityTakeDamageInfo &info, bool unk), (info, unk));
+DECLARE_DEFAULTHANDLER(CPlayer, ShouldGib, bool, (const CEntityTakeDamageInfo &info, bool bFeignDeath), (info, bFeignDeath));
 
-DECLARE_DEFAULTHANDLER_DETOUR_void(CPlayer, HandleCommand_JoinClass, (const char *pClass, bool unk), (pClass, unk));
+DECLARE_DEFAULTHANDLER_DETOUR_void(CPlayer, HandleCommand_JoinClass, (const char *pClass, bool bAllowSpawn), (pClass, bAllowSpawn));
 
 void CPlayer::PlayerRunCmd(CUserCmd *pCmd, IMoveHelper *pHelper)
 {

@@ -8,13 +8,13 @@ ConVar WeaponParticle("sm_dodgeball_weaponparticle", "0.0", FCVAR_NONE, "", true
 ConVar DissolvePlayers("sm_dodgeball_dissolve_players", "0", FCVAR_NONE, "", true, 0.0, true, 1.0);
 ConVar DissolveDelay("sm_dodgeball_dissolve_delay", "1.0", FCVAR_NONE, "");
 
-void CTFDBPlayer::HandleCommand_JoinClass(const char *pClass, bool unk)
+void CTFDBPlayer::HandleCommand_JoinClass(const char *pClass, bool bAllowSpawn)
 {
 	if (DodgeballEnabled.GetBool())
 	{
-		BaseClass::HandleCommand_JoinClass("pyro", unk);
+		BaseClass::HandleCommand_JoinClass("pyro", bAllowSpawn);
 	} else {
-		BaseClass::HandleCommand_JoinClass(pClass, unk);
+		BaseClass::HandleCommand_JoinClass(pClass, bAllowSpawn);
 	}
 }
 
@@ -33,31 +33,31 @@ int CTFDBPlayer::OnTakeDamage(CEntityTakeDamageInfo &info)
 	return ret;
 }
 
-bool CTFDBPlayer::ShouldGib(const CEntityTakeDamageInfo &info, bool unk)
+bool CTFDBPlayer::ShouldGib(const CEntityTakeDamageInfo &info, bool bFeignDeath)
 {
 	if (DodgeballEnabled.GetBool() && (DissolvePlayers.GetBool() || (info.m_bitsDamageType & DMG_ACID) == 0))
 		return false;
 	else
-		return BaseClass::ShouldGib(info, unk);
+		return BaseClass::ShouldGib(info, bFeignDeath);
 }
 
-CBaseEntity *CTFDBPlayer::GiveNamedItem(char const *szName, int iSubType, CScriptCreatedItem *item, bool bUnknown)
+CBaseEntity *CTFDBPlayer::GiveNamedItem(char const *szName, int iSubType, CScriptCreatedItem *pScriptItem, bool bForce)
 {
-	CTFDBCreatedItem *pItem = (CTFDBCreatedItem *)item;
-	if (!DodgeballEnabled.GetBool() || !item)
+	CTFDBCreatedItem *pItem = (CTFDBCreatedItem *)pScriptItem;
+	if (!DodgeballEnabled.GetBool() || !pScriptItem)
 	{
-		return BaseClass::GiveNamedItem(szName, iSubType, item, bUnknown);
+		return BaseClass::GiveNamedItem(szName, iSubType, pScriptItem, bForce);
 	} else if (GetPlayerClass() != PLAYERCLASS_PYRO) {
 		g_pSM->LogError(myself, "WARNING: Server tried to give a weapon to a player that isn't a pyro.");
-		return BaseClass::GiveNamedItem(szName, iSubType, item, bUnknown);
+		return BaseClass::GiveNamedItem(szName, iSubType, pScriptItem, bForce);
 	} else if (pItem->GetLoadoutSlot(PLAYERCLASS_PYRO) == LOADOUTSLOT_MISC || pItem->GetLoadoutSlot(PLAYERCLASS_PYRO) == LOADOUTSLOT_ACTION) {
-		return BaseClass::GiveNamedItem(szName, iSubType, item, bUnknown);
+		return BaseClass::GiveNamedItem(szName, iSubType, pScriptItem, bForce);
 	} else if (pItem->GetLoadoutSlot(PLAYERCLASS_PYRO) != LOADOUTSLOT_PRIMARY) {
 		return NULL;
 	}
 	
 	CScriptCreatedItem newitem;
-	CSCICopy(item, &newitem);
+	CSCICopy(pScriptItem, &newitem);
 
 	newitem.m_Attributes.Purge();
 
@@ -70,7 +70,7 @@ CBaseEntity *CTFDBPlayer::GiveNamedItem(char const *szName, int iSubType, CScrip
 		newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(134, WeaponParticle.GetFloat()));
 	}
 
-	return BaseClass::GiveNamedItem(szName, iSubType, &newitem, bUnknown);
+	return BaseClass::GiveNamedItem(szName, iSubType, &newitem, bForce);
 }
 
 void CSCICopy(CScriptCreatedItem *olditem, CScriptCreatedItem *newitem)
