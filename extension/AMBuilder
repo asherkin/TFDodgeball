@@ -1,0 +1,78 @@
+# vim: set ts=2 sw=2 tw=99 noet ft=python: 
+import os
+
+for i in SM.sdkInfo:
+	sdk = SM.sdkInfo[i]
+	if AMBuild.target['platform'] not in sdk['platform']:
+		continue
+
+	compiler = SM.DefaultHL2Compiler('extension', i)
+	
+	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.cache['SOURCEMOD13'], 'public'))
+	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.cache['SOURCEMOD13'], 'public', 'sourcepawn'))
+	
+#	$(HL2SDKOBVALVE)\public\mathlib;
+#	$(HL2SDKOBVALVE)\public\SoundEmitterSystem;
+#	$(HL2SDKOBVALVE)\public;
+#	$(HL2SDKOBVALVE)\public\engine;
+#	$(HL2SDKOBVALVE)\public\game\server;
+#	$(HL2SDKOBVALVE)\public\tier0;
+#	$(HL2SDKOBVALVE)\public\tier1;
+#	$(HL2SDKOBVALVE)\game\shared;
+#	$(HL2SDKOBVALVE)\game\server
+	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.cache['HL2SDKOBVALVE'], 'public'))
+	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.cache['HL2SDKOBVALVE'], 'public', 'mathlib'))
+	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.cache['HL2SDKOBVALVE'], 'public', 'SoundEmitterSystem'))
+	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.cache['HL2SDKOBVALVE'], 'public', 'engine'))
+	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.cache['HL2SDKOBVALVE'], 'public', 'tier0'))
+	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.cache['HL2SDKOBVALVE'], 'public', 'tier1'))
+	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.cache['HL2SDKOBVALVE'], 'public', 'game', 'server'))
+	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.cache['HL2SDKOBVALVE'], 'game', 'shared'))
+	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.cache['HL2SDKOBVALVE'], 'game', 'server'))
+	
+	compiler['CXXINCLUDES'].append(os.path.join('..', 'extension', 'CEntity'))
+	compiler['CXXINCLUDES'].append(os.path.join('..', 'extension', 'CDetour'))
+	compiler['CXXINCLUDES'].append(os.path.join('..', 'extension', 'asm'))
+
+	if compiler.cc.name == 'gcc':
+		compiler['CFLAGS'].append('-Wno-parentheses')
+
+	if i != 'ep1':
+		compiler['CDEFINES'].append('HOOKING_ENABLED')
+
+	name = 'tfdodgeball.ext.' + sdk['ext']
+	extension = AMBuild.AddJob(name)
+	binary = Cpp.LibraryBuilder(name, AMBuild, extension, compiler)
+	SM.PreSetupHL2Job(extension, binary, i)
+
+	binary.AddSourceFiles(os.path.join('extension', 'sdk'), ['smsdk_ext.cpp'])
+	binary.AddSourceFiles('extension', ['extension.cpp'])
+	binary.AddSourceFiles(os.path.join('extension', 'CEntity'), [
+		'CEntity.cpp',
+		'CEntityManager.cpp',
+		'CAnimating.cpp',
+		'CPlayer.cpp',
+		'CEntityBase.cpp',
+		'rtti.cpp',
+		'CHelpers.cpp',
+		'util.cpp',
+		'CRecipientFilter.cpp',
+		'EntityOutput.cpp',
+		'CTakeDamageInfo.cpp'
+		])
+	binary.AddSourceFiles(os.path.join('extension', 'CDetour'), ['detours.cpp'])
+	binary.AddSourceFiles(os.path.join('extension', 'asm'), ['asm.c'])
+	binary.AddSourceFiles('extension', [
+		'CTrackingProjectile.cpp',
+		'CTrackingProjectile_Nuke.cpp',
+		'CVisibleNuke.cpp',
+		'CTFDBPlayer.cpp',
+		'CTFDBAmmoPack.cpp',
+		'CTFDBCreatedItem.cpp',
+		'CTFDBDissolveField.cpp'
+		])
+	
+	SM.PostSetupHL2Job(extension, binary, i)
+	SM.AutoVersion('extension', binary)
+	binary.SendToJob()
+

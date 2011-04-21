@@ -1,0 +1,10 @@
+"Game Master"
+{
+	"centity.games.txt"
+	{
+	}
+
+	"tfdb.games.txt"
+	{
+	}
+}
