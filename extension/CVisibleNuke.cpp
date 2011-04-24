@@ -43,4 +43,5 @@ ServerClass *CVisibleNuke::GetServerClass(void)
 void CVisibleNuke::SetSkin(int nSkin)
 {
 	*m_nSkin = nSkin;
+	edict()->StateChanged(m_nSkinPropTrackerObj.GetOffset());
 }

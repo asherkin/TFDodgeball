@@ -379,6 +379,7 @@ public: \
 			} \
 		} \
 	} \
+	unsigned int GetOffset() { return offset; } \
 private: \
 	unsigned int offset; \
 	bool lookup; \

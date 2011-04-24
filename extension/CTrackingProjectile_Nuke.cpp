@@ -126,7 +126,9 @@ void CTrackingProjectile_Nuke::TrackThink(void)
 			m_pGlowModel->ChangeTeam(GetTeamNumber());
 
 			if (GetTeamNumber() > 2)
+			{
 				m_pGlowModel->SetSkin(GetTeamNumber() - 2);
+			}
 		}
 
 		m_lastTeam = GetTeamNumber();

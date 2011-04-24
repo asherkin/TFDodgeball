@@ -471,6 +471,7 @@ void CEntity::SetTargetName(const char *pTargetName)
 void CEntity::ChangeTeam(int iTeamNum)
 {
 	m_iTeamNum = iTeamNum;
+	edict()->StateChanged(m_iTeamNumPropTrackerObj.GetOffset());
 }
 
 int CEntity::GetTeamNumber(void) const
