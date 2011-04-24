@@ -30,7 +30,7 @@ OBJECTS += CDetour/detours.cpp asm/asm.c
 
 OBJECTS += CTrackingProjectile.cpp CTrackingProjectile_Nuke.cpp CVisibleNuke.cpp
 
-OBJECTS += CTFDBPlayer.cpp CTFDBAmmoPack.cpp CTFDBCreatedItem.cpp
+OBJECTS += CTFDBPlayer.cpp CTFDBAmmoPack.cpp CTFDBEconItemView.cpp
 
 OBJECTS += CTFDBDissolveField.cpp
 

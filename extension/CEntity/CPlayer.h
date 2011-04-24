@@ -27,7 +27,7 @@
 #include "usercmd.h"
 #include "vehicles.h"
 #include "mathlib.h"
-#include "CScriptCreatedItem.h"
+#include "CEconItemView.h"
 #include "CAnimating.h"
 
 class CPlayer : public CAnimating
@@ -80,7 +80,7 @@ public: // CBasePlayer virtuals
 	virtual bool ShouldGib(const CEntityTakeDamageInfo &info, bool bFeignDeath);
 
 public: //Virtual calls
-	virtual CBaseEntity *GiveNamedItem(char const *szName, int iSubType, CScriptCreatedItem *pScriptItem, bool bForce);
+	virtual CBaseEntity *GiveNamedItem(char const *szName, int iSubType, CEconItemView *pScriptItem, bool bForce);
 	virtual bool RemovePlayerItem(CBaseEntity *pWeapon);
 	virtual void Weapon_Equip(CBaseEntity *pWeapon);
 	virtual CBaseEntity *Weapon_GetSlot(int slot);
@@ -97,7 +97,7 @@ public: //Autohandlers
 	DECLARE_DEFAULTHEADER(WeaponSwitch, bool, (CBaseEntity /*CBaseCombatWeapon*/ *pWeapon, int viewmodelindex));
 	DECLARE_DEFAULTHEADER(IsReadyToSpawn, bool, ());
 	DECLARE_DEFAULTHEADER(CanSpeakVoiceCommand, bool, ());
-	DECLARE_DEFAULTHEADER(GiveNamedItem, CBaseEntity *, (char const *szName, int iSubType, CScriptCreatedItem *pScriptItem, bool bForce));
+	DECLARE_DEFAULTHEADER(GiveNamedItem, CBaseEntity *, (char const *szName, int iSubType, CEconItemView *pScriptItem, bool bForce));
 	DECLARE_DEFAULTHEADER(RemovePlayerItem, bool, (CBaseEntity *pItem));
 	DECLARE_DEFAULTHEADER(Weapon_Equip, void, (CBaseEntity *pWeapon));
 	DECLARE_DEFAULTHEADER(Weapon_GetSlot, CBaseEntity *, (int slot));

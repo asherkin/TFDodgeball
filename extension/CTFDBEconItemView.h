@@ -1,9 +1,9 @@
 #ifndef CTFDBCreatedItem_h__
 #define CTFDBCreatedItem_h__
 
-#include "CScriptCreatedItem.h"
+#include "CEconItemView.h"
 
-class CTFDBCreatedItem: public CScriptCreatedItem
+class CTFDBEconItemView: public CEconItemView
 {
 public:
 	int GetLoadoutSlot(int playerClass);

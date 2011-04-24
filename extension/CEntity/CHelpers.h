@@ -154,7 +154,7 @@ public: //Scanned Functions
 	void KeyValuesSetString(KeyValues *pKeyValues, const char *keyName, const char *value);
 	CBaseEntity *CreateEntityByName(const char *className, int iForceEdictIndex = -1);
 	int DispatchSpawn(CBaseEntity *pEntity);
-	CBaseEntity *GiveNamedItem(CBaseEntity *player, const char *weapon, int iSubType, CScriptCreatedItem *item, bool bUnknown);
+	CBaseEntity *GiveNamedItem(CBaseEntity *player, const char *weapon, int iSubType, CEconItemView *item, bool bUnknown);
 	void WeaponEquip(CBaseEntity *player, CBaseEntity *weapon);
 	//float PlayScene(CBaseEntity *player, const char *pszScene, float flDelay, AI_Response *response, IRecipientFilter *filter);
 };
@@ -166,7 +166,7 @@ typedef int (__fastcall *LoadEventsFromFileFunction)(IGameEventManager2 * /*this
 typedef void (__fastcall *KVSetStringFunction)(KeyValues * /*this*/, int /*dummy*/, const char *, const char *);
 typedef CBaseEntity* (*CreateEntityByNameFunction)(const char *, int);
 typedef int (*DispatchSpawnFunction)(CBaseEntity *);
-typedef CBaseEntity* (__fastcall *GiveNamedItemFunction) (void* /*this*/, int /*dummy*/, const char *, int, CScriptCreatedItem *, bool);
+typedef CBaseEntity* (__fastcall *GiveNamedItemFunction) (void* /*this*/, int /*dummy*/, const char *, int, CEconItemView *, bool);
 typedef void (__fastcall *WeaponEquipFunction) (void * /*this*/, int /*dummy*/, CBaseEntity *);
 //typedef float (__fastcall *PlaySceneFunction) (void * /*this*/, int /*dummy*/, const char *, float, AI_Response *, IRecipientFilter *);
 #else
@@ -174,7 +174,7 @@ typedef int (*LoadEventsFromFileFunction)(IGameEventManager2 * /*this*/, const c
 typedef void (*KVSetStringFunction)(KeyValues * /*this*/, const char *, const char *);
 typedef CBaseEntity* (*CreateEntityByNameFunction)(const char *, int);
 typedef int (*DispatchSpawnFunction)(CBaseEntity *);
-typedef CBaseEntity* (*GiveNamedItemFunction) (void* /*this*/, const char *, int, CScriptCreatedItem *, bool);
+typedef CBaseEntity* (*GiveNamedItemFunction) (void* /*this*/, const char *, int, CEconItemView *, bool);
 typedef void (*WeaponEquipFunction) (void * /*this*/, CBaseEntity *);
 //typedef float (*PlaySceneFunction) (void * /*this*/, const char *, float, AI_Response *, IRecipientFilter *);
 #endif // WIN32

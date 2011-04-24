@@ -66,7 +66,7 @@
 *			- Support for custom classnames with LINK_ENTITY_TO_CUSTOM_CLASS.
 *			- Added support for detours, needs CDetours folder in the parent directory.
 *			- Added a helpers class that makes common functions easy (from CrimsonGT).
-*			- CScriptCreatedItem and CScriptCreatedAttribute (from TF2Items).
+*			- CEconItemView and CScriptCreatedAttribute (from TF2Items).
 *			- A new 'tracker', designed to get a generic pointer from a sig in a gamedata file.
 *			- A lot of CPlayer defines, including PLAYERCONDs, WEAPONSLOTs and LOADOUTSLOTs.
 *			- Added CAnimating with StudioFrameAdvance and Dissolve.

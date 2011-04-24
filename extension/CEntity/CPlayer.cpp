@@ -34,7 +34,7 @@ SH_DECL_MANUALHOOK1(OnTakeDamage_Alive, 0, 0, 0, int, CEntityTakeDamageInfo &);
 SH_DECL_MANUALHOOK2(WeaponSwitch, 0, 0, 0, bool, CBaseEntity */*CBaseCombatWeapon*/, int);
 SH_DECL_MANUALHOOK0(IsReadyToSpawn, 0, 0, 0, bool);
 SH_DECL_MANUALHOOK0(CanSpeakVoiceCommand, 0, 0, 0, bool);
-SH_DECL_MANUALHOOK4(GiveNamedItem, 0, 0, 0, CBaseEntity *, char const *, int, CScriptCreatedItem *, bool);
+SH_DECL_MANUALHOOK4(GiveNamedItem, 0, 0, 0, CBaseEntity *, char const *, int, CEconItemView *, bool);
 SH_DECL_MANUALHOOK1(RemovePlayerItem, 0, 0, 0, bool, CBaseEntity *);
 SH_DECL_MANUALHOOK1_void(Weapon_Equip, 0, 0, 0, CBaseEntity *);
 SH_DECL_MANUALHOOK1(Weapon_GetSlot, 0, 0, 0, CBaseEntity *, int);
@@ -91,7 +91,7 @@ DEFINE_PROP(m_nButtons, CPlayer);
 //IMPLEMENT_NULL_DATADESC(CPlayer);
 
 DECLARE_DEFAULTHANDLER_void(CPlayer, LeaveVehicle, (const Vector &vecExitPoint, const QAngle &vecExitAngles), (vecExitPoint, vecExitAngles));
-DECLARE_DEFAULTHANDLER(CPlayer, GiveNamedItem, CBaseEntity *, (char const *szName, int iSubType, CScriptCreatedItem *pScriptItem, bool bForce), (szName, iSubType, pScriptItem, bForce));
+DECLARE_DEFAULTHANDLER(CPlayer, GiveNamedItem, CBaseEntity *, (char const *szName, int iSubType, CEconItemView *pScriptItem, bool bForce), (szName, iSubType, pScriptItem, bForce));
 DECLARE_DEFAULTHANDLER(CPlayer, RemovePlayerItem, bool, (CBaseEntity *pItem), (pItem));
 DECLARE_DEFAULTHANDLER_void(CPlayer, Weapon_Equip, (CBaseEntity *pWeapon), (pWeapon));
 DECLARE_DEFAULTHANDLER(CPlayer, Weapon_GetSlot, CBaseEntity *, (int slot), (slot));

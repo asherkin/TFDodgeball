@@ -123,7 +123,7 @@
     <ClCompile Include="..\..\..\zombiefix_ext\CDetour\detours.cpp" />
     <ClCompile Include="..\CEntity\CAnimating.cpp" />
     <ClCompile Include="..\CTFDBAmmoPack.cpp" />
-    <ClCompile Include="..\CTFDBCreatedItem.cpp" />
+    <ClCompile Include="..\CTFDBEconItemView.cpp" />
     <ClCompile Include="..\CTFDBDissolveField.cpp" />
     <ClCompile Include="..\CTFDBPlayer.cpp" />
     <ClCompile Include="..\CTrackingProjectile.cpp" />
@@ -148,7 +148,7 @@
     <ClInclude Include="..\..\..\zombiefix_ext\CDetour\detours.h" />
     <ClInclude Include="..\CEntity\CAnimating.h" />
     <ClInclude Include="..\CTFDBAmmoPack.h" />
-    <ClInclude Include="..\CTFDBCreatedItem.h" />
+    <ClInclude Include="..\CTFDBEconItemView.h" />
     <ClInclude Include="..\CTFDBDissolveField.h" />
     <ClInclude Include="..\CTFDBPlayer.h" />
     <ClInclude Include="..\CTrackingProjectile.h" />
@@ -163,7 +163,7 @@
     <ClInclude Include="..\CEntity\CHelpers.h" />
     <ClInclude Include="..\CEntity\CPlayer.h" />
     <ClInclude Include="..\CEntity\CRecipientFilter.h" />
-    <ClInclude Include="..\CEntity\CScriptCreatedItem.h" />
+    <ClInclude Include="..\CEntity\CEconItemView.h" />
     <ClInclude Include="..\CEntity\CTakeDamageInfo.h" />
     <ClInclude Include="..\CEntity\EntityOutput.h" />
     <ClInclude Include="..\CEntity\IEntityFactory.h" />

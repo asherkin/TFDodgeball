@@ -41,9 +41,9 @@ bool CTFDBPlayer::ShouldGib(const CEntityTakeDamageInfo &info, bool bFeignDeath)
 		return BaseClass::ShouldGib(info, bFeignDeath);
 }
 
-CBaseEntity *CTFDBPlayer::GiveNamedItem(char const *szName, int iSubType, CScriptCreatedItem *pScriptItem, bool bForce)
+CBaseEntity *CTFDBPlayer::GiveNamedItem(char const *szName, int iSubType, CEconItemView *pScriptItem, bool bForce)
 {
-	CTFDBCreatedItem *pItem = (CTFDBCreatedItem *)pScriptItem;
+	CTFDBEconItemView *pItem = (CTFDBEconItemView *)pScriptItem;
 	if (!DodgeballEnabled.GetBool() || !pScriptItem)
 	{
 		return BaseClass::GiveNamedItem(szName, iSubType, pScriptItem, bForce);
@@ -56,7 +56,7 @@ CBaseEntity *CTFDBPlayer::GiveNamedItem(char const *szName, int iSubType, CScrip
 		return NULL;
 	}
 	
-	CScriptCreatedItem newitem;
+	CEconItemView newitem;
 	CSCICopy(pScriptItem, &newitem);
 
 	newitem.m_Attributes.Purge();
@@ -73,9 +73,9 @@ CBaseEntity *CTFDBPlayer::GiveNamedItem(char const *szName, int iSubType, CScrip
 	return BaseClass::GiveNamedItem(szName, iSubType, &newitem, bForce);
 }
 
-void CSCICopy(CScriptCreatedItem *olditem, CScriptCreatedItem *newitem)
+void CSCICopy(CEconItemView *olditem, CEconItemView *newitem)
 {
-	memset(newitem, 0, sizeof(CScriptCreatedItem));
+	memset(newitem, 0, sizeof(CEconItemView));
 	
 	//#define copymember(a) newitem->a = olditem->a
 	#define copymember(a) memcpy(&newitem->a, &olditem->a, sizeof(newitem->a));

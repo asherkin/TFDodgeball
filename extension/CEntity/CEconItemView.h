@@ -66,7 +66,7 @@ public:
 	wchar_t m_szDescription[96];						// Win Length = 192 / Lin Length = 384 / Win = 12 / Lin = 12
 };
 
-class CScriptCreatedItem								// Win Length = 3552 / Lin Length = 6872
+class CEconItemView								// Win Length = 3552 / Lin Length = 6872
 {
 public:
 	void * m_pVTable;									// Length = 4 / Win = 0 / Lin = 0

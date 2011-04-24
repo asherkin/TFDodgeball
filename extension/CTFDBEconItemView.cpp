@@ -17,17 +17,17 @@
 * this program.  If not, see <http://www.gnu.org/licenses/>.
 */
 
-#include "CTFDBCreatedItem.h"
+#include "CTFDBEconItemView.h"
 
 DECLARE_SIGOFFSET(GetLoadoutSlot);
 
 #ifndef WIN32
-typedef int (* GetLoadoutSlotFunc)(CScriptCreatedItem *, int m_iClass);
+typedef int (* GetLoadoutSlotFunc)(CEconItemView *, int m_iClass);
 #else
-typedef int (__fastcall * GetLoadoutSlotFunc)(CScriptCreatedItem *, void *, int m_iClass);
+typedef int (__fastcall * GetLoadoutSlotFunc)(CEconItemView *, void *, int m_iClass);
 #endif
 
-int CTFDBCreatedItem::GetLoadoutSlot(int playerClass) {
+int CTFDBEconItemView::GetLoadoutSlot(int playerClass) {
 	if (!GET_SIGOFFSET(GetLoadoutSlot))
 		return -1;
 

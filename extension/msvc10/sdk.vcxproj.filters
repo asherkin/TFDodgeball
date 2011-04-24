@@ -74,9 +74,6 @@
     <ClCompile Include="..\CVisibleNuke.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\CTFDBCreatedItem.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\CEntity\CAnimating.cpp">
       <Filter>CEntity\Source Files</Filter>
     </ClCompile>
@@ -87,6 +84,9 @@
       <Filter>Source Files</Filter>
     </ClCompile>
     <ClCompile Include="..\CTFDBPlayer.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CTFDBEconItemView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
@@ -119,9 +119,6 @@
       <Filter>CEntity\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\CEntity\CRecipientFilter.h">
-      <Filter>CEntity\Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\CEntity\CScriptCreatedItem.h">
       <Filter>CEntity\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\CEntity\CTakeDamageInfo.h">
@@ -160,9 +157,6 @@
     <ClInclude Include="..\CVisibleNuke.h">
       <Filter>Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\CTFDBCreatedItem.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\CEntity\CAnimating.h">
       <Filter>CEntity\Header Files</Filter>
     </ClInclude>
@@ -174,6 +168,12 @@
     </ClInclude>
     <ClInclude Include="..\CTFDBPlayer.h">
       <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CTFDBEconItemView.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CEntity\CEconItemView.h">
+      <Filter>CEntity\Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
