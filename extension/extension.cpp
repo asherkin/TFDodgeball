@@ -62,6 +62,8 @@ IEngineSound *engsound;
 IEngineTrace *enginetrace;
 IServerGameClients *gameclients;
 
+CSharedEdictChangeInfo *g_pSharedChangeInfo = NULL;
+
 CGlobalVars *gpGlobals;
 
 ConVar DodgeballVersion("tfdodgeball_version", SMEXT_CONF_VERSION, FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY, "TFDodgeball Version");
@@ -109,6 +111,8 @@ bool Sidewinder::SDK_OnMetamodLoad(ISmmAPI *ismm, char *error, size_t maxlen, bo
 	
 	ConVar_Register(0, this);
 
+	g_pSharedChangeInfo = engine->GetSharedEdictChangeInfo();
+
 	// add standard plugin hooks
 	SH_ADD_HOOK_MEMFUNC(IServerGameDLL, ServerActivate, gamedll, &g_Sidewinder, &Sidewinder::ServerActivate, true);
 	SH_ADD_HOOK_MEMFUNC(IServerGameClients, SetCommandClient, serverclients, &g_Sidewinder, &Sidewinder::SetCommandClient, true);
@@ -129,6 +133,12 @@ bool Sidewinder::SDK_OnMetamodUnload(char *error, size_t maxlength)
 	SH_REMOVE_HOOK_MEMFUNC(IServerGameDLL, ServerActivate, gamedll, &g_Sidewinder, &Sidewinder::ServerActivate, true);
 	SH_REMOVE_HOOK_MEMFUNC(IServerGameClients, SetCommandClient, serverclients, &g_Sidewinder, &Sidewinder::SetCommandClient, true);
 	return true;
+}
+
+// Stupid shim required for CBaseEdict::StateChanged to work
+IChangeInfoAccessor *CBaseEdict::GetChangeAccessor()
+{
+	return engine->GetChangeAccessor( (const edict_t *)this );
 }
 
 // *************************************************
