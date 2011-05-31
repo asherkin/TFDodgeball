@@ -61,7 +61,8 @@ DECLARE_HOOK(ShouldGib, CPlayer);
 
 DECLARE_DETOUR(HandleCommand_JoinClass, CPlayer);
 
-LINK_ENTITY_TO_CLASS(CTFPlayer, CPlayer);
+//TODO: Temporary fix for race condition, DO NOT MERGE UPSTREAM
+//LINK_ENTITY_TO_CLASS(CTFPlayer, CPlayer);
 
 //Sendprops
 DEFINE_PROP(m_flNextAttack, CPlayer);

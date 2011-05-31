@@ -96,6 +96,7 @@ public: \
 		if (pThisType && m_bShouldHook) \
 		{ \
 			SH_ADD_MANUALVPHOOK(name, pEnt->BaseEntity(), SH_MEMBER(pThisType, &cl::Internal##name), false); \
+			/* META_CONPRINTF("Hooked %s on %s.\n", #name, pEnt->GetClassname()); */ \
 		} \
 	} \
 	void ClearFlag(CEntity *pEnt) \
