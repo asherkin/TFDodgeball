@@ -49,7 +49,8 @@ for i in SM.sdkInfo:
 		'util.cpp',
 		'CRecipientFilter.cpp',
 		'EntityOutput.cpp',
-		'CTakeDamageInfo.cpp'
+		'CTakeDamageInfo.cpp',
+		'CTFWeaponBase.cpp',
 		])
 	binary.AddSourceFiles(os.path.join('extension', 'CDetour'), ['detours.cpp'])
 	binary.AddSourceFiles(os.path.join('extension', 'asm'), ['asm.c'])
@@ -60,7 +61,8 @@ for i in SM.sdkInfo:
 		'CTFDBPlayer.cpp',
 		'CTFDBAmmoPack.cpp',
 		'CTFDBEconItemView.cpp',
-		'CTFDBDissolveField.cpp'
+		'CTFDBDissolveField.cpp',
+		'CTFDBFlameThrower.cpp',
 		])
 	
 	SM.PostSetupHL2Job(extension, binary, i)

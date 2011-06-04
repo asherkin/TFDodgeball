@@ -24,7 +24,7 @@
 public Plugin:myinfo = {
 	name = "TFDodgeball",
 	author = "Asherkin",
-	description	= "An open-source version of the popular 'Dodgeball' gameplay modification.",
+	description = "An open-source version of the popular 'Dodgeball' gameplay modification.",
 	version = "1.3",
 	url = "http://limetech.org/"
 };

@@ -164,6 +164,11 @@
 				"windows"	"457"
 				"linux"		"458"
 			}
+			"DeflectPlayer"
+			{
+				"windows"	"373"
+				"linux"		"379"
+			}
 		}
 	}
 	"#default"
