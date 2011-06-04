@@ -45,3 +45,8 @@ void CVisibleNuke::SetSkin(int nSkin)
 	*m_nSkin = nSkin;
 	edict()->StateChanged(m_nSkinPropTrackerObj.GetOffset());
 }
+
+void CVisibleNuke::Touch( CEntity *pOther )
+{
+	GetMoveParent()->Touch(pOther);
+}

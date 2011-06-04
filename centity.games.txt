@@ -4,6 +4,11 @@
 	{
 		"Offsets"
 		{
+			"FVisible"
+			{
+				"windows"	"140"
+				"linux"		"140"
+			}
 			"Teleport"
 			{
 				"windows"	"106"

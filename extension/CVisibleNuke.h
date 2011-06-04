@@ -14,7 +14,7 @@ public:
 	virtual void Init(edict_t *pEdict, CBaseEntity *pBaseEntity);
 	virtual void Spawn(void);
 	virtual ServerClass *GetServerClass(void);
-
+	virtual void Touch(CEntity *pOther);
 public:
 	void SetSkin(int nSkin);
 
