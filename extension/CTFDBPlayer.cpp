@@ -7,10 +7,12 @@ LINK_ENTITY_TO_CLASS(CTFPlayer, CTFDBPlayer);
 ConVar WeaponParticle("sm_dodgeball_weaponparticle", "0.0", FCVAR_NONE, "", true, 0.0, true, 19.0);
 ConVar DissolvePlayers("sm_dodgeball_dissolve_players", "0", FCVAR_NONE, "", true, 0.0, true, 1.0);
 ConVar DissolveDelay("sm_dodgeball_dissolve_delay", "1.0", FCVAR_NONE, "");
+ConVar ForcePyro("sm_dodgeball_force_class", "1", FCVAR_NONE, "", true, 0.0, true, 1.0);
+ConVar ForceLoadout("sm_dodgeball_force_loadout", "2", FCVAR_NONE, "", true, 0.0, true, 2.0);
 
 void CTFDBPlayer::HandleCommand_JoinClass(const char *pClass, bool bAllowSpawn)
 {
-	if (DodgeballEnabled.GetBool())
+	if (DodgeballEnabled.GetBool() && ForcePyro.GetBool())
 	{
 		BaseClass::HandleCommand_JoinClass("pyro", bAllowSpawn);
 	} else {
@@ -48,12 +50,17 @@ CBaseEntity *CTFDBPlayer::GiveNamedItem(char const *szName, int iSubType, CEconI
 	{
 		return BaseClass::GiveNamedItem(szName, iSubType, pScriptItem, bForce);
 	} else if (GetPlayerClass() != PLAYERCLASS_PYRO) {
-		g_pSM->LogError(myself, "WARNING: Server tried to give a weapon to a player that isn't a pyro.");
+		if (ForcePyro.GetBool())
+		{
+			g_pSM->LogError(myself, "WARNING: Server tried to give a weapon to a player that isn't a pyro.");
+		}
 		return BaseClass::GiveNamedItem(szName, iSubType, pScriptItem, bForce);
 	} else if (pItem->GetLoadoutSlot(PLAYERCLASS_PYRO) == LOADOUTSLOT_MISC || pItem->GetLoadoutSlot(PLAYERCLASS_PYRO) == LOADOUTSLOT_ACTION) {
 		return BaseClass::GiveNamedItem(szName, iSubType, pScriptItem, bForce);
-	} else if (pItem->GetLoadoutSlot(PLAYERCLASS_PYRO) != LOADOUTSLOT_PRIMARY) {
+	} else if (ForceLoadout.GetInt() >= 2 && (pItem->GetLoadoutSlot(PLAYERCLASS_PYRO) != LOADOUTSLOT_PRIMARY)) {
 		return NULL;
+	} else if (!ForceLoadout.GetBool()) {
+		return BaseClass::GiveNamedItem(szName, iSubType, pScriptItem, bForce);
 	}
 	
 	CEconItemView newitem;
