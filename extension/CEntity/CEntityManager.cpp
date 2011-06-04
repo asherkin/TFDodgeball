@@ -135,14 +135,20 @@ void CEntityManager::Shutdown()
 	}
 }
 
-void CEntityManager::LinkEntityToClass(IEntityFactory *pFactory, const char *className)
+void CEntityManager::LinkEntityToClass(IEntityFactory *pFactory, const char *className, bool internalClass)
 {
 	assert(pFactory);
-	pFactoryTrie.insert(className, pFactory);
+	if (internalClass)
+	{
+		pInternalFactoryTrie.insert(className, pFactory);
+	} else {
+		pFactoryTrie.insert(className, pFactory);
+	}
 }
 
 void CEntityManager::LinkEntityToClass(IEntityFactory *pFactory, const char *className, const char *replaceName)
 {
+	assert(pFactory);
 	LinkEntityToClass(pFactory, className);
 	pSwapTrie.insert(className, replaceName);
 }
@@ -165,34 +171,21 @@ IServerNetworkable *CEntityManager::Create(const char *pClassName)
 	}
 
 	IEntityFactory **value = NULL;
-	value = pFactoryTrie.retrieve(pClassName);
+	value = FindFactoryInTrie(&pFactoryTrie, pEnt, pClassName);
 
 	if (!value)
 	{
-		/* Attempt to do an RTTI lookup for C++ class links */
-		IType *pType = GetType(pEnt);
-		IBaseType *pBase = pType->GetBaseType();
-
-		do 
-		{
-			const char *classname = GetTypeName(pBase->GetTypeInfo());
-			value = pFactoryTrie.retrieve(classname);
-
-			if (value)
-			{
-				break;
-			}
-
-		} while (pBase->GetNumBaseClasses() && (pBase = pBase->GetBaseClass(0)));
-
-		pType->Destroy();
+		/* Look for CEntity handlers */
+		value = FindFactoryInTrie(&pInternalFactoryTrie, pEnt, pClassName);
 	}
 
 	if (!value)
 	{
-		/* No specific handler for this entity */
-		value = pFactoryTrie.retrieve("baseentity");
-		assert(value);
+		/* No handler for this entity (not an entity?) */
+		//value = pFactoryTrie.retrieve("CBaseEntity");
+		g_pSM->LogError(myself, "No handler found for %d/%s", gamehelpers->EntityToBCompatRef(pEnt), pClassName);
+		//PrintTypeTree(pEnt);
+		//_asm int 3;
 	}
 
 	IEntityFactory *pFactory = *value;
@@ -227,4 +220,33 @@ void CEntityManager::RemoveEdict(edict_t *e)
 		g_pSM->LogMessage(myself, "Edict Removed, removing CEntity");
 		pEnt->Destroy();
 	}
+}
+
+IEntityFactory **CEntityManager::FindFactoryInTrie(KTrie<IEntityFactory *> *pTrie, CBaseEntity *pEntity, const char *pClassName)
+{
+	IEntityFactory **value = NULL;
+	value = pTrie->retrieve(pClassName); // Old style match to entity classname (also used for custom classes).
+
+	if (!value)
+	{
+		/* Attempt to do an RTTI lookup for C++ class links */
+		IType *pType = GetType(pEntity);
+		IBaseType *pBase = pType->GetBaseType();
+
+		do 
+		{
+			const char *classname = GetTypeName(pBase->GetTypeInfo());
+			value = pTrie->retrieve(classname);
+
+			if (value)
+			{
+				break;
+			}
+
+		} while (pBase->GetNumBaseClasses() && (pBase = pBase->GetBaseClass(0)));
+
+		pType->Destroy();
+	}
+
+	return value;
 }

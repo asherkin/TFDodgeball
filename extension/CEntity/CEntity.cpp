@@ -121,7 +121,7 @@ datamap_t* CEntity::InternalGetDataDescMap()
 	return retvalue;
 }
 
-LINK_ENTITY_TO_CLASS(baseentity, CEntity);
+LINK_ENTITY_TO_INTERNAL_CLASS(CBaseEntity, CEntity);
 
 variant_t g_Variant;
 

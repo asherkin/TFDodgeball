@@ -19,7 +19,7 @@
 
 #include "CAnimating.h"
 
-LINK_ENTITY_TO_CLASS(CBaseAnimating, CAnimating);
+LINK_ENTITY_TO_INTERNAL_CLASS(CBaseAnimating, CAnimating);
 
 
 SH_DECL_MANUALHOOK0_void(StudioFrameAdvance, 0, 0, 0);

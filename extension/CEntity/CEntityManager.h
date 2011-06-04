@@ -46,15 +46,18 @@ public:
 	CEntityManager();
 	bool Init(IGameConfig *pConfig);
 	void Shutdown();
-	void LinkEntityToClass(IEntityFactory *pFactory, const char *className);
+	void LinkEntityToClass(IEntityFactory *pFactory, const char *className, bool internalClass = false);
 	void LinkEntityToClass(IEntityFactory *pFactory, const char *className, const char *replaceName);
 
 	virtual IServerNetworkable *Create(const char *pClassName);
 	void RemoveEdict(edict_t *e);
-	//virtual IEntityFactory *FindFactory(const char *pClassName);
+	
+private:
+	IEntityFactory **FindFactoryInTrie(KTrie<IEntityFactory *> *pTrie, CBaseEntity *pEntity, const char *pClassName);
 
 private:
 	KTrie<IEntityFactory *> pFactoryTrie;
+	KTrie<IEntityFactory *> pInternalFactoryTrie;
 	KTrie<const char *> pSwapTrie;
 	KTrie<bool> pHookedTrie;
 	IEntityFactoryDictionary *pDict;

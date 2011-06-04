@@ -24,11 +24,14 @@
 #include "CEntity.h"
 
 #define LINK_ENTITY_TO_CLASS(mapClassName,DLLClassName) \
-	static CEntityFactory<DLLClassName> mapClassName(#mapClassName);
+	static CEntityFactory<DLLClassName> mapClassName##Factory(#mapClassName);
+
+#define LINK_ENTITY_TO_INTERNAL_CLASS(mapClassName,DLLClassName) \
+	static CEntityFactory<DLLClassName> mapClassName##Factory(#mapClassName,true);
 
 #define LINK_ENTITY_TO_CUSTOM_CLASS(mapClassName,replaceClassName,DLLClassName); \
-	static CCustomEntityFactory<DLLClassName> mapClassName##custom(#mapClassName, #replaceClassName); \
-	static CEntityFactory<DLLClassName> mapClassName(#mapClassName);
+	static CCustomEntityFactory<DLLClassName> mapClassName##CustomFactory(#mapClassName, #replaceClassName); \
+	static CEntityFactory<DLLClassName> mapClassName##Factory(#mapClassName);
 
 class CEntity;
 
@@ -53,9 +56,9 @@ template <class T>
 class CEntityFactory : public IEntityFactory
 {
 public:
-	CEntityFactory(const char *pClassName)
+	CEntityFactory(const char *pClassName, bool internalClass = false)
 	{
-		GetEntityManager()->LinkEntityToClass(this, pClassName);
+		GetEntityManager()->LinkEntityToClass(this, pClassName, internalClass);
 	}
 
 	CEntity *Create(edict_t *pEdict, CBaseEntity *pEnt)
