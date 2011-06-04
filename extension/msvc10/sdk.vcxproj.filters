@@ -95,6 +95,9 @@
     <ClCompile Include="..\CEntity\CTFWeaponBase.cpp">
       <Filter>CEntity\Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\CEntity\CTFRocket.cpp">
+      <Filter>CEntity\Source Files</Filter>
+    </ClCompile>
   </ItemGroup>
   <ItemGroup>
     <ClInclude Include="..\CTrackingProjectile.h">
@@ -185,6 +188,9 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\CEntity\CTFWeaponBase.h">
+      <Filter>CEntity\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CEntity\CTFRocket.h">
       <Filter>CEntity\Header Files</Filter>
     </ClInclude>
   </ItemGroup>

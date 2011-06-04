@@ -3,12 +3,12 @@
 
 #include "CEntityManager.h"
 #include "CEntity.h"
-#include "CAnimating.h"
+#include "CTFRocket.h"
 
-class CTrackingProjectile : public CAnimating
+class CTrackingProjectile : public CTFRocket
 {
 public:
-	DECLARE_CLASS(CTrackingProjectile, CAnimating);
+	DECLARE_CLASS(CTrackingProjectile, CTFRocket);
 	//DECLARE_DATADESC();
 
 	virtual void Init(edict_t *pEdict, CBaseEntity *pBaseEntity);

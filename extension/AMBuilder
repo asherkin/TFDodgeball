@@ -51,6 +51,7 @@ for i in SM.sdkInfo:
 		'EntityOutput.cpp',
 		'CTakeDamageInfo.cpp',
 		'CTFWeaponBase.cpp',
+		'CTFRocket.cpp',
 		])
 	binary.AddSourceFiles(os.path.join('extension', 'CDetour'), ['detours.cpp'])
 	binary.AddSourceFiles(os.path.join('extension', 'asm'), ['asm.c'])

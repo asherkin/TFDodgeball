@@ -3,17 +3,18 @@
 
 #include "CEntityManager.h"
 #include "CEntity.h"
-#include "CAnimating.h"
+#include "CTFRocket.h"
 #include "CVisibleNuke.h"
 
-class CTrackingProjectile_Nuke : public CAnimating
+class CTrackingProjectile_Nuke : public CTFRocket
 {
 public:
-	DECLARE_CLASS(CTrackingProjectile_Nuke, CAnimating);
+	DECLARE_CLASS(CTrackingProjectile_Nuke, CTFRocket);
 	//DECLARE_DATADESC();
 
 	virtual void Init(edict_t *pEdict, CBaseEntity *pBaseEntity);
 	virtual void Spawn(void);
+	virtual float GetRadius();
 
 public:
 	virtual void TrackThink(void);

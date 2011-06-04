@@ -22,6 +22,7 @@ ConVar ReflectSpeedInc_Nuke("sm_dodgeball_reflectinc_nuke", "0.02", FCVAR_NONE);
 ConVar RocketTurnRate_Nuke("sm_dodgeball_turnrate_nuke", "0.1", FCVAR_NONE);
 
 ConVar NukeBeepOnTarget("sm_dodgeball_nuke_targetbeep", "0", FCVAR_NONE, "", true, 0.0, true, 1.0);
+ConVar NukeRadius("sm_dodgeball_nuke_radius", "500.0", FCVAR_NONE, "", true, 0.0, false, 0.0);
 
 DEFINE_PROP(m_bCritical, CTrackingProjectile_Nuke);
 DEFINE_PROP(m_iDeflected, CTrackingProjectile_Nuke);
@@ -60,6 +61,11 @@ void CTrackingProjectile_Nuke::Spawn(void)
 		//*m_iDeflected = 1;
 		SetOwner(CEntity::Instance(0));
 	}
+}
+
+float CTrackingProjectile_Nuke::GetRadius()
+{
+	return NukeRadius.GetFloat();
 }
 
 void CTrackingProjectile_Nuke::FindThink(void)
