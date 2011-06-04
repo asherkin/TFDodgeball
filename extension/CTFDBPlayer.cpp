@@ -55,7 +55,7 @@ CBaseEntity *CTFDBPlayer::GiveNamedItem(char const *szName, int iSubType, CEconI
 			g_pSM->LogError(myself, "WARNING: Server tried to give a weapon to a player that isn't a pyro.");
 		}
 		return BaseClass::GiveNamedItem(szName, iSubType, pScriptItem, bForce);
-	} else if (pItem->GetLoadoutSlot(PLAYERCLASS_PYRO) == LOADOUTSLOT_MISC || pItem->GetLoadoutSlot(PLAYERCLASS_PYRO) == LOADOUTSLOT_ACTION) {
+	} else if (pItem->GetLoadoutSlot(PLAYERCLASS_PYRO) == LOADOUTSLOT_HEAD || pItem->GetLoadoutSlot(PLAYERCLASS_PYRO) == LOADOUTSLOT_MISC || pItem->GetLoadoutSlot(PLAYERCLASS_PYRO) == LOADOUTSLOT_ACTION) {
 		return BaseClass::GiveNamedItem(szName, iSubType, pScriptItem, bForce);
 	} else if (ForceLoadout.GetInt() >= 2 && (pItem->GetLoadoutSlot(PLAYERCLASS_PYRO) != LOADOUTSLOT_PRIMARY)) {
 		return NULL;
