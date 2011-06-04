@@ -14,7 +14,7 @@
 #define PROJECTILE_ROCKET 1
 #define PROJECTILE_ROCKET_SENTRY 2
 
-#define CONVAR_COUNT 13
+#define CONVAR_COUNT 14
 
 #define MAX_FAILED_LAUNCHER_SEARCHES 2
 
@@ -52,10 +52,12 @@ new bool:g_config_bAutoJoin;
 new bool:g_config_bGameDesc;
 new bool:g_config_bManiFix;
 new Float:g_config_flNukeChance;
+new bool:g_config_bCheckMap;
 
 new g_iRocketCount;
 new g_iRocketCount_Nuke;
 new bool:g_bMapRoaded;
+new bool:g_bOriginallyEnabled;
 
 new currentlauncherIndex_Red = -1;
 new currentlauncherIndex_Blue = -1;
@@ -81,6 +83,7 @@ public OnPluginStart()
 	g_hConVars[10] = CreateConVar("sm_dodgeball_gamedesc", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_hConVars[11] = CreateConVar("sm_dodgeball_gamedesc_manifix", "0", "", FCVAR_NONE, true, 0.0, true, 1.0);
 	g_hConVars[12] = CreateConVar("sm_dodgeball_nuke_chance", "0.01", "", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hConVars[13] = CreateConVar("sm_dodgeball_check_map", "0", "", FCVAR_NONE, true, 0.0, true, 1.0);
 	
 	g_config_bEnabled = true;
 	g_config_iMaxRockets = 10;
@@ -94,6 +97,7 @@ public OnPluginStart()
 	g_config_bGameDesc = true;
 	g_config_bManiFix = false;
 	g_config_flNukeChance = 0.1;
+	g_config_bCheckMap = false;
 	
 	HookConVarChange(g_hConVars[0], config_bEnabled_changed);
 	HookConVarChange(g_hConVars[1], config_flSpawnInterval_changed);
@@ -108,6 +112,7 @@ public OnPluginStart()
 	HookConVarChange(g_hConVars[10], config_bGameDesc_changed);
 	HookConVarChange(g_hConVars[11], config_bManiFix_changed);
 	HookConVarChange(g_hConVars[12], config_flNukeChance_changed);
+	HookConVarChange(g_hConVars[13], config_bCheckMap_changed);
 	
 	HookEvent("teamplay_round_start", Event_TeamplayRoundStart);
 	HookEvent("teamplay_setup_finished", Event_TeamplaySetupFinished);
@@ -126,6 +131,17 @@ public OnMapStart()
 	
 	PrecacheModel(NUKE_MODEL);
 	PrecacheSound(NUKE_SOUND);
+	
+	g_bOriginallyEnabled = g_config_bEnabled
+	
+	if (!g_config_bCheckMap)
+		return;
+	
+	new String:mapName[255];
+	GetCurrentMap(mapName, sizeof(mapName));
+	
+	if (strncmp(mapName, "tfdb_", 5, false) != 0)
+		SetConVarBool(g_hConVars[0], false);
 }
 
 public OnMapEnd()
@@ -134,11 +150,16 @@ public OnMapEnd()
 	
 	currentlauncherIndex_Red = -1;
 	currentlauncherIndex_Blue = -1;
+	
+	if (g_config_bCheckMap && g_bOriginallyEnabled && g_bOriginallyEnabled != g_config_bEnabled)
+	{
+		SetConVarBool(g_hConVars[0], g_bOriginallyEnabled);
+	}
 }
 
 public Action:OnGetGameDescription(String:gameDesc[64])
 {
-	if (g_config_bGameDesc && (g_bMapRoaded || !g_config_bManiFix))
+	if (g_config_bEnabled && g_config_bGameDesc && (g_bMapRoaded || !g_config_bManiFix))
 	{
 		strcopy(gameDesc, sizeof(gameDesc), "TFDodgeball");
 		return Plugin_Changed;
@@ -175,6 +196,7 @@ public config_bAutoJoin_changed(Handle:convar, const String:oldValue[], const St
 public config_bGameDesc_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bGameDesc = bool:StringToInt(newValue); }
 public config_bManiFix_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bManiFix = bool:StringToInt(newValue); }
 public config_flNukeChance_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flNukeChance = StringToFloat(newValue); }
+public config_bCheckMap_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bCheckMap = bool:StringToInt(newValue); }
 
 public config_flSpawnInterval_changed(Handle:convar, const String:oldValue[], const String:newValue[])
 {
@@ -189,8 +211,7 @@ public Action:SpawnRockets(Handle:timer)
 {
 	static iRocketLastTeam = TEAM_RED;
 	
-	if (!g_config_bEnabled)
-		return Plugin_Continue;
+	if (!g_config_bEnabled) return Plugin_Continue;
 	
 	new bool:isNuke = (GetURandomFloat() < g_config_flNukeChance);
 	
