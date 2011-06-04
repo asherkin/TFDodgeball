@@ -132,7 +132,7 @@ public OnMapStart()
 	PrecacheModel(NUKE_MODEL);
 	PrecacheSound(NUKE_SOUND);
 	
-	g_bOriginallyEnabled = g_config_bEnabled
+	g_bOriginallyEnabled = g_config_bEnabled;
 	
 	if (!g_config_bCheckMap)
 		return;
