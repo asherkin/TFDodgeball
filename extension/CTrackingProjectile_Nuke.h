@@ -35,9 +35,10 @@ private:
 	int m_currentTarget;
 	int m_lastTeam;
 	CVisibleNuke *m_pGlowModel;
+	bool m_bDodgeballRocket;
 
 protected:
-	bool   m_bHasThought;
+	bool m_bHasThought;
 
 protected: //Sendprops
 	DECLARE_SENDPROP(int, m_iDeflected);

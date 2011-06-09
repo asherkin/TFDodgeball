@@ -7,7 +7,7 @@
 SH_DECL_MANUALEXTERN3(FVisible, bool, CBaseEntity *, int, CBaseEntity **);
 
 LINK_ENTITY_TO_CLASS(CTFProjectile_Rocket, CTrackingProjectile);
-//LINK_ENTITY_TO_CLASS(CTFProjectile_SentryRocket, CTrackingProjectile);
+//LINK_ENTITY_TO_CUSTOM_CLASS(tfdb_rocket, tf_projectile_rocket, CTrackingProjectile);
 
 #if 0
 BEGIN_DATADESC(CTrackingProjectile)
@@ -44,12 +44,17 @@ void CTrackingProjectile::Spawn(void)
 
 	if (DodgeballEnabled.GetBool())
 	{
-		SetThink(&CTrackingProjectile::FindThink);
-		SetNextThink(gpGlobals->curtime);
-
 		m_lastTeam = GetTeamNumber();
 		//*m_iDeflected = 1;
-		SetOwner(CEntity::Instance(0));
+
+		if (!GetOwner())
+		{
+			SetThink(&CTrackingProjectile::FindThink);
+			SetNextThink(gpGlobals->curtime);
+
+			m_bDodgeballRocket = true;
+			SetOwner(CEntity::Instance(0));
+		}
 	}
 }
 

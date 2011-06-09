@@ -7,6 +7,7 @@
 SH_DECL_MANUALEXTERN3(FVisible, bool, CBaseEntity *, int, CBaseEntity **);
 
 LINK_ENTITY_TO_CLASS(CTFProjectile_SentryRocket, CTrackingProjectile_Nuke);
+//LINK_ENTITY_TO_CUSTOM_CLASS(tfdb_nuke, tf_projectile_sentryrocket, CTrackingProjectile_Nuke);
 
 #if 0
 BEGIN_DATADESC(CTrackingProjectile_Nuke)
@@ -54,23 +55,30 @@ void CTrackingProjectile_Nuke::Spawn(void)
 			}
 		}
 
-		SetThink(&CTrackingProjectile_Nuke::FindThink);
-		SetNextThink(gpGlobals->curtime);
-
 		m_lastTeam = GetTeamNumber();
 		//*m_iDeflected = 1;
-		SetOwner(CEntity::Instance(0));
+
+		if (!GetOwner())
+		{
+			SetThink(&CTrackingProjectile_Nuke::FindThink);
+			SetNextThink(gpGlobals->curtime);
+
+			m_bDodgeballRocket = true;
+			SetOwner(CEntity::Instance(0));
+		}
 	}
 }
 
 float CTrackingProjectile_Nuke::GetRadius()
 {
+	if (!m_bDodgeballRocket)
+		return BaseClass::GetRadius();
+
 	return NukeRadius.GetFloat();
 }
 
 void CTrackingProjectile_Nuke::FindThink(void)
 {
-
 	CEntity *pBestVictim = NULL;
 	float flBestVictim = MAX_TRACE_LENGTH;
 	float flVictimDist;
