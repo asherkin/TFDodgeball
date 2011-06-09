@@ -6,6 +6,7 @@ LINK_ENTITY_TO_CLASS(CTFPlayer, CTFDBPlayer);
 
 ConVar WeaponParticle("sm_dodgeball_weaponparticle", "0.0", FCVAR_NONE, "", true, 0.0, true, 19.0);
 ConVar DissolvePlayers("sm_dodgeball_dissolve_players", "0", FCVAR_NONE, "", true, 0.0, true, 1.0);
+ConVar DissolveOverride("sm_dodgeball_dissolve_disable", "0", FCVAR_NONE, "", true, 0.0, true, 1.0);
 ConVar DissolveDelay("sm_dodgeball_dissolve_delay", "1.0", FCVAR_NONE, "");
 ConVar ForcePyro("sm_dodgeball_force_class", "1", FCVAR_NONE, "", true, 0.0, true, 1.0);
 ConVar ForceLoadout("sm_dodgeball_force_loadout", "2", FCVAR_NONE, "", true, 0.0, true, 2.0);
@@ -22,7 +23,7 @@ void CTFDBPlayer::HandleCommand_JoinClass(const char *pClass, bool bAllowSpawn)
 
 int CTFDBPlayer::OnTakeDamage(CEntityTakeDamageInfo &info)
 {
-	if (!DodgeballEnabled.GetBool() || (!DissolvePlayers.GetBool() && (info.m_bitsDamageType & DMG_ACID) != 0))
+	if (!DodgeballEnabled.GetBool() || DissolveOverride.GetBool() || (!DissolvePlayers.GetBool() && (info.m_bitsDamageType & DMG_ACID) != 0))
 		return BaseClass::OnTakeDamage(info);
 
 	int ret = BaseClass::OnTakeDamage(info);
