@@ -112,20 +112,37 @@ bool CEntityManager::Init(IGameConfig *pConfig)
 		pSigOffsetTracker = pSigOffsetTracker->m_Next;
 	}
 
-	/* Start the creation hooks! */
-	SH_ADD_HOOK(IEntityFactoryDictionary, Create, pDict, SH_MEMBER(this, &CEntityManager::Create), true);
-	SH_ADD_HOOK(IVEngineServer, RemoveEdict, engine, SH_MEMBER(this, &CEntityManager::RemoveEdict), true);
-
 	srand(time(NULL));
-
 	m_bEnabled = true;
+
+	/* Find any already existing entities */
+	for (int i = 0; i < gpGlobals->maxEntities; i++)
+	{
+		edict_t *pEntity = gamehelpers->EdictOfIndex(i);
+		if (!pEntity || pEntity->IsFree())
+		{
+			continue;
+		}
+
+		IServerNetworkable *pNetworkable = pEntity->GetNetworkable();
+		if (!pNetworkable)
+		{
+			continue;
+		}
+
+		HookEntity(pNetworkable);
+	}
+
+	/* Start the creation hooks! */
+	SH_ADD_HOOK(IEntityFactoryDictionary, Create, pDict, SH_MEMBER(this, &CEntityManager::Create_Hook), true);
+	SH_ADD_HOOK(IVEngineServer, RemoveEdict, engine, SH_MEMBER(this, &CEntityManager::RemoveEdict_Hook), true);
 	return true;
 }
 
 void CEntityManager::Shutdown()
 {
-	SH_REMOVE_HOOK(IEntityFactoryDictionary, Create, pDict, SH_MEMBER(this, &CEntityManager::Create), true);
-	SH_REMOVE_HOOK(IVEngineServer, RemoveEdict, engine, SH_MEMBER(this, &CEntityManager::RemoveEdict), true);
+	SH_REMOVE_HOOK(IEntityFactoryDictionary, Create, pDict, SH_MEMBER(this, &CEntityManager::Create_Hook), true);
+	SH_REMOVE_HOOK(IVEngineServer, RemoveEdict, engine, SH_MEMBER(this, &CEntityManager::RemoveEdict_Hook), true);
 
 	IDetourTracker *pDetourTracker = IDetourTracker::m_Head;
 	while (pDetourTracker)
@@ -153,13 +170,16 @@ void CEntityManager::LinkEntityToClass(IEntityFactory *pFactory, const char *cla
 	pSwapTrie.insert(className, replaceName);
 }
 
-IServerNetworkable *CEntityManager::Create(const char *pClassName)
+void CEntityManager::HookEntity(IServerNetworkable *pNetworkable, const char *pClassName)
 {
-	IServerNetworkable *pNetworkable = META_RESULT_ORIG_RET(IServerNetworkable *);
-
 	if (!pNetworkable)
 	{
-		return NULL;
+		return;
+	}
+
+	if (!pClassName)
+	{
+		pClassName = pNetworkable->GetClassName();
 	}
 
 	CBaseEntity *pEnt = pNetworkable->GetBaseEntity();
@@ -167,7 +187,7 @@ IServerNetworkable *CEntityManager::Create(const char *pClassName)
 
 	if (!pEdict || !pEnt)
 	{
-		return NULL;
+		return;
 	}
 
 	IEntityFactory **value = NULL;
@@ -207,19 +227,32 @@ IServerNetworkable *CEntityManager::Create(const char *pClassName)
 	}
 
 	pEntity->SetClassname(pClassName);
-
-
-	return NULL;
 }
 
-void CEntityManager::RemoveEdict(edict_t *e)
+IServerNetworkable *CEntityManager::Create_Hook(const char *pClassName)
+{
+	IServerNetworkable *pNetworkable = META_RESULT_ORIG_RET(IServerNetworkable *);
+
+	if (!pNetworkable)
+	{
+		return NULL;
+	}
+
+	HookEntity(pNetworkable, pClassName);
+
+	RETURN_META_VALUE(MRES_IGNORED, NULL);
+}
+
+void CEntityManager::RemoveEdict_Hook(edict_t *e)
 {
 	CEntity *pEnt = CEntity::Instance(e);
 	if (pEnt)
 	{
-		g_pSM->LogMessage(myself, "Edict Removed, removing CEntity");
+		//g_pSM->LogMessage(myself, "Edict Removed, removing CEntity");
 		pEnt->Destroy();
 	}
+
+	RETURN_META(MRES_IGNORED);
 }
 
 IEntityFactory **CEntityManager::FindFactoryInTrie(KTrie<IEntityFactory *> *pTrie, CBaseEntity *pEntity, const char *pClassName)

@@ -49,8 +49,10 @@ public:
 	void LinkEntityToClass(IEntityFactory *pFactory, const char *className, bool internalClass = false);
 	void LinkEntityToClass(IEntityFactory *pFactory, const char *className, const char *replaceName);
 
-	virtual IServerNetworkable *Create(const char *pClassName);
-	void RemoveEdict(edict_t *e);
+private:
+	void HookEntity(IServerNetworkable *pNetworkable, const char *pClassName = NULL);
+	virtual IServerNetworkable *Create_Hook(const char *pClassName);
+	void RemoveEdict_Hook(edict_t *e);
 	
 private:
 	IEntityFactory **FindFactoryInTrie(KTrie<IEntityFactory *> *pTrie, CBaseEntity *pEntity, const char *pClassName);
