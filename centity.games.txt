@@ -171,8 +171,8 @@
 			}
 			"DeflectPlayer"
 			{
-				"windows"	"373"
-				"linux"		"379"
+				"windows"	"374"
+				"linux"		"380"
 			}
 			"GetRadius"
 			{
