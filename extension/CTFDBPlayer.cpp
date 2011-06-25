@@ -69,13 +69,13 @@ CBaseEntity *CTFDBPlayer::GiveNamedItem(char const *szName, int iSubType, CEconI
 
 	newitem.m_Attributes.Purge();
 
-	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(112,	0.25)); // +%s1% ammo regenerated every 5 seconds on wearer
-	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(76,	4.00)); // +%s1% max primary ammo on wearer
-	newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(60,	0.00)); // +%s1% fire damage resistance on wearer
+	newitem.m_Attributes.AddToTail(CEconItemAttribute(112,	0.25)); // +%s1% ammo regenerated every 5 seconds on wearer
+	newitem.m_Attributes.AddToTail(CEconItemAttribute(76,	4.00)); // +%s1% max primary ammo on wearer
+	newitem.m_Attributes.AddToTail(CEconItemAttribute(60,	0.00)); // +%s1% fire damage resistance on wearer
 
 	if (WeaponParticle.GetInt() > 0)
 	{
-		newitem.m_Attributes.AddToTail(CScriptCreatedAttribute(134, WeaponParticle.GetFloat()));
+		newitem.m_Attributes.AddToTail(CEconItemAttribute(134, WeaponParticle.GetFloat()));
 	}
 
 	return BaseClass::GiveNamedItem(szName, iSubType, &newitem, bForce);
@@ -89,32 +89,26 @@ void CSCICopy(CEconItemView *olditem, CEconItemView *newitem)
 	#define copymember(a) memcpy(&newitem->a, &olditem->a, sizeof(newitem->a));
 
 	copymember(m_pVTable);
-	
-#ifdef _WIN32
-	copymember(m_Padding);
-#endif
 
 	copymember(m_iItemDefinitionIndex);
+	copymember(m_Unknown);
 	copymember(m_iEntityQuality);
 	copymember(m_iEntityLevel);
 
-#ifdef _WIN32
-	copymember(m_Padding2);
-#endif
-
-	copymember(m_iGlobalIndex);
-	copymember(m_iGlobalIndexHigh);
-	copymember(m_iGlobalIndexLow);
+	copymember(m_iItemID);
+	copymember(m_iItemIDHigh);
+	copymember(m_iItemIDLow);
 	copymember(m_iAccountID);
-	copymember(m_iPosition);
-	copymember(m_szWideName);
-	copymember(m_szName);
+	copymember(m_iInventoryPosition);
+	copymember(m_wszItemName);
+	copymember(m_szItemName);
 
-	copymember(m_szBlob);
-	copymember(m_szBlob2);
-
-	copymember(m_Unknown);
+	copymember(m_wszAttributeDescription);
 	copymember(m_Unknown2);
+
+	copymember(m_pAlternateItemData);
+	copymember(m_pLocalizationProvider);
+	copymember(m_Unknown3);
 
 	copymember(m_bInitialized);
 

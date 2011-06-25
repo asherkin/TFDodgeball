@@ -47,58 +47,55 @@ public:
 	}
 };
 
-class CScriptCreatedAttribute							// Win Length = 204 / Lin Length = 396
+class CEconItemAttribute
 {
 public:
-	CScriptCreatedAttribute() {};
+	CEconItemAttribute() {};
 
-	CScriptCreatedAttribute(int iAttributeDefinitionIndex, float flValue)
+	CEconItemAttribute(int iAttributeDefinitionIndex, float flValue)
 	{
 		this->m_iAttributeDefinitionIndex = iAttributeDefinitionIndex;
 		this->m_flValue = flValue;
 	}
 
 public:
-	void * m_pVTable;									// Length = 4 / Win = 0 / Lin = 0
+	void *m_pVTable;
 
-	uint32 m_iAttributeDefinitionIndex;					// Length = 4 / Win = 4 / Lin = 4
-	float m_flValue;									// Length = 4 / Win = 8 / Lin = 8
-	wchar_t m_szDescription[96];						// Win Length = 192 / Lin Length = 384 / Win = 12 / Lin = 12
+	uint16 m_iAttributeDefinitionIndex;
+	uint16 m_Unknown;
+	float m_flValue;
+	wchar_t m_wszDescription[96];
 };
 
-class CEconItemView								// Win Length = 3552 / Lin Length = 6872
+class CEconItemView
 {
 public:
-	void * m_pVTable;									// Length = 4 / Win = 0 / Lin = 0
+	void *m_pVTable;
 
-#ifdef _WIN32
-	char m_Padding[4];									// Length = 4 / Win = 4 / Lin = N/A
-#endif
+	uint16 m_iItemDefinitionIndex;
+	uint16 m_Unknown;
+	uint32 m_iEntityQuality;
+	uint32 m_iEntityLevel;
 
-	uint32 m_iItemDefinitionIndex;						// Length = 4 / Win = 8 / Lin = 4
-	uint32 m_iEntityQuality;							// Length = 4 / Win = 12 / Lin = 8
-	uint32 m_iEntityLevel;								// Length = 4 / Win = 16 / Lin = 12
+	uint64 m_iItemID;
+	uint32 m_iItemIDHigh;
+	uint32 m_iItemIDLow;
+	uint32 m_iAccountID;
+	uint32 m_iInventoryPosition;
 
-#ifdef _WIN32
-	char m_Padding2[4];									// Length = 4 / Win = 20 / Lin = N/A
-#endif
+	wchar_t m_wszItemName[128];
+	char m_szItemName[128];
 
-	uint64 m_iGlobalIndex;								// Length = 8 / Win = 24 / Lin = 16
-	uint32 m_iGlobalIndexHigh;							// Length = 4 / Win = 32 / Lin = 24
-	uint32 m_iGlobalIndexLow;							// Length = 4 / Win = 36 / Lin = 28
-	uint32 m_iAccountID;								// Length = 4 / Win = 40 / Lin = 32
-	uint32 m_iPosition;									// Length = 4 / Win = 44 / Lin = 36
-	wchar_t m_szWideName[128];							// Win Length = 256 / Lin Length = 512 / Win = 48 / Lin = 40
-	char m_szName[128];									// Length = 128 / Win = 304 / Lin = 552
+	wchar_t m_wszAttributeDescription[1536];
+	char m_Unknown2[20];
 
-	char m_szBlob[20];									// Length = 20 / Win = 432 / Lin = 680
-	wchar_t m_szBlob2[1536];							// Win Length = 3072 / Lin Length = 6144 / Win = 452 / Lin = 700
+	void *m_pAlternateItemData;
+	void *m_pLocalizationProvider;
 
-	char m_Unknown[4];									// Length = 4 / Win = 3524 / Lin = 6844
-	char m_Unknown2[4];									// Length = 4 / Win = 3528 / Lin = 6848
+	char m_Unknown3[4];
 
-	CUtlVector<CScriptCreatedAttribute, CUtlMemoryTF2Items<CScriptCreatedAttribute> > m_Attributes;	// Length = 20 / Win = 3532 / Lin = 6852
+	CUtlVector<CEconItemAttribute, CUtlMemoryTF2Items<CEconItemAttribute> > m_Attributes;
 
-	bool m_bInitialized;								// Length = 4 / Win = 3552 / Lin = 6872
+	bool m_bInitialized;
 };
 #endif // CScriptCreatedItem_h__
