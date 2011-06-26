@@ -19,21 +19,36 @@
 
 #include "CTFDBEconItemView.h"
 
+DECLARE_SIGOFFSET(GetStaticData);
 DECLARE_SIGOFFSET(GetLoadoutSlot);
 
+class CTFItemDefinition;
+
 #ifndef WIN32
-typedef int (* GetLoadoutSlotFunc)(CEconItemView *, int m_iClass);
+typedef CTFItemDefinition *(* GetStaticDataFunc)(CEconItemView *);
 #else
-typedef int (__fastcall * GetLoadoutSlotFunc)(CEconItemView *, void *, int m_iClass);
+typedef CTFItemDefinition *(__fastcall * GetStaticDataFunc)(CEconItemView *, void *);
+#endif
+
+#ifndef WIN32
+typedef int (* GetLoadoutSlotFunc)(CTFItemDefinition *, int);
+#else
+typedef int (__fastcall * GetLoadoutSlotFunc)(CTFItemDefinition *, void *, int);
 #endif
 
 int CTFDBEconItemView::GetLoadoutSlot(int playerClass) {
-	if (!GET_SIGOFFSET(GetLoadoutSlot))
+	if (GET_SIGOFFSET(GetLoadoutSlot) == NULL || GET_SIGOFFSET(GetLoadoutSlot) == NULL)
 		return -1;
 
 #ifndef WIN32
-	return ((GetLoadoutSlotFunc)GET_SIGOFFSET(GetLoadoutSlot))(this, playerClass);
+	CTFItemDefinition *pItemDefinition = ((GetStaticDataFunc)GET_SIGOFFSET(GetStaticData))(this);
 #else
-	return ((GetLoadoutSlotFunc)GET_SIGOFFSET(GetLoadoutSlot))(this, NULL, playerClass);
+	CTFItemDefinition *pItemDefinition = ((GetStaticDataFunc)GET_SIGOFFSET(GetStaticData))(this, NULL);
+#endif
+
+#ifndef WIN32
+	return ((GetLoadoutSlotFunc)GET_SIGOFFSET(GetLoadoutSlot))(pItemDefinition, playerClass);
+#else
+	return ((GetLoadoutSlotFunc)GET_SIGOFFSET(GetLoadoutSlot))(pItemDefinition, NULL, playerClass);
 #endif
 }

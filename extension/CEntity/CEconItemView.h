@@ -62,7 +62,6 @@ public:
 	void *m_pVTable;
 
 	uint16 m_iAttributeDefinitionIndex;
-	uint16 m_Unknown;
 	float m_flValue;
 	wchar_t m_wszDescription[96];
 };
@@ -73,7 +72,7 @@ public:
 	void *m_pVTable;
 
 	uint16 m_iItemDefinitionIndex;
-	uint16 m_Unknown;
+	uint16 m_Padding;
 	uint32 m_iEntityQuality;
 	uint32 m_iEntityLevel;
 
@@ -87,13 +86,12 @@ public:
 	char m_szItemName[128];
 
 	wchar_t m_wszAttributeDescription[1536];
-	char m_Unknown2[20];
+	char m_vecAttributeColors[20];
 
 	void *m_pAlternateItemData;
 	void *m_pLocalizationProvider;
 
-	char m_Unknown3[4];
-
+	void *m_pVTable_Attributes;
 	CUtlVector<CEconItemAttribute, CUtlMemoryTF2Items<CEconItemAttribute> > m_Attributes;
 
 	bool m_bInitialized;
