@@ -46,10 +46,6 @@ public:
 	int GetButtons();
 	IServerVehicle *GetVehicle();
 	virtual void Spawn();
-	virtual int OnTakeDamage(CEntityTakeDamageInfo &info)
-	{
-		return BaseClass::OnTakeDamage(info);
-	}
 
 public:
 	int GetHealth();
