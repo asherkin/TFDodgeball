@@ -76,7 +76,7 @@
       <DebugInformationFormat>EditAndContinue</DebugInformationFormat>
     </ClCompile>
     <Link>
-      <AdditionalDependencies>$(HL2SDKOB)\lib\public\tier0.lib;$(HL2SDKOB)\lib\public\tier1.lib;$(HL2SDKOB)\lib\public\vstdlib.lib;$(HL2SDKOB)\lib\public\mathlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
+      <AdditionalDependencies>$(HL2SDKOBVALVE)\lib\public\tier0.lib;$(HL2SDKOBVALVE)\lib\public\tier1.lib;$(HL2SDKOBVALVE)\lib\public\vstdlib.lib;$(HL2SDKOBVALVE)\lib\public\mathlib.lib;%(AdditionalDependencies)</AdditionalDependencies>
       <OutputFile>$(OutDir)$(ProjectName).ext.dll</OutputFile>
       <Version>531.8008</Version>
       <IgnoreSpecificDefaultLibraries>LIBC;LIBCD;LIBCMT;%(IgnoreSpecificDefaultLibraries)</IgnoreSpecificDefaultLibraries>
@@ -119,8 +119,8 @@
     </Link>
   </ItemDefinitionGroup>
   <ItemGroup>
-    <ClCompile Include="..\..\..\zombiefix_ext\asm\asm.c" />
-    <ClCompile Include="..\..\..\zombiefix_ext\CDetour\detours.cpp" />
+    <ClCompile Include="..\asm\asm.c" />
+    <ClCompile Include="..\CDetour\detours.cpp" />
     <ClCompile Include="..\CEntity\CAnimating.cpp" />
     <ClCompile Include="..\CEntity\CTFRocket.cpp" />
     <ClCompile Include="..\CEntity\CTFWeaponBase.cpp" />
@@ -146,9 +146,9 @@
     <ClCompile Include="..\CEntity\util.cpp" />
   </ItemGroup>
   <ItemGroup>
-    <ClInclude Include="..\..\..\zombiefix_ext\asm\asm.h" />
-    <ClInclude Include="..\..\..\zombiefix_ext\CDetour\detourhelpers.h" />
-    <ClInclude Include="..\..\..\zombiefix_ext\CDetour\detours.h" />
+    <ClInclude Include="..\asm\asm.h" />
+    <ClInclude Include="..\CDetour\detourhelpers.h" />
+    <ClInclude Include="..\CDetour\detours.h" />
     <ClInclude Include="..\CEntity\CAnimating.h" />
     <ClInclude Include="..\CEntity\CTFRocket.h" />
     <ClInclude Include="..\CEntity\CTFWeaponBase.h" />

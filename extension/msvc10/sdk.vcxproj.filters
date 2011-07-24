@@ -62,12 +62,6 @@
     <ClCompile Include="..\CEntity\util.cpp">
       <Filter>CEntity\Source Files</Filter>
     </ClCompile>
-    <ClCompile Include="..\..\..\zombiefix_ext\asm\asm.c">
-      <Filter>Source Files</Filter>
-    </ClCompile>
-    <ClCompile Include="..\..\..\zombiefix_ext\CDetour\detours.cpp">
-      <Filter>Source Files</Filter>
-    </ClCompile>
     <ClCompile Include="..\CTrackingProjectile_Nuke.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
@@ -97,6 +91,12 @@
     </ClCompile>
     <ClCompile Include="..\CEntity\CTFRocket.cpp">
       <Filter>CEntity\Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\asm\asm.c">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CDetour\detours.cpp">
+      <Filter>Source Files</Filter>
     </ClCompile>
   </ItemGroup>
   <ItemGroup>
@@ -151,15 +151,6 @@
     <ClInclude Include="..\CEntity\vehicles.h">
       <Filter>CEntity\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\..\..\zombiefix_ext\asm\asm.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\zombiefix_ext\CDetour\detourhelpers.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
-    <ClInclude Include="..\..\..\zombiefix_ext\CDetour\detours.h">
-      <Filter>Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\CTrackingProjectile_Nuke.h">
       <Filter>Header Files</Filter>
     </ClInclude>
@@ -192,6 +183,15 @@
     </ClInclude>
     <ClInclude Include="..\CEntity\CTFRocket.h">
       <Filter>CEntity\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CDetour\detours.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CDetour\detourhelpers.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\asm\asm.h">
+      <Filter>Header Files</Filter>
     </ClInclude>
   </ItemGroup>
   <ItemGroup>
