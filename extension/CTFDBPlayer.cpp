@@ -91,7 +91,7 @@ void CSCICopy(CEconItemView *olditem, CEconItemView *newitem)
 	copymember(m_pVTable);
 
 	copymember(m_iItemDefinitionIndex);
-	copymember(m_Padding);
+	
 	copymember(m_iEntityQuality);
 	copymember(m_iEntityLevel);
 
