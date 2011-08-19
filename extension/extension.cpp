@@ -67,25 +67,7 @@ CSharedEdictChangeInfo *g_pSharedChangeInfo = NULL;
 CGlobalVars *gpGlobals;
 
 ConVar DodgeballVersion("tfdodgeball_version", SMEXT_CONF_VERSION, FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY, "TFDodgeball Version");
-
-#ifndef WIN32
-#include <execinfo.h>
-static void EnabledHook(IConVar *var, const char *pOldValue, float flOldValue)
-{
-	void *trace[32];
-	char **messages = (char **)NULL;
-	int i, trace_size = 0;
-
-	trace_size = backtrace(trace, 32);
-	messages = backtrace_symbols(trace, trace_size);
-	g_pSM->LogError(myself, "sm_dodgeball_enabled cvar changed (%s -> %s):\n", pOldValue, ConVarRef(var).GetString());
-	for (i = 0; i < trace_size; ++i)
-		g_pSM->LogError(myself, "> [%d] %s\n", i, messages[i]);
-}
-ConVar DodgeballEnabled("sm_dodgeball_enabled", "1", FCVAR_NONE, "", true, 0.0, true, 1.0, EnabledHook);
-#else
 ConVar DodgeballEnabled("sm_dodgeball_enabled", "1", FCVAR_NONE, "", true, 0.0, true, 1.0);
-#endif
 
 void *g_EntList = NULL;
 int gMaxClients = 0;
