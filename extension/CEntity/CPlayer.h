@@ -25,7 +25,6 @@
 #include "sh_list.h"
 #include "shareddefs.h"
 #include "usercmd.h"
-#include "vehicles.h"
 #include "mathlib.h"
 #include "CEconItemView.h"
 #include "CAnimating.h"
@@ -44,7 +43,6 @@ public:
 	bool IsDisguised();
 	int GetDisguisedTeam();
 	int GetButtons();
-	IServerVehicle *GetVehicle();
 	virtual void Spawn();
 
 public:
@@ -63,7 +61,6 @@ public:
 public: // CBasePlayer virtuals
 	virtual	bool FVisible(CEntity *pEntity, int traceMask = MASK_BLOCKLOS, CEntity **ppBlocker = NULL);
 	virtual void PlayerRunCmd(CUserCmd *, IMoveHelper *);
-	virtual void LeaveVehicle( const Vector &vecExitPoint = vec3_origin, const QAngle &vecExitAngles = vec3_angle );
 	virtual void ProcessUserCmds(CUserCmd *cmds, int numcmds, int totalcmds, int dropped_packets, bool paused);
 	virtual void PreThink(void);
 	virtual void PostThink(void);
@@ -84,7 +81,6 @@ public: //Virtual calls
 public: //Autohandlers
 	DECLARE_DEFAULTHEADER(FVisible, bool, (CBaseEntity *pEntity, int traceMask, CBaseEntity **ppBlocker));
 	DECLARE_DEFAULTHEADER(PlayerRunCmd, void, (CUserCmd *pCmd, IMoveHelper *pHelper));
-	DECLARE_DEFAULTHEADER(LeaveVehicle, void, (const Vector &vecExitPoint, const QAngle &vecExitAngles));
 	DECLARE_DEFAULTHEADER(ProcessUserCmds, void, (CUserCmd *cmds, int numcmds, int totalcmds, int dropped_packets, bool paused));
 	DECLARE_DEFAULTHEADER(PreThink, void, ());
 	DECLARE_DEFAULTHEADER(PostThink, void, ());
@@ -105,7 +101,6 @@ protected: // Sendprops
 	DECLARE_SENDPROP(float, m_flNextAttack);
 	DECLARE_SENDPROP(CBaseHandle, m_hActiveWeapon);
 	DECLARE_SENDPROP(CBaseHandle, m_hMyWeapons);
-	DECLARE_SENDPROP(CBaseHandle, m_hVehicle);
 	DECLARE_SENDPROP(uint16_t, m_iHealth);
 	//DECLARE_SENDPROP(uint16_t, m_i);
 	DECLARE_SENDPROP(uint8_t, m_lifeState);

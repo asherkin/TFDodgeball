@@ -95,7 +95,6 @@ typedef CHandle<CBaseEntity> EHANDLE;
 #include "macros.h"
 #include "shareddefs.h"
 #include "util.h"
-#include "vehicles.h"
 
 extern variant_t g_Variant;
 
@@ -198,7 +197,6 @@ public: // CBaseEntity virtuals
 	virtual void Touch(CEntity *pOther); 
 	virtual void EndTouch(CEntity *pOther);
 	virtual Vector GetSoundEmissionOrigin();
-	virtual IServerVehicle *GetServerVehicle();
 	virtual int VPhysicsTakeDamage(const CEntityTakeDamageInfo &inputInfo);
 	virtual int	VPhysicsGetObjectList(IPhysicsObject **pList, int listMax);
 	virtual ServerClass *GetServerClass();
@@ -257,7 +255,6 @@ public: // All the internal hook implementations for the above virtuals
 	DECLARE_DEFAULTHEADER(Touch, void, (CBaseEntity *pOther));
 	DECLARE_DEFAULTHEADER(EndTouch, void, (CBaseEntity *pOther));
 	DECLARE_DEFAULTHEADER(GetSoundEmissionOrigin, Vector, ());
-	DECLARE_DEFAULTHEADER(GetServerVehicle, IServerVehicle *, ());
 	DECLARE_DEFAULTHEADER(VPhysicsTakeDamage, int, (const CEntityTakeDamageInfo &inputInfo));
 	DECLARE_DEFAULTHEADER(VPhysicsGetObjectList, int, (IPhysicsObject **pList, int listMax));
 	DECLARE_DEFAULTHEADER(GetServerClass, ServerClass *, ());

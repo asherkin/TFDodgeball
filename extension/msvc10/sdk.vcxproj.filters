@@ -145,9 +145,6 @@
     <ClInclude Include="..\CEntity\util.h">
       <Filter>CEntity\Header Files</Filter>
     </ClInclude>
-    <ClInclude Include="..\CEntity\vehicles.h">
-      <Filter>CEntity\Header Files</Filter>
-    </ClInclude>
     <ClInclude Include="..\CTrackingProjectile_Nuke.h">
       <Filter>Header Files</Filter>
     </ClInclude>

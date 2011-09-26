@@ -64,16 +64,6 @@
 				"windows"	"98"
 				"linux"		"99"
 			}
-			"GetServerVehicle"
-			{
-				"windows"	"87"
-				"linux"		"88"
-			}
-			"LeaveVehicle"
-			{
-				"windows"	"382"
-				"linux"		"383"
-			}
 			"VPhysicsTakeDamage"
 			{
 				"windows"	"155"

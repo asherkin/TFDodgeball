@@ -21,11 +21,9 @@
 #include "CHelpers.h"
 #include "shareddefs.h"
 #include "in_buttons.h"
-#include "vphysics/vehicles.h"
 
 SH_DECL_MANUALHOOK3(FVisible, 0, 0, 0, bool, CBaseEntity *, int, CBaseEntity **);
 SH_DECL_MANUALHOOK2_void(PlayerRunCmd, 0, 0, 0, CUserCmd *, IMoveHelper *);
-SH_DECL_MANUALHOOK2_void(LeaveVehicle, 0, 0, 0, const Vector &, const QAngle &);
 SH_DECL_MANUALHOOK5_void(ProcessUserCmds, 0, 0, 0, CUserCmd *, int, int, int, bool);
 SH_DECL_MANUALHOOK0_void(PreThink, 0, 0, 0);
 SH_DECL_MANUALHOOK0_void(PostThink, 0, 0, 0);
@@ -43,7 +41,6 @@ SH_DECL_MANUALHOOK2(ShouldGib, 0, 0, 0, bool, const CEntityTakeDamageInfo &, boo
 
 DECLARE_HOOK(FVisible, CPlayer);
 DECLARE_HOOK(PlayerRunCmd, CPlayer);
-DECLARE_HOOK(LeaveVehicle, CPlayer);
 DECLARE_HOOK(ProcessUserCmds, CPlayer);
 DECLARE_HOOK(PreThink, CPlayer);
 DECLARE_HOOK(PostThink, CPlayer);
@@ -67,7 +64,6 @@ LINK_ENTITY_TO_INTERNAL_CLASS(CTFPlayer, CPlayer);
 DEFINE_PROP(m_flNextAttack, CPlayer);
 DEFINE_PROP(m_hActiveWeapon, CPlayer);
 DEFINE_PROP(m_hMyWeapons, CPlayer);
-DEFINE_PROP(m_hVehicle, CPlayer);
 DEFINE_PROP(m_iHealth, CPlayer);
 //DEFINE_PROP(m_iMaxHealth, CPlayer);
 DEFINE_PROP(m_lifeState, CPlayer);
@@ -90,7 +86,7 @@ DEFINE_PROP(m_nButtons, CPlayer);
 
 //IMPLEMENT_NULL_DATADESC(CPlayer);
 
-DECLARE_DEFAULTHANDLER_void(CPlayer, LeaveVehicle, (const Vector &vecExitPoint, const QAngle &vecExitAngles), (vecExitPoint, vecExitAngles));
+DECLARE_DEFAULTHANDLER_void(CPlayer, PlayerRunCmd, (CUserCmd *pCmd, IMoveHelper *pHelper), (pCmd, pHelper));
 DECLARE_DEFAULTHANDLER(CPlayer, GiveNamedItem, CBaseEntity *, (char const *szName, int iSubType, CEconItemView *pScriptItem, bool bForce), (szName, iSubType, pScriptItem, bForce));
 DECLARE_DEFAULTHANDLER(CPlayer, RemovePlayerItem, bool, (CBaseEntity *pItem), (pItem));
 DECLARE_DEFAULTHANDLER_void(CPlayer, Weapon_Equip, (CBaseEntity *pWeapon), (pWeapon));
@@ -99,82 +95,6 @@ DECLARE_DEFAULTHANDLER(CPlayer, GetClientEyeAngles, QAngle *, (), ());
 DECLARE_DEFAULTHANDLER(CPlayer, ShouldGib, bool, (const CEntityTakeDamageInfo &info, bool bFeignDeath), (info, bFeignDeath));
 
 DECLARE_DEFAULTHANDLER_DETOUR_void(CPlayer, HandleCommand_JoinClass, (const char *pClass, bool bAllowSpawn), (pClass, bAllowSpawn));
-
-void CPlayer::PlayerRunCmd(CUserCmd *pCmd, IMoveHelper *pHelper)
-{
-	IServerVehicle *pVehicle = GetVehicle();
-	if (pVehicle)
-	{
-		/**
-		 * We don't call ProcessMovement or FinishMove because we know CPropVehicleDriveable ignores them.  
-		 * This may not work in other cases. Same with passing NULL as a CMoveData *
-		 */
-		pVehicle->SetupMove(*this, pCmd, pHelper, NULL);
-
-		if (pCmd->buttons & IN_USE)
-		{
-			if (!pVehicle->IsPassengerEntering() && !pVehicle->IsPassengerExiting())
-			{
-				pVehicle->HandlePassengerExit(*this);
-
-				/* HACKHACK: Implement FindEntityByClassname or sig it */
-				/* Unsure why we need to do this, SetPassenger should have been called and removed it - Manually calling this == client crash */
-				CEntity *pEnt;
-				for (int i=0; i<= MAX_EDICTS; i++)
-				{
-					pEnt = CEntity::Instance(i);
-					if (!pEnt)
-					{
-						continue;
-					}
-
-					if (pEnt->GetOwner() != this)
-					{
-						continue;
-					}
-
-					if (strcmp("entity_blocker", pEnt->GetClassname()) == 0)
-					{
-						pEnt->AcceptInput("Kill", NULL, NULL, g_Variant, 0);
-					}
-				}
-			}
-		}
-	}
-
-	if (!m_bInPlayerRunCmd)
-	{
-		SH_MCALL(BaseEntity(), PlayerRunCmd)(pCmd, pHelper);
-		return;
-	}
-
-	SET_META_RESULT(MRES_IGNORED);
-	SH_GLOB_SHPTR->DoRecall();
-	SourceHook::EmptyClass *thisptr = reinterpret_cast<SourceHook::EmptyClass*>(SH_GLOB_SHPTR->GetIfacePtr());
-	(thisptr->*(__SoureceHook_FHM_GetRecallMFPPlayerRunCmd(thisptr)))(pCmd, pHelper);
-	SET_META_RESULT(MRES_SUPERCEDE);
-
-	return;
-}
-
-void CPlayer::InternalPlayerRunCmd(CUserCmd *pCmd, IMoveHelper *pHelper)
-{
-	SET_META_RESULT(MRES_SUPERCEDE);
-
-	CPlayer *pEnt = dynamic_cast<CPlayer *>(CEntity::Instance(META_IFACEPTR(CBaseEntity)));
-	if (!pEnt)
-	{
-		RETURN_META(MRES_IGNORED);
-	}
-
-	int index = pEnt->entindex();
-	pEnt->m_bInPlayerRunCmd = true;
-	pEnt->PlayerRunCmd(pCmd, pHelper);
-	if (pEnt == CEntity::Instance(index))
-		pEnt->m_bInPlayerRunCmd = false;
-
-	return;
-}
 
 bool CPlayer::IsPlayer()
 {
@@ -341,17 +261,6 @@ bool CPlayer::InternalFVisible(CBaseEntity *pEntity, int traceMask, CBaseEntity 
 		*ppBlocker = *pCopyBack;
 
 	return ret;
-}
-
-IServerVehicle *CPlayer::GetVehicle()
-{
-	CEntity *pVehicle = CEntity::Instance(m_hVehicle);
-	if (pVehicle)
-	{
-		return pVehicle->GetServerVehicle();
-	}
-
-	return NULL;
 }
 
 void CPlayer::ProcessUserCmds(CUserCmd *cmds, int numcmds, int totalcmds, int dropped_packets, bool paused)

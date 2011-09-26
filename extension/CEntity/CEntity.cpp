@@ -42,7 +42,6 @@ SH_DECL_MANUALHOOK1_void(StartTouch, 0, 0, 0, CBaseEntity *);
 SH_DECL_MANUALHOOK1_void(Touch, 0, 0, 0, CBaseEntity *);
 SH_DECL_MANUALHOOK1_void(EndTouch, 0, 0, 0, CBaseEntity *);
 SH_DECL_MANUALHOOK0(GetSoundEmissionOrigin, 0, 0, 0, Vector);
-SH_DECL_MANUALHOOK0(GetServerVehicle, 0, 0, 0, IServerVehicle *);
 SH_DECL_MANUALHOOK1(VPhysicsTakeDamage, 0, 0, 0, int, const CEntityTakeDamageInfo &);
 SH_DECL_MANUALHOOK2(VPhysicsGetObjectList, 0, 0, 0, int, IPhysicsObject **, int);
 SH_DECL_MANUALHOOK0(GetServerClass, 0, 0, 0, ServerClass *);
@@ -58,7 +57,6 @@ DECLARE_HOOK(StartTouch, CEntity);
 DECLARE_HOOK(Touch, CEntity);
 DECLARE_HOOK(EndTouch, CEntity);
 DECLARE_HOOK(GetSoundEmissionOrigin, CEntity);
-DECLARE_HOOK(GetServerVehicle, CEntity);
 DECLARE_HOOK(VPhysicsTakeDamage, CEntity);
 DECLARE_HOOK(VPhysicsGetObjectList, CEntity);
 DECLARE_HOOK(GetServerClass, CEntity);
@@ -193,21 +191,9 @@ void CEntity::InternalUpdateOnRemove()
 DECLARE_DEFAULTHANDLER_void(CEntity, Teleport, (const Vector *origin, const QAngle* angles, const Vector *velocity), (origin, angles, velocity));
 DECLARE_DEFAULTHANDLER_void(CEntity, Spawn, (), ());
 DECLARE_DEFAULTHANDLER(CEntity, OnTakeDamage, int, (CEntityTakeDamageInfo &info), (info));
-//DECLARE_DEFAULTHANDLER(CEntity, GetServerVehicle, IServerVehicle *, (), ());
 DECLARE_DEFAULTHANDLER(CEntity, VPhysicsTakeDamage, int, (const CEntityTakeDamageInfo &inputInfo), (inputInfo));
 DECLARE_DEFAULTHANDLER(CEntity, VPhysicsGetObjectList, int, (IPhysicsObject **pList, int listMax), (pList, listMax));
 DECLARE_DEFAULTHANDLER(CEntity, GetServerClass, ServerClass *, (), ());
-
-IServerVehicle *CEntity::GetServerVehicle()
-{
-	return SH_MCALL(BaseEntity(), GetServerVehicle)();
-}
-
-IServerVehicle *CEntity::InternalGetServerVehicle()
-{
-	/* Do absolutely nothing since the iface ptr is 0xcccccccc sometimes and we can't handle that yet */
-	RETURN_META_VALUE(MRES_IGNORED, NULL);
-}
 
 void CEntity::StartTouch(CEntity *pOther)
 {
@@ -541,32 +527,6 @@ bool CEntity::AcceptInput(const char *szInputName, CEntity *pActivator, CEntity 
 	if (!m_bInAcceptInput)
 	{
 		return SH_MCALL(BaseEntity(), AcceptInput)(szInputName, *pActivator, *pCaller, Value, outputID);
-	}
-
-	/**
-	 * This gets the award for the worst hack so far. Detects the end of waiting for players and probably lots of other things.
-	 * Forces players out of vehicles.
-	 */
-	if (strcmp(szInputName, "ShowInHUD") == 0 || strcmp(szInputName, "RoundSpawn") == 0 || strcmp(szInputName, "RoundWin") == 0)
-	{
-		CEntity *pEnt;
-		for (int i=1; i<=gpGlobals->maxClients; i++)
-		{
-			pEnt = CEntity::Instance(i);
-			if (!pEnt)
-			{
-				continue;
-			}
-
-			CPlayer *pPlayer = dynamic_cast<CPlayer *>(pEnt);
-			assert(pPlayer);
-
-			IServerVehicle *pVehicle = pPlayer->GetVehicle();
-			if (pVehicle && !pVehicle->IsPassengerExiting())
-			{
-				pPlayer->LeaveVehicle();
-			}
-		}
 	}
 
 	SET_META_RESULT(MRES_IGNORED);
