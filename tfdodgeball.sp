@@ -119,7 +119,7 @@ public OnPluginStart()
 }
 
 public OnClientPutInServer(client) {
-	if (g_config_bEnabled && g_config_bAutoJoin)
+	if (g_config_bEnabled && g_config_bAutoJoin && !IsFakeClient(client))
 	{
 		FakeClientCommandEx(client, "jointeam 0");
 	}
