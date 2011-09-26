@@ -54,7 +54,7 @@ class CEconItemAttribute
 public:
 	CEconItemAttribute() {};
 
-	CEconItemAttribute(int iAttributeDefinitionIndex, float flValue)
+	CEconItemAttribute(uint16 iAttributeDefinitionIndex, float flValue)
 	{
 		this->m_iAttributeDefinitionIndex = iAttributeDefinitionIndex;
 		this->m_flValue = flValue;
