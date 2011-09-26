@@ -93,6 +93,7 @@ DECLARE_DEFAULTHANDLER_void(CPlayer, Weapon_Equip, (CBaseEntity *pWeapon), (pWea
 DECLARE_DEFAULTHANDLER(CPlayer, Weapon_GetSlot, CBaseEntity *, (int slot), (slot));
 DECLARE_DEFAULTHANDLER(CPlayer, GetClientEyeAngles, QAngle *, (), ());
 DECLARE_DEFAULTHANDLER(CPlayer, ShouldGib, bool, (const CEntityTakeDamageInfo &info, bool bFeignDeath), (info, bFeignDeath));
+DECLARE_DEFAULTHANDLER(CPlayer, WeaponSwitch, bool, (CBaseEntity *pWeapon, int viewmodelindex), (pWeapon, viewmodelindex));
 
 DECLARE_DEFAULTHANDLER_DETOUR_void(CPlayer, HandleCommand_JoinClass, (const char *pClass, bool bAllowSpawn), (pClass, bAllowSpawn));
 
@@ -439,42 +440,6 @@ int CPlayer::InternalOnTakeDamage_Alive(CEntityTakeDamageInfo &info)
 	int ret = pEnt->OnTakeDamage_Alive(info);
 	if (pEnt == CEntity::Instance(index))
 		pEnt->m_bInOnTakeDamage_Alive = false;
-
-	return ret;
-}
-
-bool CPlayer::WeaponSwitch(CBaseEntity *pWeapon, int viewmodelindex)
-{
-	if (!m_bInWeaponSwitch)
-	{
-		bool ret = SH_MCALL(BaseEntity(), WeaponSwitch)(pWeapon, viewmodelindex);
-		return ret;
-	}
-
-	SET_META_RESULT(MRES_IGNORED);
-	SH_GLOB_SHPTR->DoRecall();
-	SourceHook::EmptyClass *thisptr = reinterpret_cast<SourceHook::EmptyClass*>(SH_GLOB_SHPTR->GetIfacePtr());
-	bool ret = (thisptr->*(__SoureceHook_FHM_GetRecallMFPWeaponSwitch(thisptr)))(pWeapon, viewmodelindex);
-	SET_META_RESULT(MRES_SUPERCEDE);
-
-	return ret;
-}
-
-bool CPlayer::InternalWeaponSwitch(CBaseEntity *pWeapon, int viewmodelindex)
-{
-	SET_META_RESULT(MRES_SUPERCEDE);
-
-	CPlayer *pEnt = dynamic_cast<CPlayer *>(CEntity::Instance(META_IFACEPTR(CBaseEntity)));
-	if (!pEnt)
-	{
-		RETURN_META_VALUE(MRES_IGNORED, false);
-	}
-
-	int index = pEnt->entindex();
-	pEnt->m_bInWeaponSwitch = true;
-	bool ret = pEnt->WeaponSwitch(pWeapon, viewmodelindex);
-	if (pEnt == CEntity::Instance(index))
-		pEnt->m_bInWeaponSwitch = false;
 
 	return ret;
 }
