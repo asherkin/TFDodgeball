@@ -46,7 +46,7 @@
  * @brief Sample implementation of the SDK Extension.
  * Note: Uncomment one of the pre-defined virtual functions in order to use it.
  */
-class Sidewinder : 
+class TFDodgeball: 
 	public SDKExtension,
 	public IConCommandBaseAccessor
 {
@@ -105,7 +105,7 @@ public:
 	 * @param maxlength		Maximum size of error buffer.
 	 * @return				True to succeed, false to fail.
 	 */
-	virtual bool SDK_OnMetamodUnload(char *error, size_t maxlength);
+	//virtual bool SDK_OnMetamodUnload(char *error, size_t maxlength);
 
 	/**
 	 * @brief Called when Metamod's pause state is changing.
@@ -121,12 +121,6 @@ public:
 
 public: //IConCommandBaseAccessor
 	bool RegisterConCommandBase(ConCommandBase *pCommand);
-
-	// Standard MM:S Plugin Hooks
-	void ServerActivate(edict_t *pEdictList, int edictCount, int clientMax);
-	void SetCommandClient( int cmd );
-	//void ClientPutInServer(edict_t *pEntity, char const *playername);
-	//void ClientDisconnect(edict_t *pEntity);
 };
 
 extern CGlobalVars *gpGlobals;
@@ -136,8 +130,6 @@ extern INetworkStringTableContainer *netstringtables;
 extern IEngineSound *engsound;
 extern IEngineTrace *enginetrace;
 extern IServerGameClients *gameclients;
-
-extern int gMaxClients;
 
 extern ConVar DodgeballVersion;
 extern ConVar DodgeballEnabled;

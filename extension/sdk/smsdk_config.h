@@ -36,10 +36,12 @@
  * @brief Contains macros for configuring basic extension information.
  */
 
+#include "version.h" // SM_FULL_VERSION
+
 /* Basic information exposed publicly */
 #define SMEXT_CONF_NAME			"TFDodgeball"
 #define SMEXT_CONF_DESCRIPTION	"Helper for the TFDodgeball plugin"
-#define SMEXT_CONF_VERSION		"1.3.2"
+#define SMEXT_CONF_VERSION		SM_FULL_VERSION
 #define SMEXT_CONF_AUTHOR		"Asherkin (based on work by pRED*)"
 #define SMEXT_CONF_URL			"http://limetech.org/"
 #define SMEXT_CONF_LOGTAG		"TFDB"

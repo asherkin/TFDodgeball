@@ -48,11 +48,9 @@
  * @brief Implement extension code here.
  */
 
-Sidewinder g_Sidewinder;
+TFDodgeball g_TFDodgeball;
 
-SMEXT_LINK(&g_Sidewinder);
-
-ICvar *icvar = NULL;
+SMEXT_LINK(&g_TFDodgeball);
 
 IGameConfig *g_pGameConf = NULL;
 
@@ -69,15 +67,7 @@ CGlobalVars *gpGlobals;
 ConVar DodgeballVersion("tfdodgeball_version", SMEXT_CONF_VERSION, FCVAR_SPONLY|FCVAR_REPLICATED|FCVAR_NOTIFY, "TFDodgeball Version");
 ConVar DodgeballEnabled("sm_dodgeball_enabled", "1", FCVAR_NONE, "", true, 0.0, true, 1.0);
 
-void *g_EntList = NULL;
-int gMaxClients = 0;
-int gCmdIndex;
-
-/** hooks **/
-SH_DECL_HOOK3_void(IServerGameDLL, ServerActivate, SH_NOATTRIB, 0, edict_t *, int, int)
-SH_DECL_HOOK1_void(IServerGameClients, SetCommandClient, SH_NOATTRIB, 0, int);
-
-bool Sidewinder::SDK_OnLoad(char *error, size_t maxlength, bool late)
+bool TFDodgeball::SDK_OnLoad(char *error, size_t maxlength, bool late)
 {
 	char conf_error[255] = "";
 	if (!gameconfs->LoadGameConfigFile("tfdodgeball.games", &g_pGameConf, conf_error, sizeof(conf_error)))
@@ -90,48 +80,37 @@ bool Sidewinder::SDK_OnLoad(char *error, size_t maxlength, bool late)
 	}
 
 	if (!GetEntityManager()->Init(g_pGameConf))
-		g_pSM->LogError(myself, "CEntity failed to init.");
-
-	g_EntList = gamehelpers->GetGlobalEntityList();
+	{
+		g_pSM->Format(error, maxlength, "CEntity failed to init.");
+		return false;
+	}
 
 	return true;
 }
 
-bool Sidewinder::SDK_OnMetamodLoad(ISmmAPI *ismm, char *error, size_t maxlen, bool late)
+bool TFDodgeball::SDK_OnMetamodLoad(ISmmAPI *ismm, char *error, size_t maxlen, bool late)
 {
 	GET_V_IFACE_CURRENT(GetServerFactory, gameents, IServerGameEnts, INTERFACEVERSION_SERVERGAMEENTS);
-	GET_V_IFACE_CURRENT(GetEngineFactory, icvar, ICvar, CVAR_INTERFACE_VERSION);
+	GET_V_IFACE_CURRENT(GetEngineFactory, cvar, ICvar, CVAR_INTERFACE_VERSION);
 	GET_V_IFACE_CURRENT(GetEngineFactory, netstringtables, INetworkStringTableContainer, INTERFACENAME_NETWORKSTRINGTABLESERVER);
 	GET_V_IFACE_CURRENT(GetEngineFactory, engsound, IEngineSound, IENGINESOUND_SERVER_INTERFACE_VERSION);
 	GET_V_IFACE_CURRENT(GetEngineFactory, enginetrace, IEngineTrace, INTERFACEVERSION_ENGINETRACE_SERVER);
 	GET_V_IFACE_CURRENT(GetServerFactory, gameclients, IServerGameClients, INTERFACEVERSION_SERVERGAMECLIENTS);
 
 	gpGlobals = ismm->GetCGlobals();
-	g_pCVar = icvar;
+	g_pCVar = cvar;
 	
 	ConVar_Register(0, this);
 
 	g_pSharedChangeInfo = engine->GetSharedEdictChangeInfo();
 
-	// add standard plugin hooks
-	SH_ADD_HOOK_MEMFUNC(IServerGameDLL, ServerActivate, gamedll, &g_Sidewinder, &Sidewinder::ServerActivate, true);
-	SH_ADD_HOOK_MEMFUNC(IServerGameClients, SetCommandClient, serverclients, &g_Sidewinder, &Sidewinder::SetCommandClient, true);
-
 	return true;
 }
 
-bool Sidewinder::RegisterConCommandBase(ConCommandBase *pCommand)
+bool TFDodgeball::RegisterConCommandBase(ConCommandBase *pCommand)
 {
 	META_REGCVAR(pCommand);
 
-	return true;
-}
-
-bool Sidewinder::SDK_OnMetamodUnload(char *error, size_t maxlength)
-{
-	// remove standard plugin hooks
-	SH_REMOVE_HOOK_MEMFUNC(IServerGameDLL, ServerActivate, gamedll, &g_Sidewinder, &Sidewinder::ServerActivate, true);
-	SH_REMOVE_HOOK_MEMFUNC(IServerGameClients, SetCommandClient, serverclients, &g_Sidewinder, &Sidewinder::SetCommandClient, true);
 	return true;
 }
 
@@ -139,17 +118,4 @@ bool Sidewinder::SDK_OnMetamodUnload(char *error, size_t maxlength)
 IChangeInfoAccessor *CBaseEdict::GetChangeAccessor()
 {
 	return engine->GetChangeAccessor( (const edict_t *)this );
-}
-
-// *************************************************
-// Standard MM:S Plugin Hooks
-void Sidewinder::ServerActivate(edict_t *pEdictList, int edictCount, int clientMax)
-{
-	gMaxClients = clientMax;
-	RETURN_META(MRES_IGNORED);
-}
-
-void Sidewinder::SetCommandClient( int cmd )
-{
-	gCmdIndex = cmd + 1; //offset by -1 due to using the engine's client index.
 }
