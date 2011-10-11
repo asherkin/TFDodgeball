@@ -47,8 +47,6 @@ public:
 	}
 };
 
-#define ATTRIBUTE_DESCRIPTION_LENGTH (256 / sizeof(wchar_t))
-
 class CEconItemAttribute
 {
 public:
@@ -58,6 +56,7 @@ public:
 	{
 		this->m_iAttributeDefinitionIndex = iAttributeDefinitionIndex;
 		this->m_flValue = flValue;
+		this->m_bSetBonus = false;
 	}
 
 public:
@@ -65,7 +64,7 @@ public:
 
 	uint16 m_iAttributeDefinitionIndex;
 	float m_flValue;
-	wchar_t m_wszDescription[ATTRIBUTE_DESCRIPTION_LENGTH];
+	bool m_bSetBonus;
 };
 
 class CEconItemView
@@ -84,19 +83,11 @@ public:
 	uint32 m_iAccountID;
 	uint32 m_iInventoryPosition;
 
-	wchar_t m_wszItemName[128];
-	char m_szItemName[128];
-
-	wchar_t m_wszLevelDescription[ATTRIBUTE_DESCRIPTION_LENGTH];
-	wchar_t m_wszAttributeDescription[16 * ATTRIBUTE_DESCRIPTION_LENGTH];
-	char m_vecAttributeColors[20];
-
 	void *m_pAlternateItemData;
-	void *m_pLocalizationProvider;
+	bool m_bInitialized;
 
 	void *m_pVTable_Attributes;
 	CUtlVector<CEconItemAttribute, CUtlMemoryTF2Items<CEconItemAttribute> > m_Attributes;
-
-	bool m_bInitialized;
+	void *m_pAttributeManager;
 };
 #endif // CScriptCreatedItem_h__

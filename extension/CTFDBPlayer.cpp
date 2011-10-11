@@ -106,19 +106,24 @@ void CSCICopy(CEconItemView *olditem, CEconItemView *newitem)
 	copymember(m_iItemIDLow);
 	copymember(m_iAccountID);
 	copymember(m_iInventoryPosition);
-	copymember(m_wszItemName);
-	copymember(m_szItemName);
-
-	copymember(m_wszLevelDescription);
-	copymember(m_wszAttributeDescription);
-	copymember(m_vecAttributeColors);
 
 	copymember(m_pAlternateItemData);
-	copymember(m_pLocalizationProvider);
-
-	copymember(m_pVTable_Attributes);
-
 	copymember(m_bInitialized);
 
+	copymember(m_pVTable_Attributes);
+	copymember(m_pAttributeManager);
+
 	newitem->m_Attributes = olditem->m_Attributes;
+	
+	/*
+	META_CONPRINTF("Copying attributes...\n");
+	int nCount = olditem->m_Attributes.Count();
+	META_CONPRINTF("Count: %d\n", nCount);
+	newitem->m_Attributes.SetSize( nCount );
+	for ( int i = 0; i < nCount; i++ )
+	{
+		META_CONPRINTF("Copying %d...\n", i+1);
+		newitem->m_Attributes[ i ] = olditem->m_Attributes[ i ];
+	}
+	*/
 }
