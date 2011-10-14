@@ -50,7 +50,6 @@ for i in SM.sdkInfo:
 		'CRecipientFilter.cpp',
 		'EntityOutput.cpp',
 		'CTakeDamageInfo.cpp',
-		'CTFWeaponBase.cpp',
 		'CTFRocket.cpp',
 		])
 	binary.AddSourceFiles(os.path.join('extension', 'CDetour'), ['detours.cpp'])
