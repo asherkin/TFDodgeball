@@ -41,8 +41,8 @@
 			}
 			"PlayerRunCmd"
 			{
-				"windows"	"407"
-				"linux"		"408"
+				"windows"	"408"
+				"linux"		"409"
 			}
 			"GetDataDescMap"
 			{
@@ -76,8 +76,8 @@
 			}
 			"GiveNamedItem"
 			{
-				"windows"	"458"
-				"linux"		"465"
+				"windows"	"459"
+				"linux"		"467"
 			}
 			"RemovePlayerItem"
 			{
@@ -116,13 +116,13 @@
 			}
 			"CanSpeakVoiceCommand"
 			{
-				"windows"	"447"
-				"linux"		"448"
+				"windows"	"448"
+				"linux"		"449"
 			}
 			"IsReadyToSpawn"
 			{
-				"windows"	"422"
-				"linux"		"423"
+				"windows"	"423"
+				"linux"		"424"
 			}
 			"OnTakeDamage_Alive"
 			{
@@ -136,8 +136,8 @@
 			}
 			"ProcessUserCmds"
 			{
-				"windows"	"406"
-				"linux"		"407"
+				"windows"	"407"
+				"linux"		"408"
 			}
 			"GetSoundEmissionOrigin"
 			{
@@ -156,8 +156,8 @@
 			}
 			"ShouldGib"
 			{
-				"windows"	"457"
-				"linux"		"458"
+				"windows"	"458"
+				"linux"		"459"
 			}
 			"GetRadius"
 			{
@@ -179,7 +179,7 @@
 			"FireOutput"
 			{
 				"library"	"server"
-				"windows"	"\x81\xEC\x1C\x01\x00\x00\x53\x55\x56\x8B\x71\x14\x85\xF6"
+				"windows"	"\x81\xEC\x2A\x2A\x00\x00\x53\x55\x56\x8B\x71\x14\x85\xF6"
 				"linux"		"@_ZN17CBaseEntityOutput10FireOutputE9variant_tP11CBaseEntityS2_f"
 			}
 			"PhysIsInCallback"
@@ -197,7 +197,7 @@
 			"Dissolve"
 			{
 				"library"		"server"
-				"windows"		"\x83\xEC\x0C\x80\x7C\x24\x18\x00\x57\x8B\xF9\x74\x15\xF7\x87"
+				"windows"		"\x83\xEC\x0C\x80\x7C\x24\x18\x00\x56"
 				"linux"			"@_ZN14CBaseAnimating8DissolveEPKcfbi6Vectori"
 			}
 		}
