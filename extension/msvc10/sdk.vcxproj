@@ -123,7 +123,6 @@
     <ClCompile Include="..\CDetour\detours.cpp" />
     <ClCompile Include="..\CEntity\CAnimating.cpp" />
     <ClCompile Include="..\CEntity\CTFRocket.cpp" />
-    <ClCompile Include="..\CEntity\CTFWeaponBase.cpp" />
     <ClCompile Include="..\CTFDBAmmoPack.cpp" />
     <ClCompile Include="..\CTFDBEconItemView.cpp" />
     <ClCompile Include="..\CTFDBDissolveField.cpp" />
@@ -150,7 +149,6 @@
     <ClInclude Include="..\CDetour\detours.h" />
     <ClInclude Include="..\CEntity\CAnimating.h" />
     <ClInclude Include="..\CEntity\CTFRocket.h" />
-    <ClInclude Include="..\CEntity\CTFWeaponBase.h" />
     <ClInclude Include="..\CTFDBAmmoPack.h" />
     <ClInclude Include="..\CTFDBEconItemView.h" />
     <ClInclude Include="..\CTFDBDissolveField.h" />

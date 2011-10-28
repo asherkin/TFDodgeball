@@ -6,8 +6,8 @@
 		{
 			"FVisible"
 			{
-				"windows"	"140"
-				"linux"		"140"
+				"windows"	"141"
+				"linux"		"141"
 			}
 			"Teleport"
 			{
@@ -41,8 +41,8 @@
 			}
 			"PlayerRunCmd"
 			{
-				"windows"	"408"
-				"linux"		"409"
+				"windows"	"410"
+				"linux"		"411"
 			}
 			"GetDataDescMap"
 			{
@@ -66,83 +66,83 @@
 			}
 			"VPhysicsTakeDamage"
 			{
-				"windows"	"155"
-				"linux"		"156"
+				"windows"	"156"
+				"linux"		"157"
 			}
 			"VPhysicsGetObjectList"
 			{
-				"windows"	"161"
-				"linux"		"162"
+				"windows"	"162"
+				"linux"		"163"
 			}
 			"GiveNamedItem"
 			{
-				"windows"	"459"
-				"linux"		"467"
+				"windows"	"461"
+				"linux"		"469"
 			}
 			"RemovePlayerItem"
-			{
-				"windows"	"262"
-				"linux"		"263"
-			}
-			"Weapon_GetSlot"
-			{
-				"windows"	"260"
-				"linux"		"261"
-			}
-			"GetClientEyeAngles"
-			{
-				"windows"	"129"
-				"linux"		"130"
-			}
-			"Weapon_Equip"
-			{
-				"windows"	"253"
-				"linux"		"254"
-			}
-			"PreThink"
-			{
-				"windows"	"324"
-				"linux"		"325"
-			}
-			"PostThink"
-			{
-				"windows"	"325"
-				"linux"		"326"
-			}
-			"WeaponSwitch"
-			{
-				"windows"	"256"
-				"linux"		"257"
-			}
-			"CanSpeakVoiceCommand"
-			{
-				"windows"	"448"
-				"linux"		"449"
-			}
-			"IsReadyToSpawn"
-			{
-				"windows"	"423"
-				"linux"		"424"
-			}
-			"OnTakeDamage_Alive"
 			{
 				"windows"	"264"
 				"linux"		"265"
 			}
+			"Weapon_GetSlot"
+			{
+				"windows"	"262"
+				"linux"		"263"
+			}
+			"GetClientEyeAngles"
+			{
+				"windows"	"130"
+				"linux"		"131"
+			}
+			"Weapon_Equip"
+			{
+				"windows"	"255"
+				"linux"		"256"
+			}
+			"PreThink"
+			{
+				"windows"	"326"
+				"linux"		"327"
+			}
+			"PostThink"
+			{
+				"windows"	"327"
+				"linux"		"328"
+			}
+			"WeaponSwitch"
+			{
+				"windows"	"258"
+				"linux"		"259"
+			}
+			"CanSpeakVoiceCommand"
+			{
+				"windows"	"450"
+				"linux"		"451"
+			}
+			"IsReadyToSpawn"
+			{
+				"windows"	"425"
+				"linux"		"426"
+			}
+			"OnTakeDamage_Alive"
+			{
+				"windows"	"266"
+				"linux"		"267"
+			}
 			"Jump"
 			{
-				"windows"	"322"
-				"linux"		"323"
+				"windows"	"324"
+				"linux"		"325"
 			}
 			"ProcessUserCmds"
 			{
-				"windows"	"407"
-				"linux"		"408"
+				"windows"	"409"
+				"linux"		"410"
 			}
 			"GetSoundEmissionOrigin"
 			{
-				"windows"	"148"
-				"linux"		"149"
+				"windows"	"149"
+				"linux"		"150"
 			}
 			"GetServerClass"
 			{
@@ -151,18 +151,18 @@
 			}
 			"StudioFrameAdvance"
 			{
-				"windows"	"186"
-				"linux"		"187"
+				"windows"	"187"
+				"linux"		"188"
 			}
 			"ShouldGib"
 			{
-				"windows"	"458"
-				"linux"		"459"
+				"windows"	"460"
+				"linux"		"461"
 			}
 			"GetRadius"
 			{
-				"windows"	"219"
-				"linux"		"220"
+				"windows"	"220"
+				"linux"		"221"
 			}
 		}
 	}
