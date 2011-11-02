@@ -6,8 +6,8 @@
 		{
 			"FVisible"
 			{
-				"windows"	"141"
-				"linux"		"141"
+				"windows"	"140"
+				"linux"		"140"
 			}
 			"Teleport"
 			{
@@ -41,8 +41,8 @@
 			}
 			"PlayerRunCmd"
 			{
-				"windows"	"410"
-				"linux"		"411"
+				"windows"	"409"
+				"linux"		"410"
 			}
 			"GetDataDescMap"
 			{
@@ -66,83 +66,83 @@
 			}
 			"VPhysicsTakeDamage"
 			{
-				"windows"	"156"
-				"linux"		"157"
+				"windows"	"155"
+				"linux"		"156"
 			}
 			"VPhysicsGetObjectList"
 			{
-				"windows"	"162"
-				"linux"		"163"
+				"windows"	"161"
+				"linux"		"162"
 			}
 			"GiveNamedItem"
 			{
-				"windows"	"461"
-				"linux"		"469"
+				"windows"	"460"
+				"linux"		"468"
 			}
 			"RemovePlayerItem"
 			{
-				"windows"	"264"
-				"linux"		"265"
+				"windows"	"263"
+				"linux"		"264"
 			}
 			"Weapon_GetSlot"
 			{
-				"windows"	"262"
-				"linux"		"263"
+				"windows"	"261"
+				"linux"		"262"
 			}
 			"GetClientEyeAngles"
 			{
-				"windows"	"130"
-				"linux"		"131"
+				"windows"	"129"
+				"linux"		"130"
 			}
 			"Weapon_Equip"
 			{
-				"windows"	"255"
-				"linux"		"256"
+				"windows"	"254"
+				"linux"		"255"
 			}
 			"PreThink"
+			{
+				"windows"	"325"
+				"linux"		"326"
+			}
+			"PostThink"
 			{
 				"windows"	"326"
 				"linux"		"327"
 			}
-			"PostThink"
-			{
-				"windows"	"327"
-				"linux"		"328"
-			}
 			"WeaponSwitch"
 			{
-				"windows"	"258"
-				"linux"		"259"
+				"windows"	"257"
+				"linux"		"258"
 			}
 			"CanSpeakVoiceCommand"
 			{
-				"windows"	"450"
-				"linux"		"451"
+				"windows"	"449"
+				"linux"		"450"
 			}
 			"IsReadyToSpawn"
 			{
-				"windows"	"425"
-				"linux"		"426"
+				"windows"	"424"
+				"linux"		"425"
 			}
 			"OnTakeDamage_Alive"
 			{
-				"windows"	"266"
-				"linux"		"267"
+				"windows"	"265"
+				"linux"		"266"
 			}
 			"Jump"
 			{
-				"windows"	"324"
-				"linux"		"325"
+				"windows"	"323"
+				"linux"		"324"
 			}
 			"ProcessUserCmds"
 			{
-				"windows"	"409"
-				"linux"		"410"
+				"windows"	"408"
+				"linux"		"409"
 			}
 			"GetSoundEmissionOrigin"
 			{
-				"windows"	"149"
-				"linux"		"150"
+				"windows"	"148"
+				"linux"		"149"
 			}
 			"GetServerClass"
 			{
@@ -151,18 +151,18 @@
 			}
 			"StudioFrameAdvance"
 			{
-				"windows"	"187"
-				"linux"		"188"
+				"windows"	"186"
+				"linux"		"187"
 			}
 			"ShouldGib"
 			{
-				"windows"	"460"
-				"linux"		"461"
+				"windows"	"459"
+				"linux"		"460"
 			}
 			"GetRadius"
 			{
-				"windows"	"220"
-				"linux"		"221"
+				"windows"	"219"
+				"linux"		"220"
 			}
 		}
 	}
