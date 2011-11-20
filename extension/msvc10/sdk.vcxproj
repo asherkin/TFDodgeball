@@ -126,6 +126,7 @@
     <ClCompile Include="..\CTFDBAmmoPack.cpp" />
     <ClCompile Include="..\CTFDBEconItemView.cpp" />
     <ClCompile Include="..\CTFDBDissolveField.cpp" />
+    <ClCompile Include="..\CTFDBFlameThrower.cpp" />
     <ClCompile Include="..\CTFDBPlayer.cpp" />
     <ClCompile Include="..\CTrackingProjectile.cpp" />
     <ClCompile Include="..\CTrackingProjectile_Nuke.cpp" />
@@ -152,6 +153,7 @@
     <ClInclude Include="..\CTFDBAmmoPack.h" />
     <ClInclude Include="..\CTFDBEconItemView.h" />
     <ClInclude Include="..\CTFDBDissolveField.h" />
+    <ClInclude Include="..\CTFDBFlameThrower.h" />
     <ClInclude Include="..\CTFDBPlayer.h" />
     <ClInclude Include="..\CTrackingProjectile.h" />
     <ClInclude Include="..\CTrackingProjectile_Nuke.h" />

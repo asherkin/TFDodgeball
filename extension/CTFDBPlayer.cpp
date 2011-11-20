@@ -10,7 +10,6 @@ ConVar DissolveOverride("sm_dodgeball_dissolve", "1", FCVAR_NONE, "", true, 0.0,
 ConVar DissolveDelay("sm_dodgeball_dissolve_delay", "1.0", FCVAR_NONE, "");
 ConVar ForcePyro("sm_dodgeball_force_class", "1", FCVAR_NONE, "", true, 0.0, true, 1.0);
 ConVar ForceLoadout("sm_dodgeball_force_loadout", "2", FCVAR_NONE, "", true, 0.0, true, 2.0);
-ConVar DeflectPlayers("sm_dodgeball_deflect_players", "1", FCVAR_NONE, "", true, 0.0, true, 1.0);
 
 void CTFDBPlayer::HandleCommand_JoinClass(const char *pClass, bool bAllowSpawn)
 {
@@ -73,11 +72,6 @@ CBaseEntity *CTFDBPlayer::GiveNamedItem(char const *szName, int iSubType, CEconI
 	newitem.m_Attributes.AddToTail(CEconItemAttribute(112,	0.25)); // +%s1% ammo regenerated every 5 seconds on wearer
 	newitem.m_Attributes.AddToTail(CEconItemAttribute(76,	4.00)); // +%s1% max primary ammo on wearer
 	newitem.m_Attributes.AddToTail(CEconItemAttribute(60,	0.00)); // +%s1% fire damage resistance on wearer
-	
-	if (!DeflectPlayers.GetBool())
-	{
-		newitem.m_Attributes.AddToTail(CEconItemAttribute(254,	(0x02 | 0x04))); // airblast functionality flags
-	}
 
 	if (WeaponParticle.GetInt() > 0)
 	{

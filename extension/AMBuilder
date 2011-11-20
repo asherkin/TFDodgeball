@@ -62,6 +62,7 @@ for i in SM.sdkInfo:
 		'CTFDBAmmoPack.cpp',
 		'CTFDBEconItemView.cpp',
 		'CTFDBDissolveField.cpp',
+		'CTFDBFlameThrower.cpp',
 		])
 	
 	SM.PostSetupHL2Job(extension, binary, i)

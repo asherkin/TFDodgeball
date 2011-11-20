@@ -83,6 +83,12 @@
     <ClCompile Include="..\CTFDBEconItemView.cpp">
       <Filter>Source Files</Filter>
     </ClCompile>
+    <ClCompile Include="..\CTFDBFlameThrower.cpp">
+      <Filter>Source Files</Filter>
+    </ClCompile>
+    <ClCompile Include="..\CEntity\CTFWeaponBase.cpp">
+      <Filter>CEntity\Source Files</Filter>
+    </ClCompile>
     <ClCompile Include="..\CEntity\CTFRocket.cpp">
       <Filter>CEntity\Source Files</Filter>
     </ClCompile>
@@ -164,6 +170,12 @@
       <Filter>Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\CEntity\CEconItemView.h">
+      <Filter>CEntity\Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CTFDBFlameThrower.h">
+      <Filter>Header Files</Filter>
+    </ClInclude>
+    <ClInclude Include="..\CEntity\CTFWeaponBase.h">
       <Filter>CEntity\Header Files</Filter>
     </ClInclude>
     <ClInclude Include="..\CEntity\CTFRocket.h">
