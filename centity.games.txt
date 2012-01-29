@@ -6,168 +6,163 @@
 		{
 			"FVisible"
 			{
-				"windows"	"140"
-				"linux"		"140"
+				"windows"       "140"
+				"linux"         "140"
 			}
 			"Teleport"
 			{
-				"windows"	"106"
-				"linux"		"107"
+				"windows"       "106"
+				"linux"         "107"
 			}
 			"Spawn"
 			{
-				"windows"	"21"
-				"linux"		"22"
+				"windows"       "21"
+				"linux"         "22"
 			}
 			"UpdateOnRemove"
 			{
-				"windows"	"103"
-				"linux"		"104"
+				"windows"       "103"
+				"linux"         "104"
 			}
 			"Think"
 			{
-				"windows"	"46"
-				"linux"		"47"
+				"windows"       "46"
+				"linux"         "47"
 			}
 			"OnTakeDamage"
 			{
-				"windows"	"61"
-				"linux"		"62"
+				"windows"       "61"
+				"linux"         "62"
 			}
 			"AcceptInput"
 			{
-				"windows"	"35"
-				"linux"		"36"
+				"windows"       "35"
+				"linux"         "36"
 			}
 			"PlayerRunCmd"
 			{
-				"windows"	"409"
-				"linux"		"410"
+				"windows"       "409"
+				"linux"         "410"
 			}
 			"GetDataDescMap"
 			{
-				"windows"	"11"
-				"linux"		"12"
+				"windows"       "11"
+				"linux"         "12"
 			}
 			"StartTouch"
 			{
-				"windows"	"96"
-				"linux"		"97"
+				"windows"       "96"
+				"linux"         "97"
 			}
 			"Touch"
 			{
-				"windows"	"97"
-				"linux"		"98"
+				"windows"       "97"
+				"linux"         "98"
 			}
 			"EndTouch"
 			{
-				"windows"	"98"
-				"linux"		"99"
+				"windows"       "98"
+				"linux"         "99"
 			}
 			"VPhysicsTakeDamage"
 			{
-				"windows"	"155"
-				"linux"		"156"
+				"windows"       "155"
+				"linux"         "156"
 			}
 			"VPhysicsGetObjectList"
 			{
-				"windows"	"161"
-				"linux"		"162"
+				"windows"       "161"
+				"linux"         "162"
 			}
 			"GiveNamedItem"
 			{
-				"windows"	"460"
-				"linux"		"468"
+				"windows"       "461"
+				"linux"         "469"
 			}
 			"RemovePlayerItem"
 			{
-				"windows"	"263"
-				"linux"		"264"
+				"windows"       "263"
+				"linux"         "264"
 			}
 			"Weapon_GetSlot"
 			{
-				"windows"	"261"
-				"linux"		"262"
+				"windows"       "261"
+				"linux"         "262"
 			}
 			"GetClientEyeAngles"
 			{
-				"windows"	"129"
-				"linux"		"130"
+				"windows"       "129"
+				"linux"         "130"
 			}
 			"Weapon_Equip"
 			{
-				"windows"	"254"
-				"linux"		"255"
+				"windows"       "254"
+				"linux"         "255"
 			}
 			"PreThink"
 			{
-				"windows"	"325"
-				"linux"		"326"
+				"windows"       "325"
+				"linux"         "326"
 			}
 			"PostThink"
 			{
-				"windows"	"326"
-				"linux"		"327"
+				"windows"       "326"
+				"linux"         "327"
 			}
 			"WeaponSwitch"
 			{
-				"windows"	"257"
-				"linux"		"258"
+				"windows"       "257"
+				"linux"         "258"
 			}
 			"CanSpeakVoiceCommand"
 			{
-				"windows"	"449"
-				"linux"		"450"
+				"windows"       "449"
+				"linux"         "450"
 			}
 			"IsReadyToSpawn"
 			{
-				"windows"	"424"
-				"linux"		"425"
+				"windows"       "424"
+				"linux"         "425"
 			}
 			"OnTakeDamage_Alive"
 			{
-				"windows"	"265"
-				"linux"		"266"
+				"windows"       "265"
+				"linux"         "266"
 			}
 			"Jump"
 			{
-				"windows"	"323"
-				"linux"		"324"
+				"windows"       "323"
+				"linux"         "324"
 			}
 			"ProcessUserCmds"
 			{
-				"windows"	"408"
-				"linux"		"409"
+				"windows"       "408"
+				"linux"         "409"
 			}
 			"GetSoundEmissionOrigin"
 			{
-				"windows"	"148"
-				"linux"		"149"
+				"windows"       "148"
+				"linux"         "149"
 			}
 			"GetServerClass"
 			{
-				"windows"	"9"
-				"linux"		"10"
+				"windows"       "9"
+				"linux"         "10"
 			}
 			"StudioFrameAdvance"
 			{
-				"windows"	"186"
-				"linux"		"187"
+				"windows"       "186"
+				"linux"         "187"
 			}
 			"ShouldGib"
 			{
-				"windows"	"459"
-				"linux"		"460"
-			}
-			"DeflectPlayer"
-			{
-				"windows"	"381"
-				"linux"		"387"
+				"windows"       "460"
+				"linux"         "461"
 			}
 			"GetRadius"
 			{
-				"windows"	"219"
-				"linux"		"220"
+				"windows"       "219"
+				"linux"         "220"
 			}
 		}
 	}
@@ -177,33 +172,33 @@
 		{
 			"EntityFactory"
 			{
-				"library"	"server"
-				"windows"	"\xB8\x01\x00\x00\x00\x84\x2A\x2A\x2A\x2A\x2A\x75\x1D\x09\x2A\x2A\x2A\x2A\x2A\xB9\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x83\xC4\x04\xB8\x2A\x2A\x2A\x2A\xC3"
-				"linux"		"@_Z23EntityFactoryDictionaryv"
+				"library"       "server"
+				"windows"       "\xB8\x01\x00\x00\x00\x84\x2A\x2A\x2A\x2A\x2A\x75\x1D\x09\x2A\x2A\x2A\x2A\x2A\xB9\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x68\x2A\x2A\x2A\x2A\xE8\x2A\x2A\x2A\x2A\x83\xC4\x04\xB8\x2A\x2A\x2A\x2A\xC3"
+				"linux"         "@_Z23EntityFactoryDictionaryv"
 			}
 			"FireOutput"
 			{
-				"library"	"server"
-				"windows"	"\x81\xEC\x2A\x2A\x00\x00\x53\x55\x56\x8B\x71\x14\x85\xF6"
-				"linux"		"@_ZN17CBaseEntityOutput10FireOutputE9variant_tP11CBaseEntityS2_f"
+				"library"       "server"
+				"windows"       "\x81\xEC\x2A\x2A\x00\x00\x53\x55\x56\x8B\x71\x14\x85\xF6"
+				"linux"         "@_ZN17CBaseEntityOutput10FireOutputE9variant_tP11CBaseEntityS2_f"
 			}
 			"PhysIsInCallback"
 			{
-				"library"	"server"
-				"windows"	"\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x74\x0E\x8B\x01\x8B\x90\x8C\x00\x00\x00\xFF\xD2\x84\xC0\x75\x09\x83\x3D\x2A\x2A\x2A\x2A\x00\x7E\x03\xB0\x01\xC3"
-				"linux"		"@_Z16PhysIsInCallbackv"
+				"library"       "server"
+				"windows"       "\x8B\x0D\x2A\x2A\x2A\x2A\x85\xC9\x74\x0E\x8B\x01\x8B\x90\x8C\x00\x00\x00\xFF\xD2\x84\xC0\x75\x09\x83\x3D\x2A\x2A\x2A\x2A\x00\x7E\x03\xB0\x01\xC3"
+				"linux"         "@_Z16PhysIsInCallbackv"
 			}
 			"HandleCommand_JoinClass"
 			{
-				"library"		"server"
-				"windows"		"\xA1\x2A\x2A\x2A\x2A\x83\xEC\x0C\x83\xB8\x2A\x03\x00\x00\x08\x56"
-				"linux"			"@_ZN9CTFPlayer23HandleCommand_JoinClassEPKcb"
+				"library"               "server"
+				"windows"               "\xA1\x2A\x2A\x2A\x2A\x83\xEC\x0C\x83\xB8\x2A\x03\x00\x00\x08\x56"
+				"linux"                 "@_ZN9CTFPlayer23HandleCommand_JoinClassEPKcb"
 			}
 			"Dissolve"
 			{
-				"library"		"server"
-				"windows"		"\x83\xEC\x0C\x80\x7C\x24\x18\x00\x56"
-				"linux"			"@_ZN14CBaseAnimating8DissolveEPKcfbi6Vectori"
+				"library"               "server"
+				"windows"               "\x83\xEC\x0C\x80\x7C\x24\x18\x00\x56"
+				"linux"                 "@_ZN14CBaseAnimating8DissolveEPKcfbi6Vectori"
 			}
 		}
 	}
