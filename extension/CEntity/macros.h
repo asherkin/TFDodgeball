@@ -449,8 +449,10 @@ void type::name params \
 void type::Internal##name params \
 { \
 	type *pEnt = (type *)CEntity::Instance((CBaseEntity *)this); \
-	assert(pEnt); \
-	pEnt->name paramscall; \
+	if (pEnt) \
+		pEnt->name paramscall; \
+	else \
+		DETOUR_MEMBER_CALL(name) paramscall; \
 } \
 void (type::* type::name##_Actual) params = NULL; \
 
@@ -462,8 +464,10 @@ ret type::name params \
 ret type::Internal##name params \
 { \
 	type *pEnt = (type *)CEntity::Instance((CBaseEntity *)this); \
-	assert(pEnt); \
-	return pEnt->name paramscall; \
+	if (pEnt) \
+		return pEnt->name paramscall; \
+	else \
+		DETOUR_MEMBER_CALL(name) paramscall; \
 } \
 ret (type::* type::name##_Actual) params = NULL;
 
