@@ -88,6 +88,11 @@ bool TFDodgeball::SDK_OnLoad(char *error, size_t maxlength, bool late)
 	return true;
 }
 
+void TFDodgeball::SDK_OnUnload()
+{
+	GetEntityManager()->Shutdown();
+}
+
 bool TFDodgeball::SDK_OnMetamodLoad(ISmmAPI *ismm, char *error, size_t maxlen, bool late)
 {
 	GET_V_IFACE_CURRENT(GetServerFactory, gameents, IServerGameEnts, INTERFACEVERSION_SERVERGAMEENTS);
