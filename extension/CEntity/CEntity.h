@@ -139,8 +139,6 @@ class CEntity // : public CBaseEntity  - almost.
 {
 public: // CEntity
 	DECLARE_CLASS_NOBASE(CEntity);
-	DECLARE_DATADESC();
-	DECLARE_DEFAULTHEADER(GetDataDescMap, datamap_t *, ());
 
 	virtual void Init(edict_t *pEdict, CBaseEntity *pBaseEntity);
 	void InitHooks();

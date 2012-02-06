@@ -37,7 +37,6 @@ SH_DECL_MANUALHOOK0_void(Spawn, 0, 0, 0);
 SH_DECL_MANUALHOOK1(OnTakeDamage, 0, 0, 0, int, CEntityTakeDamageInfo &);
 SH_DECL_MANUALHOOK0_void(Think, 0, 0, 0);
 SH_DECL_MANUALHOOK5(AcceptInput, 0, 0, 0, bool, const char *, CBaseEntity *, CBaseEntity *, variant_t, int);
-SH_DECL_MANUALHOOK0(GetDataDescMap, 0, 0, 0, datamap_t *);
 SH_DECL_MANUALHOOK1_void(StartTouch, 0, 0, 0, CBaseEntity *);
 SH_DECL_MANUALHOOK1_void(Touch, 0, 0, 0, CBaseEntity *);
 SH_DECL_MANUALHOOK1_void(EndTouch, 0, 0, 0, CBaseEntity *);
@@ -52,7 +51,6 @@ DECLARE_HOOK(Spawn, CEntity);
 DECLARE_HOOK(OnTakeDamage, CEntity);
 DECLARE_HOOK(Think, CEntity);
 DECLARE_HOOK(AcceptInput, CEntity);
-DECLARE_HOOK(GetDataDescMap, CEntity);
 DECLARE_HOOK(StartTouch, CEntity);
 DECLARE_HOOK(Touch, CEntity);
 DECLARE_HOOK(EndTouch, CEntity);
@@ -85,39 +83,7 @@ DEFINE_PROP(m_MoveType, CEntity);
 DEFINE_PROP(m_MoveCollide, CEntity);
 DEFINE_PROP(m_iName, CEntity);
 
-/* Hacked Datamap declaration to fallback to the corresponding real entities one */
-datamap_t CEntity::m_DataMap = { 0, 0, "CEntity", NULL };
-//DECLARE_DEFAULTHANDLER(CEntity, GetDataDescMap, datamap_t *, (), ());
-datamap_t *CEntity::GetBaseMap() { return NULL; }
-BEGIN_DATADESC_GUTS(CEntity)
-END_DATADESC()
-
 PhysIsInCallbackFuncType PhysIsInCallback;
-
-datamap_t* CEntity::GetDataDescMap()
-{
-	if (!m_bInGetDataDescMap)
-		return SH_MCALL(BaseEntity(), GetDataDescMap)();
-
-	SET_META_RESULT(MRES_IGNORED);
-	SH_GLOB_SHPTR->DoRecall();
-	SourceHook::EmptyClass *thisptr = reinterpret_cast<SourceHook::EmptyClass*>(SH_GLOB_SHPTR->GetIfacePtr());
-	RETURN_META_VALUE(MRES_SUPERCEDE, (thisptr->*(__SoureceHook_FHM_GetRecallMFPGetDataDescMap(thisptr)))());
-}
-
-datamap_t* CEntity::InternalGetDataDescMap()
-{
-	SET_META_RESULT(MRES_SUPERCEDE);
-	CEntity *pEnt = (CEntity *)CEntity::Instance(META_IFACEPTR(CBaseEntity));
-	if (!pEnt)
-		RETURN_META_VALUE(MRES_IGNORED, (datamap_t *)0);
-	int index = pEnt->entindex();
-	pEnt->m_bInGetDataDescMap = true;
-	datamap_t* retvalue = pEnt->GetDataDescMap();
-	if (pEnt == CEntity::Instance(index))
-		pEnt->m_bInGetDataDescMap = false;
-	return retvalue;
-}
 
 LINK_ENTITY_TO_INTERNAL_CLASS(CBaseEntity, CEntity);
 

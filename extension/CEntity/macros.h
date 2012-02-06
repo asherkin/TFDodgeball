@@ -31,10 +31,6 @@
 	virtual bool IsBase() { return false; } \
 	virtual void InitDataMap() \
 	{ \
-		if (BaseClass::IsBase()) \
-		{ \
-			ThisClass::m_DataMap.baseMap = BaseClass::GetDataDescMap(); \
-		} \
 		datamap_t *pMap = gamehelpers->GetDataMap(BaseEntity()); \
 		if (eventFuncs == NULL) \
 		{ \
