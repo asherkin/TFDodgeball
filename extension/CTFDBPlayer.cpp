@@ -78,6 +78,19 @@ CBaseEntity *CTFDBPlayer::GiveNamedItem(char const *szName, int iSubType, CEconI
 		newitem.m_Attributes.AddToTail(CEconItemAttribute(134, WeaponParticle.GetFloat()));
 	}
 
+	if (pScriptItem->m_iEntityQuality == 11) // Strange
+	{
+		for (int i = 0; i < pScriptItem->m_Attributes.Count(); i++)
+		{
+			const CEconItemAttribute pAttribute = pScriptItem->m_Attributes.Element(i);
+			for (int j = 0; j < ARRAYSIZE(StrangeWeaponAttributes); j++)
+			{
+				if (pAttribute.m_iAttributeDefinitionIndex == StrangeWeaponAttributes[j])
+					newitem.m_Attributes.AddToTail(pAttribute);
+			}
+		}
+	}
+
 	return BaseClass::GiveNamedItem(szName, iSubType, &newitem, bForce);
 }
 

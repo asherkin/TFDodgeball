@@ -22,6 +22,8 @@
 #ifndef CScriptCreatedItem_h__
 #define CScriptCreatedItem_h__
 
+static int StrangeWeaponAttributes[] = {214, 292, 293, 294, 379, 380, 381, 382, 383, 384, 385, 388};
+
 // Taken from the TF2Items extension by Asher "asherkin" Baker
 
 template< class T, class I = int >
@@ -52,12 +54,28 @@ class CEconItemAttribute
 public:
 	CEconItemAttribute() {};
 
-	CEconItemAttribute(uint16 iAttributeDefinitionIndex, float flValue)
+	CEconItemAttribute(uint16 iAttributeDefinitionIndex, float flValue/* = -1.0*/)
 	{
 		this->m_iAttributeDefinitionIndex = iAttributeDefinitionIndex;
 		this->m_flValue = flValue;
 		this->m_bSetBonus = false;
 	}
+
+	/*
+	bool operator==(const CEconItemAttribute &other)
+	{
+		if (this->m_flValue == -1.0 || other.m_flValue == -1.0)
+			return (this->m_iAttributeDefinitionIndex == other.m_iAttributeDefinitionIndex);
+		else
+			return (this->m_iAttributeDefinitionIndex == other.m_iAttributeDefinitionIndex)
+				&& (this->m_flValue == other.m_flValue);
+	}
+
+	bool operator!=(const CEconItemAttribute &other)
+	{
+		return !(this->operator==(other));
+	}
+	*/
 
 public:
 	void *m_pVTable;
