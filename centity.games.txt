@@ -179,7 +179,7 @@
 			"FireOutput"
 			{
 				"library"       "server"
-				"windows"       "\x81\xEC\x2A\x2A\x00\x00\x53\x55\x56\x8B\x71\x14\x85\xF6"
+				"windows"       "\x55\x8B\xEC\x81\xEC\x20\x01\x00\x00\x53\x56\x8B\x71\x14"
 				"linux"         "@_ZN17CBaseEntityOutput10FireOutputE9variant_tP11CBaseEntityS2_f"
 			}
 			"PhysIsInCallback"
@@ -191,13 +191,13 @@
 			"HandleCommand_JoinClass"
 			{
 				"library"               "server"
-				"windows"               "\xA1\x2A\x2A\x2A\x2A\x83\xEC\x0C\x83\xB8\x2A\x03\x00\x00\x08\x56"
+				"windows"               "\x55\x8B\xEC\xA1\x2A\x2A\x2A\x2A\x83\xEC\x0C\x83\xB8\x38\x03\x00\x00\x08"
 				"linux"                 "@_ZN9CTFPlayer23HandleCommand_JoinClassEPKcb"
 			}
 			"Dissolve"
 			{
 				"library"               "server"
-				"windows"               "\x83\xEC\x0C\x80\x7C\x24\x18\x00\x56"
+				"windows"               "\x55\x8B\xEC\x83\xEC\x0C\x80\x7D\x10\x00\x56"
 				"linux"                 "@_ZN14CBaseAnimating8DissolveEPKcfbi6Vectori"
 			}
 		}
