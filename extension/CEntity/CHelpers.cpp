@@ -192,18 +192,18 @@ void CHelpers::EmitSoundToClient(CPlayer *pPlayer,
 }
 
 void CHelpers::EmitSoundToAll(const char *szPath,
-						int entity = SOUND_FROM_WORLD,
-						int channel = SNDCHAN_AUTO,
-						int level = SNDLEVEL_NORMAL,
-						int flags = SND_NOFLAGS,
-						float volume = SNDVOL_NORMAL,
-						int pitch = SNDPITCH_NORMAL,
-						int speakerentity = -1,
-						const Vector *vecOrigin = NULL,
-						const Vector *vecDirection = NULL,
-						bool updatePos = TRUE,
-						float soundtime = 0.0,
-						int specialdsp = 0)
+						int entity,
+						int channel,
+						int level,
+						int flags,
+						float volume,
+						int pitch,
+						int speakerentity,
+						const Vector *vecOrigin,
+						const Vector *vecDirection,
+						bool updatePos,
+						float soundtime,
+						int specialdsp)
 {
 	CRecipientFilter filter;
 	filter.AddAllPlayers();
