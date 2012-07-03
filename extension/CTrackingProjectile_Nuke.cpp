@@ -55,7 +55,7 @@ void CTrackingProjectile_Nuke::Spawn(void)
 			}
 		}
 
-		m_lastTeam = GetTeamNumber();
+		m_iLastTeam = GetTeamNumber();
 		//*m_iDeflected = 1;
 
 		if (!GetOwner())
@@ -79,7 +79,7 @@ float CTrackingProjectile_Nuke::GetRadius()
 
 void CTrackingProjectile_Nuke::FindThink(void)
 {
-	CEntity *pBestVictim = NULL;
+	CPlayer *pBestVictim = NULL;
 	float flBestVictim = MAX_TRACE_LENGTH;
 	float flVictimDist;
 
@@ -92,14 +92,14 @@ void CTrackingProjectile_Nuke::FindThink(void)
 
 	for (int index = 1; index <= gpGlobals->maxClients; index++)
 	{
-		CEntity *pEntity = CEntity::Instance(index);
+		CPlayer *pPlayer = static_cast<CPlayer *>(CEntity::Instance(index));
 
-		if (!IsValidTarget(pEntity))
+		if (!IsValidTarget(pPlayer))
 		{
 			continue;
 		}
 
-		flVictimDist = (GetLocalOrigin() - pEntity->GetLocalOrigin()).Length();
+		flVictimDist = (GetLocalOrigin() - pPlayer->GetLocalOrigin()).Length();
 
 		if (flVictimDist < 64.0)
 			continue;
@@ -107,7 +107,7 @@ void CTrackingProjectile_Nuke::FindThink(void)
 		//Find closest
 		if (flVictimDist < flBestVictim)
 		{
-			pBestVictim = pEntity;
+			pBestVictim = pPlayer;
 			flBestVictim = flVictimDist;
 		}
 	}
@@ -122,16 +122,16 @@ void CTrackingProjectile_Nuke::FindThink(void)
 	//TurnToTarget(pBestVictim);
 
 	if (NukeBeepOnTarget.GetBool())
-		pHelpers->EmitSoundToClient(static_cast<CPlayer *>(pBestVictim), "weapons/det_pack_timer.wav");
+		pHelpers->EmitSoundToClient(pBestVictim, "weapons/det_pack_timer.wav");
 
-	m_currentTarget = pBestVictim->entindex();
+	m_pCurrentTarget = pBestVictim;
 	SetThink(&CTrackingProjectile_Nuke::TrackThink);
 	SetNextThink(gpGlobals->curtime);
 }
 
 void CTrackingProjectile_Nuke::TrackThink(void)
 {
-	if (m_lastTeam != GetTeamNumber())
+	if (m_iLastTeam != GetTeamNumber())
 	{
 		//g_pSM->LogMessage(myself, "Rocket Airblasted!");
 
@@ -145,14 +145,14 @@ void CTrackingProjectile_Nuke::TrackThink(void)
 			}
 		}
 
-		m_lastTeam = GetTeamNumber();
+		m_iLastTeam = GetTeamNumber();
 
 		SetThink(&CTrackingProjectile_Nuke::FindThink);
 		SetNextThink(gpGlobals->curtime + 10.0);
 		return;
 	}
 
-	CEntity *pVictim = CEntity::Instance(m_currentTarget);
+	CPlayer *pVictim = m_pCurrentTarget;
 
 	if (!IsValidTarget(pVictim))
 	{
@@ -166,19 +166,12 @@ void CTrackingProjectile_Nuke::TrackThink(void)
 	TurnToTarget(pVictim);
 }
 
-bool CTrackingProjectile_Nuke::IsValidTarget(CEntity *pEntity)
+bool CTrackingProjectile_Nuke::IsValidTarget(CPlayer *pPlayer)
 {
-	if(!pEntity)
+	if(!pPlayer)
 	{
 		return false;
 	}
-
-	if(!pEntity->IsPlayer())
-	{
-		return false;
-	}
-
-	CPlayer *pPlayer = static_cast<CPlayer *>(pEntity);
 
 	if(!pPlayer->IsAlive())
 	{
@@ -200,12 +193,12 @@ bool CTrackingProjectile_Nuke::IsValidTarget(CEntity *pEntity)
 		}
 	}
 
-	if (pEntity->GetTeamNumber() == GetTeamNumber())
+	if (pPlayer->GetTeamNumber() == GetTeamNumber())
 	{
 		return false;
 	}
 
-	if (!FVisible(pEntity->BaseEntity(), MASK_SOLID, NULL))
+	if (!FVisible(pPlayer->BaseEntity(), MASK_SOLID, NULL))
 	{
 			return false;
 	}
@@ -237,7 +230,7 @@ void CTrackingProjectile_Nuke::TurnToTarget(CEntity *pEntity)
 }
 #endif
 
-void CTrackingProjectile_Nuke::TurnToTarget(CEntity *pEntity)
+void CTrackingProjectile_Nuke::TurnToTarget(CPlayer *pPlayer)
 {
 	// Retrieve rocket info.
 	Vector fRocketPosition = GetLocalOrigin();
@@ -250,7 +243,7 @@ void CTrackingProjectile_Nuke::TurnToTarget(CEntity *pEntity)
 	fRocketOrientation.NormalizeInPlace();
 
 	// Retrieve client position and calculate new orientation.
-	Vector fOrientation = pEntity->GetLocalOrigin();
+	Vector fOrientation = pPlayer->GetLocalOrigin();
 	fOrientation[0] -= fRocketPosition[0];
 	fOrientation[1] -= fRocketPosition[1];
 	fOrientation[2] -= fRocketPosition[2] - 50.0;

@@ -17,8 +17,8 @@ public:
 public:
 	virtual void TrackThink(void);
 	virtual void FindThink(void);
-	bool IsValidTarget(CEntity *pEntity);
-	void TurnToTarget(CEntity *pEntity);
+	bool IsValidTarget(CPlayer *pEntity);
+	void TurnToTarget(CPlayer *pEntity);
 
 	bool IsCritical(void);
 	void SetCritical(bool bCritical);
@@ -30,8 +30,8 @@ public: //Autohandlers
 	DECLARE_DEFAULTHEADER(FVisible, bool, (CBaseEntity *pEntity, int traceMask, CBaseEntity **ppBlocker));
 
 private:
-	int m_currentTarget;
-	int m_lastTeam;
+	CPlayer *m_pCurrentTarget;
+	int m_iLastTeam;
 	bool m_bDodgeballRocket;
 
 protected:
