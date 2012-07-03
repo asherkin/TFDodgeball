@@ -54,7 +54,6 @@ new bool:g_config_bCheckMap;
 
 new g_iRocketCount;
 new g_iRocketCount_Nuke;
-new bool:g_bMapRoaded;
 new bool:g_bOriginallyEnabled;
 
 new currentlauncherIndex_Red = -1;
@@ -119,8 +118,6 @@ public OnClientPutInServer(client) {
 
 public OnMapStart()
 {
-	g_bMapRoaded = true;
-	
 	PrecacheModel(NUKE_MODEL);
 	PrecacheSound(NUKE_SOUND);
 	
@@ -138,8 +135,6 @@ public OnMapStart()
 
 public OnMapEnd()
 {
-	g_bMapRoaded = false;
-	
 	currentlauncherIndex_Red = -1;
 	currentlauncherIndex_Blue = -1;
 	
