@@ -9,6 +9,11 @@
 				"windows"       "9"
 				"linux"         "10"
 			}
+			"GetDataDescMap"
+			{
+				"windows"       "11"
+				"linux"         "12"
+			}
 			"Spawn"
 			{
 				"windows"       "22"
