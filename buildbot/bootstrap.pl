@@ -25,51 +25,27 @@ print "Attempting to reconfigure...\n";
 
 #update and configure shiz
 if ($^O eq "linux") {
-	my @sdks = ('sourcemod-1.3', 'mmsource-1.8', 'hl2sdk-ob-valve');
-	my ($sdk);
-	foreach $sdk (@sdks) {
-		print "Updating checkout of ", $sdk, " on ", $^O, "\n";
-		$result = `hg pull -u /home/builds/common/$sdk`;
-		print $result;
-	}
-	
-	$ENV{'SOURCEMOD13'} = '/home/builds/common/sourcemod-1.3';
+	$ENV{'SOURCEMOD14'} = '/home/builds/common/sourcemod-1.4';
 	$ENV{'MMSOURCE18'} = '/home/builds/common/mmsource-1.8';
 	
 	$ENV{'HL2SDKOBVALVE'} = '/home/builds/common/hl2sdk-ob-valve';
 } elsif ($^O eq "darwin") {
-	my @sdks = ('sourcemod-1.3', 'mmsource-1.8', 'hl2sdk-ob-valve');
-	my ($sdk);
-	foreach $sdk (@sdks) {
-		print "Updating checkout of ", $sdk, " on ", $^O, "\n";
-		$result = `hg pull -u /Users/builds/builds/common/$sdk`;
-		print $result;
-	}
+	$ENV{'SOURCEMOD14'} = '/Users/builds/slaves/common/sourcemod-1.4';
+	$ENV{'MMSOURCE18'} = '/Users/builds/slaves/common/mmsource-1.8';
 	
-	$ENV{'SOURCEMOD13'} = '/Users/builds/builds/common/sourcemod-1.3';
-	$ENV{'MMSOURCE18'} = '/Users/builds/builds/common/mmsource-1.8';
-	
-	$ENV{'HL2SDKOBVALVE'} = '/Users/builds/builds/common/hl2sdk-ob-valve';
+	$ENV{'HL2SDKOBVALVE'} = '/Users/builds/slaves/common/hl2sdk-ob-valve';
 } else {
-	my @sdks = ('sourcemod-1.3', 'mmsource-1.8', 'hl2sdk-ob-valve');
-	my ($sdk);
-	foreach $sdk (@sdks) {
-		print "Updating checkout of ", $sdk, " on ", $^O, "\n";
-		$result = `hg pull -u C:/Scripts/common/$sdk`;
-		print $result;
-	}
-	
-	$ENV{'SOURCEMOD13'} = 'C:/Scripts/common/sourcemod-1.3';
+	$ENV{'SOURCEMOD14'} = 'C:/Scripts/common/sourcemod-1.4';
 	$ENV{'MMSOURCE18'} = 'C:/Scripts/common/mmsource-1.8';
 	
-	$ENV{'HL2SDKOBVALVE'} = 'C:/Scripts/common/hl2sdk-ob-valve';
+	#$ENV{'HL2SDKOBVALVE'} = 'H:/hl2sdk-ob-valve';
 }
 
 #configure AMBuild
 if ($^O eq "linux") {
-	$result = `CC=gcc-4.1 CXX=gcc-4.1 python3.1 ../build/configure.py --enable-optimize`;
+	$result = `CC=gcc CXX=gcc python3 ../build/configure.py --enable-optimize`;
 } elsif ($^O eq "darwin") {
-	$result = `CC=gcc-4.2 CXX=gcc-4.2 python3.1 ../build/configure.py --enable-optimize`;
+	$result = `CC=clang CXX=clang python3 ../build/configure.py --enable-optimize`;
 } else {
 	$result = `C:\\Python31\\Python.exe ..\\build\\configure.py --enable-optimize`;
 }
