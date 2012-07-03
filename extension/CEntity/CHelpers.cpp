@@ -162,27 +162,6 @@ void CHelpers::EmitAmbientSound(const char *szPath, const Vector pos, int entity
 	engine->EmitAmbientSound(entity, pos, szPath, volume, (soundlevel_t)level, SND_NOFLAGS, pitch, delay);
 }
 
-/*
-void CHelpers::EmitSound(const int clients[],
-						unsigned int numClients,
-						const char *szPath,
-						int entity = SOUND_FROM_PLAYER,
-						int channel = SNDCHAN_AUTO,
-						int level = SNDLEVEL_NORMAL,
-						int flags = SND_NOFLAGS,
-						float volume = SNDVOL_NORMAL,
-						int pitch = SNDPITCH_NORMAL,
-						int speakerentity = -1,
-						const Vector vecOrigin = NULL,
-						const Vector vecDirection = NULL,
-						bool updatePos = true,
-						float soundtime = 0.0)
-{
-	CPASAttenuationFilter filter(
-	engsound->EmitSound(crf, entity, channel, szPath, volume, (soundlevel_t)level, flags, pitch, vecOrigin, vecDirection, _, updatePos, soundtime, speakerentity);
-}
-*/
-
 void CHelpers::EmitSoundToClient(CPlayer *pPlayer,
 						const char *szPath,
 						int entity,
@@ -195,7 +174,8 @@ void CHelpers::EmitSoundToClient(CPlayer *pPlayer,
 						const Vector *vecOrigin,
 						const Vector *vecDirection,
 						bool updatePos,
-						float soundtime)
+						float soundtime,
+						int specialdsp)
 {
 	CRecipientFilter filter;
 	filter.AddRecipient(pPlayer);
@@ -203,11 +183,11 @@ void CHelpers::EmitSoundToClient(CPlayer *pPlayer,
 	if(entity == SOUND_FROM_LOCAL_PLAYER)
 	{
 		int client = pPlayer->entindex();
-		engsound->EmitSound(filter, client, channel, szPath, volume, (soundlevel_t)level, flags, pitch, vecOrigin, vecDirection, NULL, updatePos, soundtime, speakerentity);
+		engsound->EmitSound(filter, client, channel, szPath, volume, (soundlevel_t)level, flags, pitch, specialdsp, vecOrigin, vecDirection, NULL, updatePos, soundtime, speakerentity);
 	}
 	else
 	{
-		engsound->EmitSound(filter, entity, channel, szPath, volume, (soundlevel_t)level, flags, pitch, vecOrigin, vecDirection, NULL, updatePos, soundtime, speakerentity);
+		engsound->EmitSound(filter, entity, channel, szPath, volume, (soundlevel_t)level, flags, pitch, specialdsp, vecOrigin, vecDirection, NULL, updatePos, soundtime, speakerentity);
 	}
 }
 
@@ -222,12 +202,13 @@ void CHelpers::EmitSoundToAll(const char *szPath,
 						const Vector *vecOrigin = NULL,
 						const Vector *vecDirection = NULL,
 						bool updatePos = TRUE,
-						float soundtime = 0.0)
+						float soundtime = 0.0,
+						int specialdsp = 0)
 {
 	CRecipientFilter filter;
 	filter.AddAllPlayers();
 
-	engsound->EmitSound(filter, entity, channel, szPath, volume, (soundlevel_t)level, flags, pitch, vecOrigin, vecDirection, NULL, updatePos, soundtime, speakerentity);
+	engsound->EmitSound(filter, entity, channel, szPath, volume, (soundlevel_t)level, flags, pitch, specialdsp, vecOrigin, vecDirection, NULL, updatePos, soundtime, speakerentity);
 }
 
 //==========================================================================================

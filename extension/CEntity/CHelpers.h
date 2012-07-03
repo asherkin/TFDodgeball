@@ -125,16 +125,13 @@ public: //Sound functions
 									float volume = SNDVOL_NORMAL,
 									int pitch = SNDPITCH_NORMAL,
 									float delay = 0.0);
-	//void EmitSound(const int clients[], unsigned int numClients, const char *szPath, int entity, int channel,
-							//int level, int flags, float volume, int pitch, int speakerentity,
-							//const Vector vecOrigin, const Vector vecDirection, bool updatePos, float soundtime);
 	void EmitSoundToClient(CPlayer *pPlayer, const char *szPath, int entity = SOUND_FROM_LOCAL_PLAYER, int channel = SNDCHAN_AUTO,
 							int level = SNDLEVEL_NORMAL, int flags = SND_NOFLAGS, float volume = SNDVOL_NORMAL,
 							int pitch = SNDPITCH_NORMAL, int speakerentity = -1, const Vector *vecOrigin = NULL,
-							const Vector *vecDirection = NULL, bool updatePos = true, float soundtime = 0.0);
+							const Vector *vecDirection = NULL, bool updatePos = true, float soundtime = 0.0, int specialdsp = 0);
 	void EmitSoundToAll(const char *szPath, int entity, int channel, int level,
 							int flags, float volume, int pitch, int speakerentity, const Vector *vecOrigin,
-							const Vector *vecDirection, bool updatePos, float soundtime);
+							const Vector *vecDirection, bool updatePos, float soundtime, int specialdsp = 0);
 
 public: //traceray functions
 	tr_contents *TR_TraceRayFilter(const Vector origin, const QAngle angles, int flags, RayType rtype, CPlayer *pPlayer);
