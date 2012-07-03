@@ -61,8 +61,8 @@
 			}
 			"FVisible"
 			{
-				"windows"       "140"
-				"linux"         "140"
+				"windows"       "141"
+				"linux"         "141"
 			}
 			"GetSoundEmissionOrigin"
 			{
