@@ -14,7 +14,7 @@
 #define PROJECTILE_ROCKET 1
 #define PROJECTILE_ROCKET_SENTRY 2
 
-#define CONVAR_COUNT 14
+#define CONVAR_COUNT 12
 
 #define MAX_FAILED_LAUNCHER_SEARCHES 2
 
@@ -49,8 +49,6 @@ new bool:g_config_bSpawnCriticals;
 new Float:g_config_flSpeedMul;
 new Float:g_config_flSpeedMul_Nuke;
 new bool:g_config_bAutoJoin;
-new bool:g_config_bGameDesc;
-new bool:g_config_bManiFix;
 new Float:g_config_flNukeChance;
 new bool:g_config_bCheckMap;
 
@@ -80,10 +78,8 @@ public OnPluginStart()
 	g_hConVars[7] = FindConVar("sm_dodgeball_speedmul");
 	g_hConVars[8] = FindConVar("sm_dodgeball_speedmul_nuke");
 	g_hConVars[9] = CreateConVar("sm_dodgeball_autojoin", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_hConVars[10] = CreateConVar("sm_dodgeball_gamedesc", "1", "", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_hConVars[11] = CreateConVar("sm_dodgeball_gamedesc_manifix", "0", "", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_hConVars[12] = CreateConVar("sm_dodgeball_nuke_chance", "0.01", "", FCVAR_NONE, true, 0.0, true, 1.0);
-	g_hConVars[13] = CreateConVar("sm_dodgeball_check_map", "0", "", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hConVars[10] = CreateConVar("sm_dodgeball_nuke_chance", "0.01", "", FCVAR_NONE, true, 0.0, true, 1.0);
+	g_hConVars[11] = CreateConVar("sm_dodgeball_check_map", "0", "", FCVAR_NONE, true, 0.0, true, 1.0);
 	
 	g_config_bEnabled = true;
 	g_config_iMaxRockets = 10;
@@ -94,8 +90,6 @@ public OnPluginStart()
 	g_config_flSpeedMul = 0.5;
 	g_config_flSpeedMul_Nuke = 0.5;
 	g_config_bAutoJoin = true;
-	g_config_bGameDesc = true;
-	g_config_bManiFix = false;
 	g_config_flNukeChance = 0.1;
 	g_config_bCheckMap = false;
 	
@@ -109,10 +103,8 @@ public OnPluginStart()
 	HookConVarChange(g_hConVars[7], config_flSpeedMul_changed);
 	HookConVarChange(g_hConVars[8], config_flSpeedMul_Nuke_changed);
 	HookConVarChange(g_hConVars[9], config_bAutoJoin_changed);
-	HookConVarChange(g_hConVars[10], config_bGameDesc_changed);
-	HookConVarChange(g_hConVars[11], config_bManiFix_changed);
-	HookConVarChange(g_hConVars[12], config_flNukeChance_changed);
-	HookConVarChange(g_hConVars[13], config_bCheckMap_changed);
+	HookConVarChange(g_hConVars[10], config_flNukeChance_changed);
+	HookConVarChange(g_hConVars[11], config_bCheckMap_changed);
 	
 	HookEvent("teamplay_round_start", Event_TeamplayRoundStart);
 	HookEvent("teamplay_setup_finished", Event_TeamplaySetupFinished);
@@ -157,17 +149,6 @@ public OnMapEnd()
 	}
 }
 
-public Action:OnGetGameDescription(String:gameDesc[64])
-{
-	if (g_config_bEnabled && g_config_bGameDesc && (g_bMapRoaded || !g_config_bManiFix))
-	{
-		strcopy(gameDesc, sizeof(gameDesc), "TFDodgeball");
-		return Plugin_Changed;
-	}
-	
-	return Plugin_Continue;
-}
-
 public Event_TeamplayRoundStart(Handle:event, const String:name[], bool:dontBroadcast) {
 	new bool:full = GetEventBool(event, "full_reset");
 	if (!full)
@@ -193,8 +174,6 @@ public config_bSpawnCriticals_changed(Handle:convar, const String:oldValue[], co
 public config_flSpeedMul_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flSpeedMul = StringToFloat(newValue); }
 public config_flSpeedMul_Nuke_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flSpeedMul_Nuke = StringToFloat(newValue); }
 public config_bAutoJoin_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bAutoJoin = bool:StringToInt(newValue); }
-public config_bGameDesc_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bGameDesc = bool:StringToInt(newValue); }
-public config_bManiFix_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bManiFix = bool:StringToInt(newValue); }
 public config_flNukeChance_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_flNukeChance = StringToFloat(newValue); }
 public config_bCheckMap_changed(Handle:convar, const String:oldValue[], const String:newValue[]) { g_config_bCheckMap = bool:StringToInt(newValue); }
 
