@@ -4,165 +4,167 @@
 	{
 		"Offsets"
 		{
-			"FVisible"
-			{
-				"windows"       "140"
-				"linux"         "140"
-			}
-			"Teleport"
-			{
-				"windows"       "106"
-				"linux"         "107"
-			}
-			"Spawn"
-			{
-				"windows"       "21"
-				"linux"         "22"
-			}
-			"UpdateOnRemove"
-			{
-				"windows"       "103"
-				"linux"         "104"
-			}
-			"Think"
-			{
-				"windows"       "46"
-				"linux"         "47"
-			}
-			"OnTakeDamage"
-			{
-				"windows"       "61"
-				"linux"         "62"
-			}
-			"AcceptInput"
-			{
-				"windows"       "35"
-				"linux"         "36"
-			}
-			"PlayerRunCmd"
-			{
-				"windows"       "409"
-				"linux"         "410"
-			}
-			"StartTouch"
-			{
-				"windows"       "96"
-				"linux"         "97"
-			}
-			"Touch"
-			{
-				"windows"       "97"
-				"linux"         "98"
-			}
-			"EndTouch"
-			{
-				"windows"       "98"
-				"linux"         "99"
-			}
-			"VPhysicsTakeDamage"
-			{
-				"windows"       "155"
-				"linux"         "156"
-			}
-			"VPhysicsGetObjectList"
-			{
-				"windows"       "161"
-				"linux"         "162"
-			}
-			"GiveNamedItem"
-			{
-				"windows"       "461"
-				"linux"         "469"
-			}
-			"RemovePlayerItem"
-			{
-				"windows"       "263"
-				"linux"         "264"
-			}
-			"Weapon_GetSlot"
-			{
-				"windows"       "261"
-				"linux"         "262"
-			}
-			"GetClientEyeAngles"
-			{
-				"windows"       "129"
-				"linux"         "130"
-			}
-			"Weapon_Equip"
-			{
-				"windows"       "254"
-				"linux"         "255"
-			}
-			"PreThink"
-			{
-				"windows"       "325"
-				"linux"         "326"
-			}
-			"PostThink"
-			{
-				"windows"       "326"
-				"linux"         "327"
-			}
-			"WeaponSwitch"
-			{
-				"windows"       "257"
-				"linux"         "258"
-			}
-			"CanSpeakVoiceCommand"
-			{
-				"windows"       "449"
-				"linux"         "450"
-			}
-			"IsReadyToSpawn"
-			{
-				"windows"       "424"
-				"linux"         "425"
-			}
-			"OnTakeDamage_Alive"
-			{
-				"windows"       "265"
-				"linux"         "266"
-			}
-			"Jump"
-			{
-				"windows"       "323"
-				"linux"         "324"
-			}
-			"ProcessUserCmds"
-			{
-				"windows"       "408"
-				"linux"         "409"
-			}
-			"GetSoundEmissionOrigin"
-			{
-				"windows"       "148"
-				"linux"         "149"
-			}
 			"GetServerClass"
 			{
 				"windows"       "9"
 				"linux"         "10"
 			}
+			"Spawn"
+			{
+				"windows"       "22"
+				"linux"         "23"
+			}
+			"AcceptInput"
+			{
+				"windows"       "36"
+				"linux"         "37"
+			}
+			"Think"
+			{
+				"windows"       "47"
+				"linux"         "48"
+			}
+			"OnTakeDamage"
+			{
+				"windows"       "62"
+				"linux"         "63"
+			}
+			"StartTouch"
+			{
+				"windows"       "97"
+				"linux"         "98"
+			}
+			"Touch"
+			{
+				"windows"       "98"
+				"linux"         "99"
+			}
+			"EndTouch"
+			{
+				"windows"       "99"
+				"linux"         "100"
+			}
+			"UpdateOnRemove"
+			{
+				"windows"       "104"
+				"linux"         "105"
+			}
+			"Teleport"
+			{
+				"windows"       "107"
+				"linux"         "108"
+			}
+			"GetClientEyeAngles"
+			{
+				"windows"       "130"
+				"linux"         "131"
+			}
+			"FVisible"
+			{
+				"windows"       "140"
+				"linux"         "140"
+			}
+			"GetSoundEmissionOrigin"
+			{
+				"windows"       "149"
+				"linux"         "150"
+			}
+			"VPhysicsTakeDamage"
+			{
+				"windows"       "157"
+				"linux"         "158"
+			}
+			"VPhysicsGetObjectList"
+			{
+				"windows"       "163"
+				"linux"         "164"
+			}
 			"StudioFrameAdvance"
 			{
-				"windows"       "186"
-				"linux"         "187"
+				"windows"       "188"
+				"linux"         "189"
+			}
+			"Weapon_Equip"
+			{
+				"windows"       "256"
+				"linux"         "257"
+			}
+			"WeaponSwitch"
+			{
+				"windows"       "259"
+				"linux"         "260"
+			}
+			"Weapon_GetSlot"
+			{
+				"windows"       "263"
+				"linux"         "264"
+			}
+			"RemovePlayerItem"
+			{
+				"windows"       "265"
+				"linux"         "266"
+			}
+			"OnTakeDamage_Alive"
+			{
+				"windows"       "267"
+				"linux"         "268"
+			}
+			"Jump"
+			{
+				"windows"       "325"
+				"linux"         "326"
+			}
+			"PreThink"
+			{
+				"windows"       "327"
+				"linux"         "328"
+			}
+			"PostThink"
+			{
+				"windows"       "328"
+				"linux"         "329"
+			}
+			"ProcessUserCmds"
+			{
+				"windows"       "410"
+				"linux"         "411"
+			}
+			"PlayerRunCmd"
+			{
+				"windows"       "411"
+				"linux"         "412"
+			}
+			"IsReadyToSpawn"
+			{
+				"windows"       "426"
+				"linux"         "427"
+			}
+			"CanSpeakVoiceCommand"
+			{
+				"windows"       "451"
+				"linux"         "452"
 			}
 			"ShouldGib"
 			{
-				"windows"       "460"
-				"linux"         "461"
+				"windows"       "462"
+				"linux"         "463"
 			}
+			"GiveNamedItem"
+			{
+				"windows"       "464"
+				"linux"         "471"
+			}
+			
 			"GetRadius"
 			{
-				"windows"       "219"
-				"linux"         "220"
+				"windows"       "221"
+				"linux"         "222"
 			}
+			
 			"DeflectPlayer"
 			{
-				"windows"       "381"
-				"linux"         "387"
+				"windows"       "389"
+				"linux"         "396"
 			}
 		}
 	}
