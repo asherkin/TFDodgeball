@@ -463,7 +463,7 @@ ret type::Internal##name params \
 	if (pEnt) \
 		return pEnt->name paramscall; \
 	else \
-		DETOUR_MEMBER_CALL(name) paramscall; \
+		return DETOUR_MEMBER_CALL(name) paramscall; \
 } \
 ret (type::* type::name##_Actual) params = NULL;
 
