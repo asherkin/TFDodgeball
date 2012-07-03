@@ -122,6 +122,7 @@
     <ClCompile Include="..\asm\asm.c" />
     <ClCompile Include="..\CDetour\detours.cpp" />
     <ClCompile Include="..\CEntity\CAnimating.cpp" />
+    <ClCompile Include="..\CEntity\CServerCommand.cpp" />
     <ClCompile Include="..\CEntity\CTFRocket.cpp" />
     <ClCompile Include="..\CEntity\CTFWeaponBase.cpp" />
     <ClCompile Include="..\CTFDBAmmoPack.cpp" />
@@ -129,6 +130,7 @@
     <ClCompile Include="..\CTFDBDissolveField.cpp" />
     <ClCompile Include="..\CTFDBFlameThrower.cpp" />
     <ClCompile Include="..\CTFDBPlayer.cpp" />
+    <ClCompile Include="..\CTFDBServerCommand.cpp" />
     <ClCompile Include="..\CTrackingProjectile.cpp" />
     <ClCompile Include="..\CTrackingProjectile_Nuke.cpp" />
     <ClCompile Include="..\CVisibleNuke.cpp" />
@@ -150,6 +152,7 @@
     <ClInclude Include="..\CDetour\detourhelpers.h" />
     <ClInclude Include="..\CDetour\detours.h" />
     <ClInclude Include="..\CEntity\CAnimating.h" />
+    <ClInclude Include="..\CEntity\CServerCommand.h" />
     <ClInclude Include="..\CEntity\CTFRocket.h" />
     <ClInclude Include="..\CEntity\CTFWeaponBase.h" />
     <ClInclude Include="..\CTFDBAmmoPack.h" />
@@ -157,6 +160,7 @@
     <ClInclude Include="..\CTFDBDissolveField.h" />
     <ClInclude Include="..\CTFDBFlameThrower.h" />
     <ClInclude Include="..\CTFDBPlayer.h" />
+    <ClInclude Include="..\CTFDBServerCommand.h" />
     <ClInclude Include="..\CTrackingProjectile.h" />
     <ClInclude Include="..\CTrackingProjectile_Nuke.h" />
     <ClInclude Include="..\CVisibleNuke.h" />

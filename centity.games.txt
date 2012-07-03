@@ -207,6 +207,12 @@
 				"windows"               "\x55\x8B\xEC\x83\xEC\x0C\x80\x7D\x10\x00\x56"
 				"linux"                 "@_ZN14CBaseAnimating8DissolveEPKcfbi6Vectori"
 			}
+			"InputCommand"
+			{
+				"library"               "server"
+				"windows"               "\x55\x8B\xEC\x56\x8B\x75\x08\x83\xC6\x08\x83\x7E\x10\x02\x75"
+				"linux"                 "@_ZN19CPointServerCommand12InputCommandER11inputdata_t"
+			}
 		}
 	}
 }
