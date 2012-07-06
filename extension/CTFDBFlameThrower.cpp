@@ -10,28 +10,30 @@ ConVar DeflectPlayersDamage("sm_dodgeball_deflect_players_damage", "0.0", FCVAR_
 
 bool CTFDBFlameThrower::DeflectPlayer(CBaseEntity *pTarget, CBaseEntity *pOwner, Vector &vecForward, Vector &vecCenter, Vector &vecSize)
 {
-	if (!DodgeballEnabled.GetBool() || (pTarget && pOwner && (CEntity::Instance(pTarget)->GetTeamNumber() == CEntity::Instance(pOwner)->GetTeamNumber())))
-	{
+	if (!DodgeballEnabled.GetBool() || (!pTarget || !pOwner))
 		return BaseClass::DeflectPlayer(pTarget, pOwner, vecForward, vecCenter, vecSize);
-	} else {
-		if (DeflectPlayersDamage.GetFloat() > 0.0)
-		{
-			CEntityTakeDamageInfo damageInfo;
-			damageInfo.m_hAttacker = pTarget;
-			damageInfo.m_hInflictor = pTarget;
-			damageInfo.m_flDamage = DeflectPlayersDamage.GetFloat();
-			damageInfo.m_bitsDamageType = DMG_GENERIC;
 
-			CEntity::Instance(pOwner)->OnTakeDamage(damageInfo);
-		}
+	CPlayer *pTargetPlayer = static_cast<CPlayer *>(CEntity::Instance(pTarget));
+	CPlayer *pOwnerPlayer = static_cast<CPlayer *>(CEntity::Instance(pOwner));
 
-		if (DeflectPlayers.GetBool())
-		{
-			return BaseClass::DeflectPlayer(pTarget, pOwner, vecForward, vecCenter, vecSize);
-		} else {
-			return false;
-		}
+	if (pTargetPlayer->InSameTeam(pOwnerPlayer))
+		return BaseClass::DeflectPlayer(pTarget, pOwner, vecForward, vecCenter, vecSize);
+
+	if (pTargetPlayer->IsAlive() && DeflectPlayersDamage.GetFloat() > 0.0)
+	{
+		CEntityTakeDamageInfo damageInfo;
+		damageInfo.m_hAttacker = pTarget;
+		damageInfo.m_hInflictor = pTarget;
+		damageInfo.m_flDamage = DeflectPlayersDamage.GetFloat();
+		damageInfo.m_bitsDamageType = DMG_GENERIC;
+
+		pOwnerPlayer->OnTakeDamage(damageInfo);
 	}
+
+	if (!DeflectPlayers.GetBool())
+		return false;
+
+	return BaseClass::DeflectPlayer(pTarget, pOwner, vecForward, vecCenter, vecSize);
 }
 
 
