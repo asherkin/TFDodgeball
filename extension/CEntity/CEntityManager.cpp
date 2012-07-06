@@ -206,6 +206,7 @@ void CEntityManager::HookEntity(IServerNetworkable *pNetworkable, const char *pC
 		g_pSM->LogError(myself, "No handler found for %d/%s", gamehelpers->EntityToBCompatRef(pEnt), pClassName);
 		//PrintTypeTree(pEnt);
 		//_asm int 3;
+		return;
 	}
 
 	IEntityFactory *pFactory = *value;
