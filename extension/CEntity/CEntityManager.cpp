@@ -218,16 +218,28 @@ void CEntityManager::HookEntity(IServerNetworkable *pNetworkable, const char *pC
 	CEntity *pEntity = pFactory->Create(pEdict, pEnt);
 
 	pEntity->ClearFlags();
+
 	pEntity->InitProps();
 
 	if (!pHookedTrie.retrieve(vtable))
 	{
-		pEntity->InitHooks();
 		pEntity->InitDataMap();
+		pEntity->InitHooks();
+
 		pHookedTrie.insert(vtable, true);
 	}
 
-	pEntity->SetClassname(pClassName);
+	// This causes issues with other things reading the classname, 
+	// likely due to not implementing string_t correctly.
+	// 
+	// Just completely ignore for now, this means that custom ents
+	// will have the wrong classname.
+	// 
+	// ^ Scratch that, it broke tfdb_nukeskin
+	// 
+	// Only set it if custom, for now.
+	if (strcmp(pEntity->GetClassname(), pClassName) != 0)
+		pEntity->SetClassname(pClassName);
 }
 
 IServerNetworkable *CEntityManager::Create_Hook(const char *pClassName)
