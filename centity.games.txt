@@ -91,85 +91,85 @@
 			}
 			"Weapon_Equip"
 			{
-				"windows"       "256"
-				"linux"         "257"
+				"windows"       "257"
+				"linux"         "258"
 			}
 			"WeaponSwitch"
 			{
-				"windows"       "259"
-				"linux"         "260"
+				"windows"       "260"
+				"linux"         "261"
 			}
 			"Weapon_GetSlot"
 			{
-				"windows"       "263"
-				"linux"         "264"
+				"windows"       "264"
+				"linux"         "265"
 			}
 			"RemovePlayerItem"
 			{
-				"windows"       "265"
-				"linux"         "266"
+				"windows"       "266"
+				"linux"         "267"
 			}
 			"OnTakeDamage_Alive"
 			{
-				"windows"       "267"
-				"linux"         "268"
+				"windows"       "268"
+				"linux"         "269"
 			}
 			"Jump"
 			{
-				"windows"       "325"
-				"linux"         "326"
+				"windows"       "326"
+				"linux"         "327"
 			}
 			"PreThink"
-			{
-				"windows"       "327"
-				"linux"         "328"
-			}
-			"PostThink"
 			{
 				"windows"       "328"
 				"linux"         "329"
 			}
+			"PostThink"
+			{
+				"windows"       "329"
+				"linux"         "330"
+			}
 			"ProcessUserCmds"
 			{
-				"windows"       "410"
-				"linux"         "411"
+				"windows"       "412"
+				"linux"         "413"
 			}
 			"PlayerRunCmd"
 			{
-				"windows"       "411"
-				"linux"         "412"
+				"windows"       "413"
+				"linux"         "414"
 			}
 			"IsReadyToSpawn"
 			{
-				"windows"       "426"
-				"linux"         "427"
+				"windows"       "428"
+				"linux"         "429"
 			}
 			"CanSpeakVoiceCommand"
 			{
-				"windows"       "451"
-				"linux"         "452"
+				"windows"       "453"
+				"linux"         "454"
 			}
 			"ShouldGib"
 			{
-				"windows"       "462"
-				"linux"         "463"
+				"windows"       "464"
+				"linux"         "465"
 			}
 			"GiveNamedItem"
 			{
-				"windows"       "464"
-				"linux"         "471"
+				"windows"       "466"
+				"linux"         "473"
 			}
 			
 			"GetRadius"
 			{
-				"windows"       "221"
-				"linux"         "222"
+				"windows"       "222"
+				"linux"         "223"
 			}
 			
 			"DeflectPlayer"
 			{
-				"windows"       "389"
-				"linux"         "396"
+				"windows"       "392"
+				"linux"         "399"
 			}
 		}
 	}
@@ -198,7 +198,7 @@
 			"HandleCommand_JoinClass"
 			{
 				"library"               "server"
-				"windows"               "\x55\x8B\xEC\xA1\x2A\x2A\x2A\x2A\x83\xEC\x0C\x83\xB8\x38\x03\x00\x00\x08"
+				"windows"               "\x55\x8B\xEC\xA1\x2A\x2A\x2A\x2A\x83\xEC\x0C\x83\xB8\x44\x03\x00\x00\x08"
 				"linux"                 "@_ZN9CTFPlayer23HandleCommand_JoinClassEPKcb"
 			}
 			"Dissolve"
