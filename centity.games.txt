@@ -198,7 +198,7 @@
 			"HandleCommand_JoinClass"
 			{
 				"library"               "server"
-				"windows"               "\x55\x8B\xEC\xA1\x2A\x2A\x2A\x2A\x83\xEC\x0C\x83\xB8\x44\x03\x00\x00\x08"
+				"windows"               "\x55\x8B\xEC\xA1\x2A\x2A\x2A\x2A\x83\xEC\x0C\x83\xB8\x2A\x2A\x2A\x2A\x2A\x56"
 				"linux"                 "@_ZN9CTFPlayer23HandleCommand_JoinClassEPKcb"
 			}
 			"Dissolve"
@@ -210,7 +210,7 @@
 			"InputCommand"
 			{
 				"library"               "server"
-				"windows"               "\x55\x8B\xEC\x56\x8B\x75\x08\x83\xC6\x08\x83\x7E\x10\x02\x75"
+				"windows"               "\x55\x8B\xEC\x56\x8B\x75\x08\x83\x7E\x18\x02\x75\x09"
 				"linux"                 "@_ZN19CPointServerCommand12InputCommandER11inputdata_t"
 			}
 		}
