@@ -22,5 +22,5 @@ void CTFDBServerCommand::InputCommand(inputdata_t *inputdata)
 	if (V_stristr(inputdata->value.String(), "sm_dodgeball_") == NULL)
 		return BaseClass::InputCommand(inputdata);
 
-	g_pSM->LogError(myself, "Warning: point_servercommand entity tried to execute \"%s\" which contains a TFDB convar.", inputdata->value.String());
+	g_pSM->LogMessage(myself, "Warning: point_servercommand entity tried to execute \"%s\" which contains a TFDB convar.", inputdata->value.String());
 }

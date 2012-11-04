@@ -83,7 +83,7 @@ CBaseEntity *CTFDBPlayer::GiveNamedItem(char const *szName, int iSubType, CEconI
 		for (int i = 0; i < pScriptItem->m_Attributes.Count(); i++)
 		{
 			const CEconItemAttribute pAttribute = pScriptItem->m_Attributes.Element(i);
-			for (int j = 0; j < ARRAYSIZE(StrangeWeaponAttributes); j++)
+			for (size_t j = 0; j < ARRAYSIZE(StrangeWeaponAttributes); j++)
 			{
 				if (pAttribute.m_iAttributeDefinitionIndex == StrangeWeaponAttributes[j])
 					newitem.m_Attributes.AddToTail(pAttribute);
