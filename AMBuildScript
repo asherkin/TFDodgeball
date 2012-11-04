@@ -258,7 +258,7 @@ class SM:
 		workFolder = os.path.join(AMBuild.outputFolder, job.workFolder)
 		src = os.path.join('..', workFolder, binary.binaryFile)
 		if AMBuild.target['platform'] == 'linux':
-			job.AddCommand(ShellCommand('objcopy --only-keep-debug ' + src + ' ' + os.path.basename(src) + '.dbg'))
+			job.AddCommand(ShellCommand('objcopy --only-keep-debug ' + src + ' ' + src + '.dbg'))
 			job.AddCommand(ShellCommand('objcopy --strip-debug ' + src))
 			job.AddCommand(ShellCommand('objcopy --add-gnu-debuglink=' + os.path.basename(src) + '.dbg ' + src))
 		elif AMBuild.target['platform'] == 'darwin':
