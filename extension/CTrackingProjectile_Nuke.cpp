@@ -154,7 +154,7 @@ void CTrackingProjectile_Nuke::TrackThink(void)
 		return;
 	}
 
-	CPlayer *pVictim = static_cast<CPlayer *>(CEntity::Instance(m_pCurrentTarget));
+	CPlayer *pVictim = static_cast<CPlayer *>(CEntity::Instance(m_pCurrentTarget->edict()));
 
 	if (!IsValidTarget(pVictim))
 	{
