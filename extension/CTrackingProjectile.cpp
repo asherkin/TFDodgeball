@@ -123,7 +123,7 @@ void CTrackingProjectile::TrackThink(void)
 		return;
 	}
 
-	CPlayer *pVictim = m_pCurrentTarget;
+	CPlayer *pVictim = static_cast<CPlayer *>(CEntity::Instance(m_pCurrentTarget));
 
 	if (!IsValidTarget(pVictim))
 	{
