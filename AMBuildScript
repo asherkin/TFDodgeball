@@ -343,7 +343,7 @@ class SM:
 				builder.AddObjectFiles(['interfaces_i486.a'])
 	
 	def DefaultHL2Compiler(self, path, sdk, noLink = False, oldMms = '-legacy'):
-		compiler = self.DefaultCompiler(path)
+		compiler = self.DefaultCompiler()
 
 		mms = 'core'
 		if sdk == 'ep1':
