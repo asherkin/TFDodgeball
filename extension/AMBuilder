@@ -7,8 +7,12 @@ for i in SM.sdkInfo:
 		continue
 
 	compiler = SM.DefaultHL2Compiler('extension', i)
+
+	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.sourceFolder, path))
+	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.sourceFolder, path, 'sdk'))
 	
 	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.cache['SOURCEMOD14'], 'public'))
+	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.cache['SOURCEMOD14'], 'extensions'))
 	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.cache['SOURCEMOD14'], 'public', 'sourcepawn'))
 	
 	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.cache['HL2SDKOBVALVE'], 'public'))
@@ -24,12 +28,6 @@ for i in SM.sdkInfo:
 	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.sourceFolder, 'extension', 'CEntity'))
 	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.sourceFolder, 'extension', 'CDetour'))
 	compiler['CXXINCLUDES'].append(os.path.join(AMBuild.sourceFolder, 'extension', 'asm'))
-
-	if compiler.cc.name == 'gcc':
-		compiler['CFLAGS'].append('-Wno-parentheses')
-
-	if i != 'ep1':
-		compiler['CDEFINES'].append('HOOKING_ENABLED')
 
 	name = 'tfdodgeball.ext.' + sdk['ext']
 	extension = AMBuild.AddJob(name)
@@ -70,5 +68,5 @@ for i in SM.sdkInfo:
 	
 	SM.PostSetupHL2Job(extension, binary, i)
 	SM.AutoVersion('extension', binary)
+	SM.ExtractDebugInfo(extension, binary)
 	binary.SendToJob()
-	SM.StripBinary(extension, binary)
