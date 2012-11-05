@@ -41,6 +41,8 @@ if ($^O eq "linux") {
 	#$ENV{'HL2SDKOBVALVE'} = 'H:/hl2sdk-ob-valve';
 }
 
+$ENV{'BREAKPAD_SYMBOL_SERVER'} = 'http://crash.limetech.org/submit-symbols';
+
 #configure AMBuild
 if ($^O eq "linux") {
 	$result = `CC=gcc CXX=gcc python3 ../build/configure.py --enable-optimize`;
