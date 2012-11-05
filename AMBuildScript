@@ -247,7 +247,7 @@ class SM:
 
 		if AMBuild.target['platform'] == 'windows':
 			self.compiler.AddToListVar('RCINCLUDES', os.path.join(AMBuild.sourceFolder, 'extension'))
-		self.mmsPath = AMBuild.cache['MMSOURCE18']
+		self.mmsPath = AMBuild.cache['MMSOURCE19']
 
 	def DefaultCompiler(self):
 		return self.compiler.Clone()
