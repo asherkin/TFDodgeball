@@ -131,33 +131,33 @@
 			}
 			"ProcessUserCmds"
 			{
-				"windows"       "414"
-				"linux"         "415"
-			}
-			"PlayerRunCmd"
-			{
 				"windows"       "415"
 				"linux"         "416"
 			}
+			"PlayerRunCmd"
+			{
+				"windows"       "416"
+				"linux"         "417"
+			}
 			"IsReadyToSpawn"
 			{
-				"windows"       "430"
-				"linux"         "431"
+				"windows"       "431"
+				"linux"         "432"
 			}
 			"CanSpeakVoiceCommand"
 			{
-				"windows"       "455"
-				"linux"         "456"
+				"windows"       "456"
+				"linux"         "457"
 			}
 			"ShouldGib"
 			{
-				"windows"       "466"
-				"linux"         "467"
+				"windows"       "467"
+				"linux"         "468"
 			}
 			"GiveNamedItem"
 			{
-				"windows"       "468"
-				"linux"         "475"
+				"windows"       "469"
+				"linux"         "476"
 			}
 			
 			"GetRadius"
