@@ -1,4 +1,4 @@
-import os, sys
+import re, os, sys
 import subprocess
 
 import zipfile
@@ -29,9 +29,9 @@ def ReleaseVersion():
 		raise Exception('Could not detremine product version')
 	
 	major, minor, release, tag = m.groups()
-	return '.'.join(major, minor, release)
+	return '.'.join([major, minor, release])
 
-filename = '-'.join('tfdodgeball', ReleaseVersion(), 'hg' + HGVersion(), platform)
+filename = '-'.join(['tfdodgeball', ReleaseVersion(), 'hg' + HGVersion(), platform])
 
 debug_build = os.environ.get('is_debug_build', False) == "1"
 
