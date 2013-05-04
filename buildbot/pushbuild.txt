@@ -1,2 +1,3 @@
 DuckDuckDuck
 AMBuild hath failed me.
+It helps if you install buildbot when testing buildbot.
