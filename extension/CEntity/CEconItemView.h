@@ -58,7 +58,7 @@ public:
 	{
 		this->m_iAttributeDefinitionIndex = iAttributeDefinitionIndex;
 		this->m_flValue = flValue;
-		this->m_flInitialValue = flValue;
+		this->m_nRefundableCurrency = 0;
 	}
 
 	/*
@@ -82,7 +82,7 @@ public:
 
 	uint16 m_iAttributeDefinitionIndex;
 	float m_flValue;
-	float m_flInitialValue;
+	int32 m_nRefundableCurrency;
 };
 
 class CEconItemView
