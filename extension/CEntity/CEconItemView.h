@@ -22,8 +22,6 @@
 #ifndef CScriptCreatedItem_h__
 #define CScriptCreatedItem_h__
 
-static int StrangeWeaponAttributes[] = {214, 292, 293, 294, 379, 380, 381, 382, 383, 384, 385, 388};
-
 // Taken from the TF2Items extension by Asher "asherkin" Baker
 
 template< class T, class I = int >
@@ -107,5 +105,7 @@ public:
 	void *m_pVTable_Attributes;
 	CUtlVector<CEconItemAttribute, CUtlMemoryTF2Items<CEconItemAttribute> > m_Attributes;
 	void *m_pAttributeManager;
+	
+	bool m_bDoNotIterateStaticAttributes;
 };
 #endif // CScriptCreatedItem_h__

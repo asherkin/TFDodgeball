@@ -23,7 +23,16 @@ void CTFDBPlayer::HandleCommand_JoinClass(const char *pClass, bool bAllowSpawn)
 
 int CTFDBPlayer::OnTakeDamage(CEntityTakeDamageInfo &info)
 {
-	if (!DodgeballEnabled.GetBool() || !DissolveOverride.GetBool() || (!DissolvePlayers.GetBool() && (info.m_bitsDamageType & DMG_ACID) != 0))
+	if (!DodgeballEnabled.GetBool())
+		return BaseClass::OnTakeDamage(info);
+	
+	if ((info.m_bitsDamageType & DMG_BURN) != 0) {
+		info.m_flDamage = 0.0f;
+		info.m_flMaxDamage = 0.0f;
+		info.m_flBaseDamage = 0.0f;
+	}
+	
+	if (!DissolveOverride.GetBool() || (!DissolvePlayers.GetBool() && (info.m_bitsDamageType & DMG_ACID) != 0))
 		return BaseClass::OnTakeDamage(info);
 
 	int ret = BaseClass::OnTakeDamage(info);
@@ -71,25 +80,13 @@ CBaseEntity *CTFDBPlayer::GiveNamedItem(char const *szName, int iSubType, CEconI
 
 	newitem.m_Attributes.AddToTail(CEconItemAttribute(112,	0.25)); // +%s1% ammo regenerated every 5 seconds on wearer
 	newitem.m_Attributes.AddToTail(CEconItemAttribute(76,	4.00)); // +%s1% max primary ammo on wearer
-	newitem.m_Attributes.AddToTail(CEconItemAttribute(60,	0.00)); // +%s1% fire damage resistance on wearer
 
 	if (WeaponParticle.GetInt() > 0)
 	{
 		newitem.m_Attributes.AddToTail(CEconItemAttribute(134, WeaponParticle.GetFloat()));
 	}
-
-	if (pScriptItem->m_iEntityQuality == 11) // Strange
-	{
-		for (int i = 0; i < pScriptItem->m_Attributes.Count(); i++)
-		{
-			const CEconItemAttribute pAttribute = pScriptItem->m_Attributes.Element(i);
-			for (size_t j = 0; j < ARRAYSIZE(StrangeWeaponAttributes); j++)
-			{
-				if (pAttribute.m_iAttributeDefinitionIndex == StrangeWeaponAttributes[j])
-					newitem.m_Attributes.AddToTail(pAttribute);
-			}
-		}
-	}
+	
+	newitem.m_bDoNotIterateStaticAttributes = true;
 
 	return BaseClass::GiveNamedItem(szName, iSubType, &newitem, bForce);
 }
@@ -119,6 +116,8 @@ void CSCICopy(CEconItemView *olditem, CEconItemView *newitem)
 
 	copymember(m_pVTable_Attributes);
 	copymember(m_pAttributeManager);
+	
+	copymember(m_bDoNotIterateStaticAttributes);
 
 	newitem->m_Attributes = olditem->m_Attributes;
 	
