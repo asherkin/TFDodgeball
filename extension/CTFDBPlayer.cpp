@@ -10,6 +10,7 @@ ConVar DissolveOverride("sm_dodgeball_dissolve", "1", FCVAR_NONE, "", true, 0.0,
 ConVar DissolveDelay("sm_dodgeball_dissolve_delay", "1.0", FCVAR_NONE, "");
 ConVar ForcePyro("sm_dodgeball_force_class", "1", FCVAR_NONE, "", true, 0.0, true, 1.0);
 ConVar ForceLoadout("sm_dodgeball_force_loadout", "2", FCVAR_NONE, "", true, 0.0, true, 2.0);
+ConVar NoFireDamage("sm_dodgeball_no_fire_damage", "1", FCVAR_NONE, "", true, 0.0, true, 1.0);
 
 void CTFDBPlayer::HandleCommand_JoinClass(const char *pClass, bool bAllowSpawn)
 {
@@ -26,11 +27,8 @@ int CTFDBPlayer::OnTakeDamage(CEntityTakeDamageInfo &info)
 	if (!DodgeballEnabled.GetBool())
 		return BaseClass::OnTakeDamage(info);
 	
-	if ((info.m_bitsDamageType & DMG_BURN) != 0) {
-		info.m_flDamage = 0.0f;
-		info.m_flMaxDamage = 0.0f;
-		info.m_flBaseDamage = 0.0f;
-	}
+	if (NoFireDamage.GetBool() && ((info.m_bitsDamageType & DMG_PLASMA) != 0))
+		return 0;
 	
 	if (!DissolveOverride.GetBool() || (!DissolvePlayers.GetBool() && (info.m_bitsDamageType & DMG_ACID) != 0))
 		return BaseClass::OnTakeDamage(info);
