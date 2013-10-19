@@ -21,6 +21,7 @@ END_DATADESC()
 ConVar RocketSpeedMul_Nuke("sm_dodgeball_speedmul_nuke", "0.2", FCVAR_NONE);
 ConVar ReflectSpeedInc_Nuke("sm_dodgeball_reflectinc_nuke", "0.02", FCVAR_NONE);
 ConVar RocketTurnRate_Nuke("sm_dodgeball_turnrate_nuke", "0.1", FCVAR_NONE);
+ConVar RocketTurnRateInc_Nuke("sm_dodgeball_turnrate_inc_nuke", "0.0", FCVAR_NONE);
 
 ConVar NukeBeepOnTarget("sm_dodgeball_nuke_targetbeep", "0", FCVAR_NONE, "", true, 0.0, true, 1.0);
 ConVar NukeRadius("sm_dodgeball_nuke_radius", "500.0", FCVAR_NONE, "", true, 0.0, false, 0.0);
@@ -240,8 +241,8 @@ void CTrackingProjectile_Nuke::TurnToTarget(CPlayer *pPlayer)
 	vec_t fCurrentSpeed;
 
 	// Calculate speed and orientation.
-	fCurrentSpeed = /*fRocketOrientation.Length()*/ 1100.0 * RocketSpeedMul_Nuke.GetFloat();
-	fCurrentSpeed *= (ReflectSpeedInc_Nuke.GetFloat() * (*m_iDeflected/* - 1*/)) + 1.0;
+	fCurrentSpeed = 1100.0 * RocketSpeedMul_Nuke.GetFloat();
+	fCurrentSpeed *= (ReflectSpeedInc_Nuke.GetFloat() * (*m_iDeflected)) + 1.0;
 	fRocketOrientation.NormalizeInPlace();
 
 	// Retrieve client position and calculate new orientation.
@@ -252,9 +253,12 @@ void CTrackingProjectile_Nuke::TurnToTarget(CPlayer *pPlayer)
 	fOrientation.NormalizeInPlace();
 
 	// Lerp from the current orientation to the new one.
-	fRocketOrientation[0] = Lerp<vec_t>(RocketTurnRate_Nuke.GetFloat(), fRocketOrientation[0], fOrientation[0]);
-	fRocketOrientation[1] = Lerp<vec_t>(RocketTurnRate_Nuke.GetFloat(), fRocketOrientation[1], fOrientation[1]);
-	fRocketOrientation[2] = Lerp<vec_t>(RocketTurnRate_Nuke.GetFloat(), fRocketOrientation[2], fOrientation[2]);
+	float turnRate = RocketTurnRate_Nuke.GetFloat();
+	turnRate += RocketTurnRateInc_Nuke.GetFloat() * (*m_iDeflected);
+	if (turnRate > 1.0) turnRate = 1.0;
+	fRocketOrientation[0] = Lerp<vec_t>(turnRate, fRocketOrientation[0], fOrientation[0]);
+	fRocketOrientation[1] = Lerp<vec_t>(turnRate, fRocketOrientation[1], fOrientation[1]);
+	fRocketOrientation[2] = Lerp<vec_t>(turnRate, fRocketOrientation[2], fOrientation[2]);
 	fRocketOrientation.NormalizeInPlace();
 
 	// Calculate angles and final speed.

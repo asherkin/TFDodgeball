@@ -21,6 +21,7 @@ END_DATADESC()
 ConVar RocketSpeedMul("sm_dodgeball_speedmul", "0.5", FCVAR_NONE);
 ConVar ReflectSpeedInk("sm_dodgeball_reflectinc", "0.02", FCVAR_NONE);
 ConVar RocketTurnRate("sm_dodgeball_turnrate", "0.25", FCVAR_NONE);
+ConVar RocketTurnRateInc("sm_dodgeball_turnrate_inc", "0.0", FCVAR_NONE);
 
 DEFINE_PROP(m_bCritical, CTrackingProjectile);
 DEFINE_PROP(m_iDeflected, CTrackingProjectile);
@@ -209,8 +210,8 @@ void CTrackingProjectile::TurnToTarget(CPlayer *pPlayer)
 	vec_t fCurrentSpeed;
 
 	// Calculate speed and orientation.
-	fCurrentSpeed = /*fRocketOrientation.Length()*/ 1100.0 * RocketSpeedMul.GetFloat();
-	fCurrentSpeed *= (ReflectSpeedInk.GetFloat() * (*m_iDeflected/* - 1*/)) + 1.0;
+	fCurrentSpeed = 1100.0 * RocketSpeedMul.GetFloat();
+	fCurrentSpeed *= (ReflectSpeedInk.GetFloat() * (*m_iDeflected)) + 1.0;
 	fRocketOrientation.NormalizeInPlace();
 
 	// Retrieve client position and calculate new orientation.
@@ -221,9 +222,12 @@ void CTrackingProjectile::TurnToTarget(CPlayer *pPlayer)
 	fOrientation.NormalizeInPlace();
 
 	// Lerp from the current orientation to the new one.
-	fRocketOrientation[0] = Lerp<vec_t>(RocketTurnRate.GetFloat(), fRocketOrientation[0], fOrientation[0]);
-	fRocketOrientation[1] = Lerp<vec_t>(RocketTurnRate.GetFloat(), fRocketOrientation[1], fOrientation[1]);
-	fRocketOrientation[2] = Lerp<vec_t>(RocketTurnRate.GetFloat(), fRocketOrientation[2], fOrientation[2]);
+	float turnRate = RocketTurnRate.GetFloat();
+	turnRate += RocketTurnRateInc.GetFloat() * (*m_iDeflected);
+	if (turnRate > 1.0) turnRate = 1.0;
+	fRocketOrientation[0] = Lerp<vec_t>(turnRate, fRocketOrientation[0], fOrientation[0]);
+	fRocketOrientation[1] = Lerp<vec_t>(turnRate, fRocketOrientation[1], fOrientation[1]);
+	fRocketOrientation[2] = Lerp<vec_t>(turnRate, fRocketOrientation[2], fOrientation[2]);
 	fRocketOrientation.NormalizeInPlace();
 
 	// Calculate angles and final speed.
