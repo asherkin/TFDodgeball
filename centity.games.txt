@@ -146,30 +146,30 @@
 			}
 			"CanSpeakVoiceCommand"
 			{
-				"windows"       "457"
-				"linux"         "458"
+				"windows"       "458"
+				"linux"         "459"
 			}
 			"ShouldGib"
 			{
-				"windows"       "468"
-				"linux"         "469"
+				"windows"       "469"
+				"linux"         "470"
 			}
 			"GiveNamedItem"
 			{
-				"windows"       "470"
-				"linux"         "477"
+				"windows"       "471"
+				"linux"         "478"
 			}
 			
 			"GetRadius"
 			{
-				"windows"       "223"
-				"linux"         "224"
+				"windows"       "226"
+				"linux"         "227"
 			}
 			
 			"DeflectPlayer"
 			{
-				"windows"       "398"
-				"linux"         "405"
+				"windows"       "399"
+				"linux"         "406"
 			}
 		}
 	}
