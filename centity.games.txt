@@ -86,73 +86,73 @@
 			}
 			"StudioFrameAdvance"
 			{
-				"windows"       "189"
-				"linux"         "190"
+				"windows"       "190"
+				"linux"         "191"
 			}
 			"Weapon_Equip"
 			{
-				"windows"       "260"
-				"linux"         "261"
+				"windows"       "261"
+				"linux"         "262"
 			}
 			"WeaponSwitch"
 			{
-				"windows"       "263"
-				"linux"         "264"
+				"windows"       "264"
+				"linux"         "265"
 			}
 			"Weapon_GetSlot"
 			{
-				"windows"       "267"
-				"linux"         "268"
+				"windows"       "268"
+				"linux"         "269"
 			}
 			"RemovePlayerItem"
 			{
-				"windows"       "269"
-				"linux"         "270"
+				"windows"       "270"
+				"linux"         "271"
 			}
 			"OnTakeDamage_Alive"
 			{
-				"windows"       "271"
-				"linux"         "272"
+				"windows"       "272"
+				"linux"         "273"
 			}
 			"Jump"
 			{
-				"windows"       "329"
-				"linux"         "330"
+				"windows"       "330"
+				"linux"         "331"
 			}
 			"PreThink"
-			{
-				"windows"       "331"
-				"linux"         "332"
-			}
-			"PostThink"
 			{
 				"windows"       "332"
 				"linux"         "333"
 			}
-			"ProcessUserCmds"
+			"PostThink"
 			{
-				"windows"       "416"
-				"linux"         "417"
+				"windows"       "333"
+				"linux"         "334"
 			}
-			"PlayerRunCmd"
+			"ProcessUserCmds"
 			{
 				"windows"       "417"
 				"linux"         "418"
 			}
+			"PlayerRunCmd"
+			{
+				"windows"       "418"
+				"linux"         "419"
+			}
 			"IsReadyToSpawn"
 			{
-				"windows"       "432"
-				"linux"         "433"
+				"windows"       "433"
+				"linux"         "434"
 			}
 			"CanSpeakVoiceCommand"
 			{
-				"windows"       "458"
-				"linux"         "459"
+				"windows"       "459"
+				"linux"         "460"
 			}
 			"ShouldGib"
 			{
-				"windows"       "469"
-				"linux"         "470"
+				"windows"       "470"
+				"linux"         "471"
 			}
 			"GiveNamedItem"
 			{
@@ -162,14 +162,14 @@
 			
 			"GetRadius"
 			{
-				"windows"       "226"
-				"linux"         "227"
+				"windows"       "231"
+				"linux"         "232"
 			}
 			
 			"DeflectPlayer"
 			{
-				"windows"       "399"
-				"linux"         "406"
+				"windows"       "404"
+				"linux"         "411"
 			}
 		}
 	}

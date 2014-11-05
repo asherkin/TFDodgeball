@@ -70,7 +70,7 @@ public: // CBasePlayer virtuals
 	virtual bool IsReadyToSpawn(void);
 	virtual bool CanSpeakVoiceCommand(void);
 	virtual void HandleCommand_JoinClass(const char *pClass, bool bAllowSpawn);
-	virtual bool ShouldGib(const CEntityTakeDamageInfo &info, bool bFeignDeath);
+	virtual bool ShouldGib(const CEntityTakeDamageInfo &info);
 
 public: //Virtual calls
 	virtual CBaseEntity *GiveNamedItem(char const *szName, int iSubType, CEconItemView *pScriptItem, bool bForce);
@@ -95,7 +95,7 @@ public: //Autohandlers
 	DECLARE_DEFAULTHEADER(Weapon_GetSlot, CBaseEntity *, (int slot));
 	DECLARE_DEFAULTHEADER(GetClientEyeAngles, QAngle *, ());
 	DECLARE_DEFAULTHEADER_DETOUR(HandleCommand_JoinClass, void, (const char *pClass, bool bAllowSpawn));
-	DECLARE_DEFAULTHEADER(ShouldGib, bool, (const CEntityTakeDamageInfo &info, bool bFeignDeath));
+	DECLARE_DEFAULTHEADER(ShouldGib, bool, (const CEntityTakeDamageInfo &info));
 
 protected: // Sendprops
 	DECLARE_SENDPROP(float, m_flNextAttack);

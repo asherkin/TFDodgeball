@@ -37,7 +37,7 @@ SH_DECL_MANUALHOOK1(RemovePlayerItem, 0, 0, 0, bool, CBaseEntity *);
 SH_DECL_MANUALHOOK1_void(Weapon_Equip, 0, 0, 0, CBaseEntity *);
 SH_DECL_MANUALHOOK1(Weapon_GetSlot, 0, 0, 0, CBaseEntity *, int);
 SH_DECL_MANUALHOOK0(GetClientEyeAngles, 0, 0, 0, QAngle *);
-SH_DECL_MANUALHOOK2(ShouldGib, 0, 0, 0, bool, const CEntityTakeDamageInfo &, bool);
+SH_DECL_MANUALHOOK1(ShouldGib, 0, 0, 0, bool, const CEntityTakeDamageInfo &);
 
 DECLARE_HOOK(FVisible, CPlayer);
 DECLARE_HOOK(PlayerRunCmd, CPlayer);
@@ -92,7 +92,7 @@ DECLARE_DEFAULTHANDLER(CPlayer, RemovePlayerItem, bool, (CBaseEntity *pItem), (p
 DECLARE_DEFAULTHANDLER_void(CPlayer, Weapon_Equip, (CBaseEntity *pWeapon), (pWeapon));
 DECLARE_DEFAULTHANDLER(CPlayer, Weapon_GetSlot, CBaseEntity *, (int slot), (slot));
 DECLARE_DEFAULTHANDLER(CPlayer, GetClientEyeAngles, QAngle *, (), ());
-DECLARE_DEFAULTHANDLER(CPlayer, ShouldGib, bool, (const CEntityTakeDamageInfo &info, bool bFeignDeath), (info, bFeignDeath));
+DECLARE_DEFAULTHANDLER(CPlayer, ShouldGib, bool, (const CEntityTakeDamageInfo &info), (info));
 DECLARE_DEFAULTHANDLER(CPlayer, WeaponSwitch, bool, (CBaseEntity *pWeapon, int viewmodelindex), (pWeapon, viewmodelindex));
 
 DECLARE_DEFAULTHANDLER_DETOUR_void(CPlayer, HandleCommand_JoinClass, (const char *pClass, bool bAllowSpawn), (pClass, bAllowSpawn));

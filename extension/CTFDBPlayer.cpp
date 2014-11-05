@@ -43,12 +43,12 @@ int CTFDBPlayer::OnTakeDamage(CEntityTakeDamageInfo &info)
 	return ret;
 }
 
-bool CTFDBPlayer::ShouldGib(const CEntityTakeDamageInfo &info, bool bFeignDeath)
+bool CTFDBPlayer::ShouldGib(const CEntityTakeDamageInfo &info)
 {
 	if (DodgeballEnabled.GetBool() && DissolveOverride.GetBool() && (DissolvePlayers.GetBool() || (info.m_bitsDamageType & DMG_ACID) == 0))
 		return false;
 	else
-		return BaseClass::ShouldGib(info, bFeignDeath);
+		return BaseClass::ShouldGib(info);
 }
 
 CBaseEntity *CTFDBPlayer::GiveNamedItem(char const *szName, int iSubType, CEconItemView *pScriptItem, bool bForce)
