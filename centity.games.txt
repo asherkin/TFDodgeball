@@ -109,6 +109,11 @@
 				"windows"       "270"
 				"linux"         "271"
 			}
+			"ShouldGib"
+			{
+				"windows"       "286"
+				"linux"         "287"
+			}
 			"OnTakeDamage_Alive"
 			{
 				"windows"       "272"
@@ -148,11 +153,6 @@
 			{
 				"windows"       "459"
 				"linux"         "460"
-			}
-			"ShouldGib"
-			{
-				"windows"       "470"
-				"linux"         "471"
 			}
 			"GiveNamedItem"
 			{
